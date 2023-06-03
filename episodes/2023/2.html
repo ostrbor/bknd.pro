@@ -1,0 +1,46 @@
+<html lang="ru">
+<head>
+    <title>Backend Podcast: 2. regex expressions, systemd.</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../css/pico.min.css">
+</head>
+<body>
+<main class="container">
+    <hgroup>
+        <h1>2. regex expressions, systemd</h1>
+        <h2>03.06.2023</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/647b8c485f71ea001161a808" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://open.acast.com/public/streams/64727c07e689970012fb1c23/episodes/647b8c485f71ea001161a808.mp3">Скачать</a>
+    </p>
+
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h3>systemd</h3>
+
+    <p>
+        Изредка возникает задача автостарта приложения при запуске ОС и перезапуске при его падении.
+        Если вы используете docker, то проблема решается restart флагом.
+        Если же у вас один бинарный файл и достаточно свежий Linux,
+        то лучше для этого использовать существующие в системе инструменты.
+        Речь о systemd.
+    </p>
+    <p>
+        Достаточно написать простой кнофигурацинный Unit-файл,
+        включить его автозагрузку при старте системы командой systemctl enable имя_сервиса.
+        И запустить подкомандой start.
+    </p>
+    <p>Напомню, что логи сервисов можно посмотреть с помощью команды journalctl.</p>
+    <p>Минимальная конфигурация, подходящая для сетевых сервисов: <a target="_blank" href="https://gist.github.com/ryankurte/4f00605ced06613b3b1354d08d25ec5f">https://gist.github.com/ryankurte/4f00605ced06613b3b1354d08d25ec5f</a>></p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+</main>
+</body>
+</html>
