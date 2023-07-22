@@ -1,0 +1,181 @@
+<html lang="ru">
+<head>
+    <title>Backend Dev Team: Go Context package</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../podcast/css/pico.min.css">
+</head>
+<body>
+<main class="container">
+    <h1>
+        Пакет context в Go
+    </h1>
+
+    <p>
+        Если заглянуть в src директорию SDK, то из всего списка пакетов, context - самое неоднозначное название.
+        Пакет context <a href="https:github.com/golang/go/issues/14660">перекочевал в Go 1.7</a> из <a
+            href="golang.org/x/net/context">golang.org/x/net/context</a>
+        (обратите внимание на путь: net здесь не случаен, этот пакет использовался для прекращения работы HTTP-запросов)
+        Бред Фитцпатрик - разработчик Go с 2010 до 2020 - в своем proposal указывал на возможное
+        использование контекста не только для отмены HTTP-запросов, но и для остановки работы TCP-диалера
+        (установка TCP-соединения), остановки дочернего процесса ОС, запущенного через os/exec,
+        отмены выполнения SQL-запроса и т.д.
+        Когда вы видите фукнцию/метод (далее просто функция), принимающую context.Context,
+        вы должны это воспринимать как предложение управлять отменой её выполнения.
+    </p>
+
+    <p>
+        Как можно решить задачу отмены процедуры без пакета context?
+        Канал done в качестве первого аргумента функции - это один из самых очевидных способов реализации отмены.
+        Отличные примеры можно найти также в статье <a
+            href="https:go.dev/blog/pipelines">https:go.dev/blog/pipelines</a>.
+        <script src="https://gist.github.com/ostretsov/ff18bb21c57edcd19b997906ba10277a.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/leNXi5gHVGH">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        А вот реализация отмены по истечению таймаута:
+        <script src="https://gist.github.com/ostretsov/14f36c4879bc63bdaabdb57e5c4b6ac4.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/UcMiJ_Th_XU">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Для решения задачи отмены процедуры в Go, SDK предлагает пакет context.
+        Пакет context - это микрофреймворк, предназначенный для коммуникации с процедурой, чаще через сигнал отмены её
+        выполнения.
+    </p>
+
+    <p>
+        Мне не удалось найти упоминаний выбора именно такого названия для пакетов.
+        Если изучить <a href="https:www.dre.vanderbilt.edu/~schmidt/PDF/Context-Object-Pattern.pdf">первую публикацию о
+        Context Object паттерне</a> (Context Object, A Design Pattern for Efficient Information Sharing across Multiple
+        System Layers, 2005 год), то становятся ясны предпосылки для такого названия пакета.
+        Цитата из публикации:
+    <blockquote>
+        This pattern provides an efficient, and application
+        transparent way of sharing information between different layers in a software system.
+    </blockquote>
+    Пакет context в Go также служит для передачи информации между слоями/уровнями приложения, но в Go акцент больше
+    смещен на
+    информацию об отмене выполнения процедуры.
+    Задачу коммуникации с процедурой можно решить также иным способом, через менеджер (Peter Sommerlad, “The Manager
+    Design
+    Pattern", Pattern Languages of Program Design 3, Addison-Wesley, 1998.), но это решение обладает серьезным
+    недостатком:
+    для конкурентной работы с менеджером нужна синхронизация между рутинами, например, через Mutex'ы.
+    </p>
+
+    <p>
+        Немного о том как устроен контекст в Go.
+        Пакет context предоставляет Context интерфейс, плюс несколько его имплементаций, которые можно объединять в
+        цепочку.
+        Это удобно, если у вас есть несколько причин для отмены функции (вызов <strong>cancel</strong>, таймаут,
+        дедлайн) и отмена
+        должна случится при наступлении любой из них.
+        Любой пользовательский контекст является дочерним к другому контексту, который называется родительским.
+        Только пустой контекст (<strong>context.Background()</strong> или <strong>context.TODO()</strong>) не имеет
+        родителя.
+        Эта иерархичность важна, т.к. влияет на то, какие из контекстов цепочки будут отменены при отмене родителя.
+        <script src="https://gist.github.com/ostretsov/8bce80d75c5123edb04bd9c5be0912b8.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/pQ5hD8ouKCQ">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Отмена родительского контекста влечет отмену всех дочерних контекстов.
+        <script src="https://gist.github.com/ostretsov/1854e2848dbda7f79d10cd59551b0959.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/0eez_X3UoeF">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Отмена дочернего контекста не отменяет родительский.
+        <script src="https://gist.github.com/ostretsov/613aaf6b55f1a7caa4e387c7699315ac.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/XF4mXj4nCkn">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Важно понимать, что сам по себе контекст не отменяет функцию. Он лишь предоставляет механизм для отмены,
+        который нужно реализовать в функции.
+        Поэтому важно заглядывать в исходный код сторонных пакетов и проверять как на самом деле используется контекст.
+        <script src="https://gist.github.com/ostretsov/e3b4e0ab5dc79de7d5a1363ef90a7293.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/MoEsvLe1tZW">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        "go vet" ругается, если не вызвать функцию отмены контекста.
+        <script src="https://gist.github.com/ostretsov/6a9f5db1e05ff35dbaf7373233d8665c.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/OqARYME2vxq">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        А что случится, если не вызвать функцию отмены контекста?
+        В случае timerCtx запускается таймер и по истечению времени запускается Go-рутина,
+        в которой вызывается cancel-функция. Только после этого происходит сборка мусора (т.е. освобождение ресурсов).
+        В случае cancelCtx вызов cancel-функции очищает map дочерних контекстов.
+        Если вы используете кастомные контексты, то можете получить утечку go-рутин,
+        т.к. только в случае кастомного контекста запускается go-рутина,
+        ждущая отмены родительского или дочернего контекста.
+        <script src="https://gist.github.com/ostretsov/20935b56ab85593ec1ae59a1aa407470.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/IVMEiXWQgBl">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Если вы планируете использовать контекст только для передачи данных,
+        то лучше сделать специальную структуру для этого.
+        В противном случае вы теряете все преимущества статической типизации.
+        Значения в контексте хранятся в виде типа any.
+        Может быть полезна следующая рекомендация: контекст только для отмены,
+        значения в контексте только в случае обоснованной необходимости.
+    </p>
+
+    <p>
+        Как организовано хранение значений в cancelCtx? Каждый следующий контекст хранит ссылку на предыдущий контекст.
+        Контекст отмены (context.cancelCtx), используемый под капотом также контекстом отмены по дедлайну/таймауту
+        (timerCtx),
+        хранит ссылки на все дочерние контексты, чтобы иметь возможность их отмены при отмене родительского контекста.
+        <script src="https://gist.github.com/ostretsov/17901c8d6c73ba69c39ab48013c35be2.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/Dhs0HA_b4_1">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Рассмотрим использование контекста в HTTP-сервере из пакета net.http.
+        Контекст здесь служит для передачи самого HTTP-сервера и TCP-адреса, на котором он запущен.
+        С помощью своих middleware вы можете также обогатить контекст дополнительными данными.
+        Т.к. базовый контекст серавера (Server.BaseContext) передаваемый в каждый запрос можно переопределить
+        (по умолчанию используется context.Background()), то можно контекст использовать, например,
+        для передачи сигнала о скорой перезагрузке сервера (см. готовую имплементацию в SDK signal.NotifyContext).
+        <script src="https://gist.github.com/ostretsov/73e3c782acbb83407ccc14db4592f8b9.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/5l6yBh3gcP1">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Помимо middleware, дополнить контекст данными новосозданного TCP-соединения
+        можно через ConnContext функцию сервера.
+        <script src="https://gist.github.com/ostretsov/8eff34243e8cfef01271894b52f2b40b.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/byTLceFApTS">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Некоторые пакеты предоставляют готовые решения по отмене по таймауту.
+        Например, можно использовать http.TimeoutHandler, если нужно ограничить время ответа хендлера.
+        Сам хендлер продолжит работу до окончания работы программы,
+        если в нем специально не проверять завершен ли контекст запроса.
+        <script src="https://gist.github.com/ostretsov/e5a37733801dffff19acf7b5a756f3ac.js"></script>
+        <a target="_blank" href="https://go.dev/play/p/w0H8WRj3Vl1">Запустить Go Playground</a>
+    </p>
+
+    <p>
+        Несколько напутственных рекомендаций:
+    <ul>
+        <li>Убедитесь, что не можете решить задачу без использования Go-рутин. Если можете обойтись без Go-рутин,
+            то можете обойтись без context-пакета.
+        </li>
+        <li>Если вы не планируете отменять процедуру, то передавайте пустой контекст (context.Background() или
+            context.TODO()).
+        </li>
+        <li>Если сторонняя функция принимает context.Context, проверьте как он используется, заглянув в её исходный код.
+            Пакет context предоставляет механизмы для отмены, но не саму отмену процедуры.
+        </li>
+    </ul>
+    </p>
+</main>
+</body>
+</html>
