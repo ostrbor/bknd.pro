@@ -1,0 +1,106 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 22. Новый рауер в Go 1.22</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../css/pico.min.css">
+</head>
+<body>
+<div class="container">
+    🌐
+    <a href="https://t.me/bkndpro">Telegram</a> /
+    <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a> /
+    <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a> /
+    <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google
+        Podcasts</a> /
+    <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon Music</a> /
+    <a href="https://www.podchaser.com/podcasts/backend-podcast-5356704">Podchaser</a> /
+    <a href="https://www.jiosaavn.com/shows/backend-podcast/1/gcf017sumlQ_">Jiosaavn</a> /
+    <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+    <br/>
+    ❓ Писать вопросы/предложения сюда: <a href="mailto:OstretsovAA+podcast@gmail.com">OstretsovAA+podcast@gmail.com</a>
+</div>
+<main class="container">
+    <hgroup>
+        <h1>22. Новый рауер в Go 1.22</h1>
+        <h2>22.10.2023</h2>
+    </hgroup>
+
+    <p>
+        <a href="https://bknd.pro/podcast-files/022_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <p>
+        Все началось 16 мая этого года с <a target="_blank" href="https://github.com/golang/go/discussions/60227">обсуждения</a>
+        нового маршрутизатора.
+
+        К сожалению эта дискуссия на гитхабе уже закрыта,
+        а среди интересных предложений был вывод все маршрутов для целей отладки. Но лайкнуть в закрытой дискуссии нельзя.
+    </p>
+
+    <p>
+        Предложение решает следующую задачу: это отличное дефолтное решение, когда не нужно будет искать альтернативы раутеру из SDK.
+
+        Появятся парметры подстановки в паттернах при регистрации обработчика (хендлера):
+        <ul>
+            <li>func (mux *ServeMux) Handle(pattern string, handler http.Handler)</li>
+            <li>func (mux *ServeMux) HandleFunc(pattern string, handler func(http.ResponseWriter, *http.Request))</li>
+        </ul>
+    </p>
+
+    <p>
+        Сегменты резделены слешем.
+        Любой из сегментов может быть шаблоном, для этого имя значения нужно заключить в фигурные скобки.
+        Паттерн только между двумя слешами!
+        Значения параметров, совпавших с шаблоном хранятся в контектсе запроса.
+        Под капотом сегменты представлены деревом.
+    </p>
+
+    <p>
+        Предложенная реализация - breaking change, т.к. не допускает фигурные скобки в URL-пути между слешами.
+    </p>
+
+    <h4>Нужна ли высокая производительность?</h4>
+
+    <p>
+        <code>gorilla/mux</code> в 30-40 раз медленнее роутера SDK, а новый механизм роутинга и паттерн-метчинга
+        чуть-чуть медленнее того, что реализован сейчас.
+    </p>
+
+    <blockquote>
+        The obvious question is, if you can serve data so fast that routing dominates, why are you using HTTP at all?
+        Why not TCP? I suspect the answer is the same as why fast structured loggers write text-based JSON
+        instead of a binary format: because the surrounding systems require it.
+        I'm still looking for real-world examples that need fast routing.
+    </blockquote>
+
+    <h4>Сам <a target="_blank" href="https://github.com/golang/go/issues/61410">proposal</a></h4>
+
+    <blockquote>
+        By the usual Go standards, this proposal is already a big change.
+    </blockquote>
+
+    <p>
+        В Go1.22 таким образом будут добавлены два новых метода:
+        <ul>
+            <li>func PathValue(r *http.Request, name string) string</li>
+            <li>func (mux *ServeMux) SetPathValue(r *http.Request, name, value string)</li>
+        </ul>
+        По задумке автора второй метод нужен для упрощения работы с тестами, хотя в изначальной дискуссии речь шла только об одном методе.
+    </p>
+
+    <p>
+        Обещанная ссылка на URL Pattern API:
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API">https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API</a>
+    </p>
+
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+</main>
+</body>
+</html>
