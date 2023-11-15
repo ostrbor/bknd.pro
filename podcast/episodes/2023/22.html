@@ -2,6 +2,7 @@
 <head>
     <title>Backend Podcast: 22. Новый рауер в Go 1.22</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
 </head>
 <body>
@@ -26,7 +27,8 @@
     </hgroup>
 
     <p>
-        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/653817a68299010011ade0c4" frameBorder="0" width="100%" height="190px"></iframe>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/653817a68299010011ade0c4" frameBorder="0"
+                width="100%" height="190px"></iframe>
         <a href="https://bknd.pro/podcast-files/022_backend_podcast.mp3">Скачать</a>
     </p>
 
@@ -39,17 +41,19 @@
         нового маршрутизатора.
 
         К сожалению эта дискуссия на гитхабе уже закрыта,
-        а среди интересных предложений был вывод все маршрутов для целей отладки. Но лайкнуть в закрытой дискуссии нельзя.
+        а среди интересных предложений был вывод все маршрутов для целей отладки. Но лайкнуть в закрытой дискуссии
+        нельзя.
     </p>
 
     <p>
-        Предложение решает следующую задачу: это отличное дефолтное решение, когда не нужно будет искать альтернативы раутеру из SDK.
+        Предложение решает следующую задачу: это отличное дефолтное решение, когда не нужно будет искать альтернативы
+        раутеру из SDK.
 
         Появятся парметры подстановки в паттернах при регистрации обработчика (хендлера):
-        <ul>
-            <li>func (mux *ServeMux) Handle(pattern string, handler http.Handler)</li>
-            <li>func (mux *ServeMux) HandleFunc(pattern string, handler func(http.ResponseWriter, *http.Request))</li>
-        </ul>
+    <ul>
+        <li>func (mux *ServeMux) Handle(pattern string, handler http.Handler)</li>
+        <li>func (mux *ServeMux) HandleFunc(pattern string, handler func(http.ResponseWriter, *http.Request))</li>
+    </ul>
     </p>
 
     <p>
@@ -86,11 +90,12 @@
 
     <p>
         В Go1.22 таким образом будут добавлены два новых метода:
-        <ul>
-            <li>func PathValue(r *http.Request, name string) string</li>
-            <li>func (mux *ServeMux) SetPathValue(r *http.Request, name, value string)</li>
-        </ul>
-        По задумке автора второй метод нужен для упрощения работы с тестами, хотя в изначальной дискуссии речь шла только об одном методе.
+    <ul>
+        <li>func PathValue(r *http.Request, name string) string</li>
+        <li>func (mux *ServeMux) SetPathValue(r *http.Request, name, value string)</li>
+    </ul>
+    По задумке автора второй метод нужен для упрощения работы с тестами, хотя в изначальной дискуссии речь шла только об
+    одном методе.
     </p>
 
     <p>
