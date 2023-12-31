@@ -1,0 +1,93 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 32. Итоги, ускорение LIKE/ILIKE, deadcode, курс на Brilliant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    🌐
+    <a href="https://t.me/bkndpro">Telegram</a> /
+    <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a> /
+    <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a> /
+    <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google
+        Podcasts</a> /
+    <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon Music</a> /
+    <a href="https://www.podchaser.com/podcasts/backend-podcast-5356704">Podchaser</a> /
+    <a href="https://www.jiosaavn.com/shows/backend-podcast/1/gcf017sumlQ_">Jiosaavn</a> /
+    <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+    <br/>
+    ❓ Писать вопросы/предложения сюда: <a href="mailto:OstretsovAA+podcast@gmail.com">OstretsovAA+podcast@gmail.com</a>
+</div>
+<main class="container">
+    <hgroup>
+        <h1>32. Итоги, ускорение LIKE/ILIKE, deadcode, курс на Brilliant</h1>
+        <h2>31.12.2023</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/6591867bd006d30016d18dec" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/032_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://go.dev/doc/devel/release">https://go.dev/doc/devel/release</a></li>
+        <li><a href="https://www.postgresql.org/about/news/postgresql-16-released-2715/">https://www.postgresql.org/about/news/postgresql-16-released-2715/</a></li>
+        <li><a href="https://www.postgresql.org/docs/current/pgtrgm.html">https://www.postgresql.org/docs/current/pgtrgm.html</a></li>
+        <li><a href="https://alandonovan.net/">https://alandonovan.net/</a></li>
+    </ul>
+
+    <h4>Итоги года</h4>
+
+    <p>
+        За прошедший год вышли две минорные версии Go: 1.21 и 1.20.
+        1.20 не привнес заметных изменений в язык, а в 1.21 появились три новые built-in функции: min, max, clear.
+    </p>
+
+    <p>
+        В сентябре этого года также вышла 16 версия PostgreSQL.
+        Эта версия отличается повышением производительности SQL-запросов: улучшена параллельная обработка запроса.
+        В некоторых тест-кейсах производительность, например, COPY возросла на 300%.
+        Также команда работает над тем, чтобы снизить простой при вакуумировании.
+        Расширен SQL/JSON синтакс.
+        Добавлена таблица <code>pg_stat_io</code> для более детального анализа I/O метрик.
+    </p>
+
+    <p>
+        Важное событие - широкая доступность языковых моделей для написания кода.
+    </p>
+
+    <h4>Ускорение LIKE/ILIKE</h4>
+
+    <p>
+        Поиск по подстроке в PostgreSQL работает по умолчанию, последовательным сканированием всех данных (seq scan).
+        Для того чтобы ускорить поиск по подстроке достаточно выполнить две команды и производительность повысится:
+    </p>
+
+    <code>CREATE EXTENSION pg_trgm;</code><br/>
+    <code>CREATE INDEX ON table_name USING GIN (text_field_to_optimize gin_trgm_ops);</code>
+
+    <p>
+        Учитываем, что размер индекса может быть существенным.
+    </p>
+
+    <h4>deadcode</h4>
+
+    <p>
+        12 декабря Алан Донован (разработчик Go в Google)
+        опубликовал статью в Go блоке о новом инструменте deadcode для обнаружения "мертвого" кода.
+        Утилита позволяет быстро находить неиспользуемые функции во всем проекте.
+        В Goland такие функции подсвечиваются серым цветом и вот теперь можно "подсветить" такие функции одним вызовом команды.
+        В одном из моих проектов возрастом более 2х лет deadcode нашел 12 неиспользуемые функций.
+        Всегда приятно уменьшить код, выбросив ненужный мусор.
+        Думаю над тем, чтобы включить deadcode в CI-цикл.
+    </p>
+</main>
+</body>
+</html>
