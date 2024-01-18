@@ -1,0 +1,54 @@
+:root {
+    --almost-black: #131313;
+    --gray: #8c8c8c;
+    --bright-green: #0f0;
+}
+body {
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    color: var(--almost-black);
+}
+#other-platforms a {
+    margin-right: 0.5em;
+    font-size: 0.8em;
+}
+.blinking-square {
+    background-color: var(--bright-green);
+    animation: blink-animation 2s steps(1, start) infinite;
+}
+
+@keyframes blink-animation {
+    50% {
+        opacity: 0;
+    }
+}
+h1 {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 700;
+    margin-bottom: 0.1em;
+}
+h1#home:before {
+    content: "$ ";
+    color: var(--bright-green);
+}
+h2 {
+    font-family: 'Roboto Mono', monospace;
+    margin-top: 0;
+    color: var(--gray);
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 10px;
+}
+.episode {
+    margin-bottom: 2em;
+}
+.episode > h3 {
+    margin-bottom: 0.5em;
+}
+.episode > h3 > .date {
+    color: var(--gray);
+}
