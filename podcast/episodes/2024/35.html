@@ -1,0 +1,110 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 35. Таймауты и ретраи</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>35. Таймауты и ретраи</h1>
+        <h2>21.01.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/65ad62f861105f0016e5987f?theme=light"
+                frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/035_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://www.cs.cmu.edu/~priya/PDL-CMU-05-109.pdf">https://www.cs.cmu.edu/~priya/PDL-CMU-05-109.pdf</a>
+        <li><a href="https://sre.google/sre-book/addressing-cascading-failures/">https://sre.google/sre-book/addressing-cascading-failures/</a>
+        <li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/</a>
+        </li>
+    </ul>
+
+    <p>
+        При использовании http.Client для отправки запросов в Go, мы часто сталкиваемся с различными ошибками. Эти
+        ошибки
+        могут быть как частью контракта ответа, так и возникать в результате сетевых проблем. Давайте рассмотрим
+        наиболее
+        распространенные ошибки и способы их обработки.
+    </p>
+
+    <h5>Типы ошибок и их частота</h5>
+    <p>
+        Часто ошибки могут быть связаны с DDoS-атаками, частота которых, по данным Cloudflare, постоянно растет.
+        Согласно
+        исследованию Carnegie Mellon University, 80% проблем вызваны человеческим фактором и багами в приложении.
+        Наиболее
+        распространенная ошибка – это задержка ответа приложения, когда указан таймаут в HTTP-клиенте (например, ошибка
+        Client.Timeout exceeded while awaiting headers). Другие распространенные ошибки включают connection refused и
+        ошибки
+        со стороны reverse proxy, такие как 502 (bad gateway) и 504 (gateway timeout).
+    </p>
+
+    <h5>Таймауты и их настройка</h5>
+    <p>
+        В Go рекомендуется всегда устанавливать таймаут при HTTP-запросах, чтобы избежать бесконечного ожидания ответа.
+        Можно настраивать как общий таймаут, так и специфические таймауты для различных этапов запроса, например,
+        ResponseHeaderTimeout при загрузке больших файлов. Это помогает справляться с пиковыми нагрузками на сервер.
+    </p>
+
+    <h5>Автоматическая и ручная обработка ошибок</h5>
+    <p>
+        Ошибки часто решаются автоматически с помощью механизмов повторных попыток (ретраев). Однако иногда может быть
+        предпочтительнее использовать подход "fail fast", особенно в сценариях, где важен быстрый фидбек, например, в
+        административных панелях.
+    </p>
+
+    <h5>Стратегии ретраев и экспоненциальный откат</h5>
+    <p>
+        В случае высоких нагрузок и риска каскадных сбоев, эффективным решением является стратегия экспоненциального
+        отката
+        с добавлением случайного времени ожидания (jitter). Это помогает распределить нагрузку более равномерно и
+        избежать
+        синхронизации запросов.
+    </p>
+
+    <h5>Защита сервера и управление нагрузкой</h5>
+    <p>
+        На стороне сервера также важно управлять таймаутами, например, с помощью http.Server.ReadTimeout для защиты от
+        атак
+        типа slowloris. Мониторинг и прогнозирование нагрузки позволяют своевременно принимать меры для предотвращения
+        перегрузок.
+    </p>
+
+    <h5>Заключение</h5>
+    <p>
+        Эффективная обработка ошибок HTTP-запросов требует комплексного подхода, включающего как настройку таймаутов и
+        стратегий повторных попыток, так и анализ причин возникновения ошибок. Понимание и правильное применение этих
+        методов помогает повысить надежность и устойчивость веб-приложений.
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+</div>
+</body>
+</html>
