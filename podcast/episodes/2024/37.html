@@ -1,0 +1,82 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 37. Буферный кеш; DRY-принцип</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>37. Буферный кеш; DRY-принцип</h1>
+        <h2>04.02.2023</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/65bfd88a8911d30017c2f53f?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/037_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY принцип (wiki)</a></li>
+    </ul>
+
+    <h4>Буфер + кеш = буферный кеш</h4>
+
+    <p>
+        Читая книгу по PostgreSQL (о ней я расскажу в следующем выпуске) я в который раз встретил термин "буферный кеш",
+        но в этот раз я решил разобраться что это обозначает и почему это не было названо просто "буфер" или "кеш".
+    </p>
+
+    <p>
+        В оригинале, на английском, термин звучит как "shared buffers", т.е. разделяемый буфер или общий буфер.
+        На русский этот термин переводят как буферный кеш.
+    </p>
+
+    <p>
+        Давайте разбираться.
+        Для чего используется shared buffers в PostgreSQL? Shared buffers - это область памяти выделяемая для хранения
+        страниц жесткого диска в оперативной памяти. К shared buffers имеют доступ все backend-процессы.
+    </p>
+
+    <ul>
+        <li>
+            Кеш - хранилище для быстрого доступа к часто используемым данным или результатам операций.
+        </li>
+        <li>
+            Буфер - временное хранилище для сглаживания различий в скорости обработки данных между компонентами.
+        </li>
+        <li>
+            Буферный кеш - объединяет функции буфера и кеша для оптимизации работы системы,
+            увеличивая ее производительность за счет минимизации задержек и снижения нагрузки на ресурсы.
+            "page cache" в Linux - это пример буферного кеша.
+        </li>
+    </ul>
+
+    <h4>DRY-принцип</h4>
+
+    <p>
+        Обсудили преимущества и недостатки DRY, когда DRY замедляет разработку, DRY в данных и в коде.
+    </p>
+</div>
+</body>
+</html>
