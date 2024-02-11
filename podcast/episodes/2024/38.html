@@ -1,0 +1,119 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 38. Go 1.22</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>38. Go 1.22</h1>
+        <h2>11.02.2023</h2>
+    </hgroup>
+
+    <p>
+        <a href="https://bknd.pro/podcast-files/038_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://go.dev/doc/go1.22">Go 1.22 release notes</a></li>
+        <li><a href="https://antonz.org/go-1-22/">Интерактивная заметка к релизу Go 1.22 (Anton Zhiyanov)</a></li>
+        <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1619047">Let's Encrypt: CAA Rechecking bug</a></li>
+        <li><a href="https://www.youtube.com/watch?v=Ks1pw1X22y4">Отличное объяснение LFSR алгоритма для генерации случаных чисел (13 мин.)</a></li>
+    </ul>
+
+    <h4>Go 1.22</h4>
+
+    <p>
+        Go 1.22 вышел 6 февраля 2024. В этом выпуске поговорим о главных изменениях.
+    </p>
+
+    <p>
+        <strong>Итератор цикла for</strong> теперь будет в области видимости одной итерации, а не всего цикла.
+        Это позволит избежать частых ошибок при вызове go-рутин внутри цикла с использованием итератора.
+        Даже опытные разработчики допускают ошибки связанные с замыканиями и итераторами.
+        Например, задокументированная проблема, связанная с этим поведением обнаружилась 4 года назад,
+        связана с речекером в Let's Encrypt (некритичный баг): выдача сертификата на основе
+        <abbr title="Certification Authority Authorization">CAA</abbr>-записи возможна
+        только единожды в течение 8 часов. Если прошло более 8 часов с момента последней проверки, то
+        нужно проверить CAA-запись заново. Проблема случилась как раз с циклом проверки этих CAA-записей.
+        Вместо нескольких доменов проверялся один и тот же (последний).
+        Переменная-итератор будет переприсваиваться для каждой итерации цикла и в замыкании (кложуре)
+        будет использоваться копия.
+        Этот функционал уже был доступен в Go 1.21, но только в экспериментальном режиме.
+        В Go 1.22 он станет стандартным.
+    </p>
+
+    <p>
+        <strong>range для integer</strong> позволяет быстро проитерироваться по числовому ряду от 0 до n,
+        где n - целое неотрицательное число. Ничего сверх этого. Напомню, что range - это клауза для итерации for-цикла
+        по элементам массива, строки, map, канала. В каждом случае range возвращает разный набор значений.
+    </p>
+
+    <p>
+        <strong>Улучшение производительности</strong> рантайма Go: почти все Go-прогаммы будут потреблять на 1%
+        меньше RAM и CPU благодаря оптимизации работы с памятью. Тут стоит напомнить про связь памяти и
+        производительности CPU.
+        Чем меньше памяти потребляет программа, тем больше ресурса в кешах процессора (L1, L2, L3).
+        Меньше памяти - быстрее работает сборщик мусора.
+    </p>
+
+    <p>
+        <strong>2-14% ускорения программ с <abbr title="Profile-Guided Optimization">PGO</abbr></strong>.
+        PGO - это техника оптимизации, при которой программа компилируется с учетом результата её профайлинга.
+        Включаем <code>runtime/pprof</code>, запускаем профилировщик, складываем результат профилирования в
+        <code>default.pgo</code> и кладем рядом с <code>main.go</code> файлом. Выполняем <code>go build</code> еще раз
+        и на выходе получаем оптимизированную версию программы. Если ваша программа использует много рефлексии,
+        например, JSON кодирование-декодирование, то PGO может ускорить вашу программу.
+    </p>
+
+    <p>
+        <strong>Добавление <code>math/rand/v2</code></strong> в SDK помимо быстрых алгоритмов генерации случайных чисел
+        привнесло и стандарт для Go SDK по версионированию пакетов. Теперь новая версия пакета будет размещаться в
+        оригинальной директории с префиксом <code>vN</code>, где N - это номер версии.
+        Пакет в директории <code>vN</code> будет по прежнему иметь имя <code>math/rand</code>.
+        Генератор случайных числе в <code>math/rand</code> не должен использоваться для длинной последовательности чисел,
+        т.к. он дает предсказуемый результат. Вместо этого рекомендуется использовать <code>crypto/rand</code> пакет.
+        В новом пакете старый (первые имплементации датируются серединой прошлого века,
+        в Go использовалась одна из многих его вариаций)
+        добрый (и невероятно простой в имплементации) алгоритм LFSR заменен на более современные
+        <code>ChaCha8</code> (2008 год) и <code>PCG</code> (2014 год).
+    </p>
+
+    <p>
+        <strong>Добавлены URL-паттерны в ServeMux</strong> и теперь можно указывать в строке методы HTTP-запроса,
+        а также параметры подстановки в фигурных скобках. В паттерне можно указывать спец символы:
+        <code>{$}</code> - конец строки;
+        <code>{name}</code> - параметр подстановки (может занимать только целый сегмент);
+        <code>{name...}</code> - именованное окончание URL-пути.
+        Получать значением параметра подстановки можно с помощью метода <code>PathValue("name")</code>.
+    </p>
+
+    <p>
+        Добавлена <strong>функция <code>slices.Concat</code></strong> для слияния N слайсов.
+        По прежнему в Go нет generic функций <code>Map, Filter, Reduce</code>, но это было намеренное решение.
+        Ожидается, что эти функции должны стать частью <a href="https://github.com/golang/go/discussions/47203#discussioncomment-1034432">streams API</a>.
+    </p>
+</div>
+</body>
+</html>
