@@ -1,0 +1,89 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 39. Книги: Мониторинг PostgreSQL; The Essence of SQL</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>39. Книги: Мониторинг PostgreSQL; The Essence of SQL</h1>
+        <h2>18.02.2023</h2>
+    </hgroup>
+
+    <p>
+        <a href="https://bknd.pro/podcast-files/039_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://postgrespro.ru/education/books/monitoring">Мониторинг PostgreSQL. Лесовский А. В.</a></li>
+        <li><a href="https://postgrespro.ru/education/books/internals">PostgreSQL 15 изнутри. Рогов Е. В.</a></li>
+        <li><a href="https://www.interdb.jp/pg/index.html">The Internals of PostgreSQL</a></li>
+        <li><a href="https://www.amazon.com/Essence-SQL-Guide-Learning-Amount/dp/0964981211">"The Essence of SQL", Дэвид Розенштейн</a></li>
+    </ul>
+
+    <h4>"Мониторинг PostgreSQL", Алексей Лесовский</h4>
+
+    <p>
+        Книга невероятна хороша именно практическим применением.
+        Этим она мне больше нравится, чем более известная книга "PostgreSQL изнутри" от Рогова.
+        Идеальный набор для чтения:
+        книга Лесовского и за глубиной обращаться к сайту Хиронобу Сузуки "The Internals of PostgreSQL", книге Рогова
+        и документации.
+        Из книги Лесовского вы узнаете: значение представлений из системного каталога, в каком состоянии СУБД,
+        какие выполняются запросы и какие транзакции подвисли, оценить время уходящее на блокировки?,
+        как используется память и кеши, активность в WAL, раздувание таблиц и индексов, очистка (vacuum) и автоочистка.
+        В итоге по мере чтения я вооружился Hex-редактором (ImHex, порекомендуйте лучше, если знаете) и залезаю
+        активно в файлы данных в директории <code>pgdata/</code>.
+        Книга рассчитана на медленное чтение. Я вовсе не ставлю перед собой задач прочесть главу в какой-то срок,
+        потому что для меня эта книга как навигатор, к котором я возвращаюсь после очередного заныривания в детали
+        работы PostgreSQL.
+        Крайне рекомендую. Думаю в течение ближайшего полугода у меня будет немало тем про работу PostgreSQL.
+    </p>
+
+    <h4>"The Essence of SQL", Дэвид Розенштейн</h4>
+
+    <p>
+        В нашем новом выпуске подкаста мы поговорим о книге "The Essence of SQL" от Дэвида Розенштейна. Эта книга, хоть
+        и не так известна и довольно старая (1997 год), на самом деле – одна из самых крутых по SQL. Мало кто про неё
+        знает, но те, кто читал, в отзывах на Амазоне пишут, что она им очень помогла. Даже опытные разработчики,
+        которые пишут свои книги по SQL, говорят, что это лучшая книга для основ.
+
+        Почему эта книга так хороша? Она просто и ясно объясняет базовые штуки в SQL, помогает лучше понимать, как
+        строить запросы, не углубляясь в сложную терминологию. Особенно полезна она будет для тех, кто уже немного
+        знаком с SQL. Новичкам может показаться сложной, возможно, придется перечитать несколько раз.
+
+        Мы еще обсудим, как в книге разъясняются важные моменты, которые обычно пропускают – например, как в реляционных
+        базах данных правильно организовывать данные. В книге есть классный пример про таблицу с машинами и их
+        владельцами, который показывает, как надо работать с такими данными.
+
+        Также поговорим о том, как SQL обрабатывает запросы, когда надо, например, найти всех владельцев Тойоты. Или
+        когда надо узнать, у кого несколько машин. Эти примеры помогут понять, как работать с запросами, когда кажется,
+        что информации не хватает.
+
+        И еще коснемся, как переводить "отрицание" из обычного языка в SQL-запросы, чтобы находить данные по сложным
+        условиям.
+    </p>
+</div>
+</body>
+</html>
