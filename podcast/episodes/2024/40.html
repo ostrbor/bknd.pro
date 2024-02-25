@@ -1,0 +1,197 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 40. MVCC, nocodb, уольнения в IT</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>40. MVCC, nocodb, уольнения в IT</h1>
+        <h2>25.02.2023</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/65db9f3f4fa56a0016ad14c8?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/040_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://dl.acm.org/doi/10.1145/356842.356846">Concurrency Control in Distributed Database Systems (PDF)</a></li>
+        <li><a href="https://www.youtube.com/watch?v=gAE_MSQtqnQ">Презентация Брюса Мамджина (YouTube)</a></li>
+        <li><a href="https://momjian.us/main/writings/pgsql/mvcc.pdf">Презентация Брюса Мамджина (PDF)</a></li>
+        <li><a href="https://github.com/nocodb/nocodb">nocodb/nocodb (40,9 stars)</a></li>
+        <li><a href="https://layoffs.fyi/">Трекер увольнений со списками уволенных</a></li>
+        <li><a href="https://news.crunchbase.com/startups/tech-layoffs/">Трекер увольнений на Crunchbase</a></li>
+        <li><a href="https://x.com/TheLaurenChen/status/1594101861564534784?s=20">Twitter before and after</a></li>
+        <li><a href="https://simplex.chat/">SimpleX Chat</a></li>
+    </ul>
+
+    <h4>Что такое MVCC (Multi-Version Concurrency Control)?</h4>
+
+    <p>
+        Концепция MVCC была сформулирована в 1981 году в статье "Concurrency Control in Distributed Database Systems"
+        (Бернштейн, Гудман). PostgreSQL (c 1986 года до 1995, Ingres) был новатором в том, что реализовал этот механизм.
+    </p>
+
+    <p>
+        MVCC напрямую решает проблему Atomicity, Consistency и Isolation (из ACID) в транзакциях.
+    </p>
+
+    <ul>
+        <li>
+            <strong>Atomicity</strong>: каждая транзакция выполняется либо полностью, либо полностью возвращает
+            состояние до исходного. Благодаря MVCC мы работаем со срезом данных, который не изменяется во время
+            транзакции.
+        </li>
+        <li>
+            <strong>Consistency</strong>: данные всегда находятся в консистентном состоянии. Благодаря MVCC мы
+            работаем с версиями данных, которые не изменяются во время транзакции.
+        </li>
+        <li>
+            <strong>Isolation</strong>: транзакции не блокируют друг друга. Благодаря MVCC мы работаем с версиями
+            данных, которые не изменяются во время транзакции.
+        </li>
+    </ul>
+
+    <blockquote>Readers never block writers and writers never block readers</blockquote>
+
+    <p>
+        Механизм, обеспечивающий высококонкурентный доступ к данным в базе данных.
+        Понимание MVCC лежит в основе ясного понимания работы режимов изоляции в PostgreSQL.
+    </p>
+
+    <p>
+        Реализация MVCC предполагает <strong>накапливание изменений</strong> в виде версий данных.
+        Таким образом, каждая запись в таблице может иметь несколько версий.
+        <code>INSERT</code> добавляет запись. <code>DELETE</code> <strong>помечает</strong> запись как удаленную.
+        <code>UPDATE</code> - это комбинация <code>DELETE</code> + <code>INSERT</code>.
+        Таким образом, следует учитывать, что обновление данных с высокой частотой может замедлять производительность
+        и увеличивать объем данных. Например, были ли какой-то пользователь онлайн или нет лучше хранить в
+        быстром key-value хранилище. Особенно, если в таблице пользователя много колонок и они хранят объемные данные
+        (при обновлении эти данные будут дублироваться в новой версии строки).
+        Также, если мы <strong>делаем бэкап</strong>, то на время бэкапа нужно сохранять старые версии строк,
+        которые были помечены как удаленные, а это также приводит к увеличению объема данных,
+        т.к. физически строка не удаляется до окончания резервного копирования.
+    </p>
+
+    <p>
+        Благодаря версионированию строк мы получаем:
+    </p>
+
+    <ul>
+        <li>Конкурентный доступ: разные транзакции могут видеть разные версии данных.</li>
+        <li>Однородность (consistency): мы можем получить доступ к срезу данных в момент выполнения транзакции.</li>
+        <li>Чтение не блокирует запись и наоборот.</li>
+        <li>Откат транзакции.</li>
+    </ul>
+
+    <p>
+        Но как PostgreSQL различает версию строки, с чем работать, а с чем нет? Для этого используется
+        <strong>транзакционный идентификатор</strong> (XID). XID - это 32-битное число, которое
+        уникально идентифицирует транзакцию. Каждая транзакция имеет свой XID. Когда транзакция начинается,
+        она получает новый XID. В PostgreSQL часто префикс X обозначает транзакционные объекты.
+    </p>
+
+    <p>
+        При создании строки в таблице, PostgreSQL сохраняет в ней два значения: XMIN и XMAX. XMIN - это XID транзакции,
+        которая создала строку. XMAX - это XID транзакции, которая удалила строку.
+    </p>
+
+    <p>
+        <strong>MVCC snapshot</strong> состоит из XID и текущих выполняемых транзакций. Мы сканируем строчки и
+        отбрасываем те, у которых XMIN больше XID текущей транзакции. Также мы игнорируем строки, у которых XMIN
+        хоть и меньше XID, но находится в списке выполняемых транзакций. Отбрасываются и строки, у которых XMAX
+        меньше XID текущей транзакции.
+    </p>
+
+    <p>
+        Учитывая особенности MVCC, нужно понимать, что <strong>часто обновляемые таблицы лучше делать компактными</strong>,
+        т.к. каждое обновление строки - это копирование предыдущей версии. Т.е. возможно стоит задуматься от нормализации
+        или выделении объемных полей из часто обновляемой таблицы. Несмотря на богатые возможности PostgreSQL,
+        под нагрузкой стоит <strong>сокращать размер транзакции</strong>, т.к. чем дольше выполняется каждая транзакция, тем
+        дольше хранятся устаревшие версии строк. А чем больше строк, тем хуже общая производительность.
+        Это же касается бэкапов. Наилучшее решение - это <strong>выполнение резервного копирования на реплике</strong>.
+    </p>
+
+    <h4>nocodb</h4>
+
+    <p>
+        Используя nocodb можно создать что-то вроде Excel файла с возможностью фильтрации, сортировки и группировки данных.
+        А также с одновременным доступом нескольких пользователей. Это может быть удобно для небольших проектов,
+        когда заранее известно, что кроме этого инструмента ничего не понадобится. Отойти от рельс nocodb очень сложно.
+    </p>
+
+    <h4>Массовые увольнения в IT-компаниях</h4>
+
+    <p>
+        В США в 2023 году было уволено 191 000 человек из IT-компаний. Увольнения продолжаются.
+    </p>
+
+    <p>Лидеры по увольнениям в 2023 году:</p>
+    <ul>
+        <li>Amazon [16,080 roles];</li>
+        <li>Alphabet [12,000 roles];</li>
+        <li>Microsoft [11,158 roles];</li>
+        <li>Meta [10,000 roles].</li>
+    </ul>
+
+    <p>
+        Заметные цифры по увольнениям в IT-компаниях:
+    </p>
+    <ul>
+        <li>Shopify: 10% (~1000), лето 2022</li>
+        <li>Snap Inc: 20% (~1280), лето 2022</li>
+        <li>Stripe: 14% (~1000), осень 2022</li>
+        <li>Twitter: 50% (~3700), осень 2022</li>
+        <li>Coinbase: 20% (~950), зина 2023</li>
+    </ul>
+
+    <p>
+        Илон Маск с нашумевшим увольнением работников из компании Twitter/X был не в числе первых: до него уже
+        начали практиковать массовые увольнения. Тут Илон скорее заложник своей популярности.
+        До Илона в Coinbase было уволено 18% сотрудников (лето 2022),
+        Stripe 14% (~1050),
+        Lyft 15% (~760),
+        Peloton 70% (~5600),
+        Twilio 32% (~2600),
+        Shopify 30% (~3300) и т.д.
+        К примеру, <strong>Snapchat</strong> уволил почти 2000 сотрудников из 6000.
+    </p>
+
+    <p>
+        Почему это происходит?
+        Первая причина - over-hiring в период пандемии.
+        Вторая - набор сотрудников положительно влиял на курс акций компаний и стейкхолдеры от этого выигрывали.
+        Третья - компании переоценивают свои потребности в персонале и создают больше количество узкоспециализированных
+        позиций.
+    </p>
+
+    <p>
+        Не доверяйте свои секреты Snapchat. Если вы хотите действительно безопасный канал коммуникации, то рассмотрите
+        SimpleX Chat.
+    </p>
+</div>
+</body>
+</html>

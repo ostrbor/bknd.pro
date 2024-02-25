@@ -14,6 +14,11 @@ code {
     padding: 2px 4px;
     white-space: nowrap;
 }
+blockquote {
+    border-left: 4px solid var(--bright-green);
+    padding-left: 1em;
+    margin: 0;
+}
 #other-platforms a {
     margin-right: 0.5em;
     font-size: 0.8em;
