@@ -1,0 +1,124 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 42. </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+    <style>
+        table.memory td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+        }
+        table.memory td.deleted {
+            background-color: #d5d5d5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>42. Go 1.22.1, PostgreSQL в облаке, пакет slices</h1>
+        <h2>10.03.2023</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/65edf3c655a1700016a90e81?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/042_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://go.dev/blog/generic-slice-functions">Robust generic functions on slices</a></li>
+        <li><a href="https://github.com/golang/go/issues?q=milestone%3AGo1.22.1">Go 1.22.1 milestone</a></li>
+        <li><a href="https://blog.peerdb.io/comparing-postgres-managed-services-aws-azure-gcp-and-supabase">Comparing Postgres Managed Services: AWS, Azure, GCP and Supabase</a></li>
+    </ul>
+
+    <h4>Улучшения в пакете slices</h4>
+    <p>
+        В Go 1.21, т.е. предыдущей стабильной версии, вызов <code>slices.Delete[S ~[]E, E any](s S, i, j int) S</code>
+        не обнулял значения удаленных элементов и они могли остаться в памяти. Если количество удаленных элементов
+        велико, а тем более, если это, например, указатели на большие объекты, то это могло привести к утечкам памяти.
+        В Go 1.21 дженерик-удаление - это однострочная функция.
+    </p>
+
+    <p>
+        Подлежащий массив слайса <code>s</code> до удаления в Go 1.21:
+    </p>
+    <table class="memory">
+        <tr>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+        </tr>
+    </table>
+
+    <p>
+        Ниже подлежащий массив слайса после удаления в Go 1.21 <code>slices.Delete(s, 1, 4)</code>.
+        Серым обозначены удаленные элементы слайса:
+    </p>
+    <table class="memory">
+        <tr>
+            <td>0</td>
+            <td>4</td>
+            <td class="deleted">2</td>
+            <td class="deleted">3</td>
+            <td class="deleted">4</td>
+        </tr>
+    </table>
+
+    <p>
+        У команды разработчиков Go было и другое решение - предоставить пользователю самому обнулять ненужные элементы.
+        Но это бы привело, по их мнению, к тому, что нужно постоянно помнить о том, что удаление способно привести
+        к утечкам памяти. В итоге команда решила, что пусть уж лучше Go бережливо относится к памяти.
+    </p>
+
+    <p>
+        В Go 1.22 удаленные элементы в хвосте слайса обнуляются. То же самое касается функций пакета <code>slices</code>:
+        <code>Compact()</code>, <code>CompactFunc()</code> и <code>DeleteFunc()</code>.
+    </p>
+
+    <h4>Сравнение PostgreSQL в облаках: AWS, Azure, GCP и Supabase.</h4>
+    <p>
+        По ссылке вы можете глянуть на сравнение производительности и стоимости развертывания PostgreSQL в облаках.
+        Автор арендовал на время теста машины с 2vCPU, 8GB RAM и 100GB SSD и запустил pgbench на сутки.
+        По итогу самым производительным оказался AWS, но одновременно и самым дорогим (USD141), а самым доступным
+        Supabase (USD113; низкая цена судя по всему обеспечена ARM процессорами).
+    </p>
+
+    <p>
+        Немного про ARM процессоры: они более энергоэффективны, допускают высокую плотность размещения ядер
+        без перегрева, а также ARM Holdings поощряет конкуренцию: любой желающий может по лицензии создавать
+        свои процессоры на базе архитектуры ARM.
+    </p>
+
+    <h4>Go 1.22.1</h4>
+    <p>
+        Версия go1.22.1 (выпущена 2024-03-05) включает в себя исправления безопасности для пакетов crypto/x509,
+        html/template, net/http, net/http/cookiejar и net/mail, а также исправления ошибок для компилятора, команды go,
+        среды выполнения, команды trace и пакетов go/types и net/http.
+    </p>
+</div>
+</body>
+</html>
