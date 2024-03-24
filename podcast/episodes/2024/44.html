@@ -1,0 +1,148 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 44. Go tracer, 1BRC</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>44. Go tracer, 1BRC</h1>
+        <h2>24.03.2023</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/660061b1e414a60016862c5c?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/044_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://go.dev/blog/execution-traces-2024">More powerful Go execution traces</a></li>
+        <li><a href="https://gotraceui.dev/">gotraceui</a></li>
+        <li><a href="https://blog.felixge.de/reducing-gos-execution-tracer-overhead-with-frame-pointer-unwinding/">Reducing Go Execution Tracer Overhead With Frame Pointer Unwinding</a></li>
+    </ul>
+
+    <h4>Улучшенный трейсинг в Go</h4>
+    <p>
+        Речь пойдет про статью, написанную Michael Knyszek, автора proposal по улучшению трейсинга в Go.
+    </p>
+
+    <p>
+        Напомню, пакет <code>runtime</code> содержит инструментарий для профайлинга ресурсов: CPU и памяти.
+        Собрав статистику, можно анализировать её с помощью <code>go tool pprof</code> и обнаружить утечки памяти.
+    </p>
+
+    <p>
+        <code>runtime/trace</code> накапливает события во время выполнения программы: создание, блокировка,
+        разблокировка go-рутин, момент передачи контроля системному вызову, его блокировка, события GC, работу тредов.
+        Для анализа этих собранных данных используется <code>go tool trace</code>. Также можно использовать
+        <a href="https://gotraceui.dev/">gotraceui</a>. В этих инструментах на временной шкале можно увидеть
+        события, которые происходили во время выполнения программы.
+    </p>
+
+    <p>
+        Благодаря <code>runtime/trace</code> профайлеру можно обнаружить проблемы конкурентного доступа к ресурсам,
+        например, когда много go-рутин блокируются на чтение из/запись в канал. Для удобной навигации и расстановки
+        нужных вам акцентов можно использовать задачи (NewTask), которые объединяют регионы (WithRegion()) в группы.
+        Регион - это область на временной шкале визуализатора, где происходит какое-то событие. Также можно добавить
+        лог запись в трейсинг данные в нужном вам месте и увидеть её в визуализаторе в контексте go-рутины, которая её
+        вызвала.
+    </p>
+
+    <p>
+        Go Execution Tracer (<code>runtime/trace</code>) был создан как инструмент для live профайлинга и для
+        обеспечения производительности был использован бинарный формат данных статистики и получение точного времени
+        из регистра процессора TSC (комнад RDTSC). Несмотря на это <code>runtime/trace</code> потреблял от 10 до 20%
+        CPU для большинства приложений.
+    </p>
+
+    <p>
+        Причина потери производительности была в stack unwinding (stack walking). Это процесс, когда профайлер
+        собирает стек вызовов для каждого события, пробегая по по фреймам этого стека. Помимо этого нужно обогатить
+        данные именем файла и строкой кода для вывода данных в визуализаторе.
+        <a href="https://github.com/golang/go/blob/6b8b7823c7fd9f3f2317f657120dc2e965d97b77/src/runtime/traceback.go?ref=blog.felixge.de#L32">gettraceback</a>
+        (пакет <code>runtime</code>) функция исторически была реализована асинхронной, чтобы как можно меньше
+        препятствовать работе программы, кроме этого пакет <code>trace</code> появился в версии Go 1.5 до того как
+        в стеке вызовов был указатель на фрейм, где выполняется программа. С появлением frame pointer'а в Go 1.7
+        оптимизация стала возможна, но ей попросту никто не занимался.
+    </p>
+
+    <p>
+        Благодаря проведенной оптимизации начиная с Go 1.21 <code>runtime/trace</code> потребляет 1-2% CPU.
+    </p>
+
+    <p>
+        Пропоузал можно почитать здесь:
+        <a href="https://github.com/golang/proposal/blob/master/design/60773-execution-tracer-overhaul.md">proposal 60773</a>.
+        Главная цель - добавить в <code>runtime/trace</code> возможность стриминга данных трейсинга.
+        Для этого необходимо разбить накопленные данные на партиции, что и было сделано и уже доступно в Go 1.22.
+        Но <code>go tool trace</code> еще не зарефакторен, чтобы использовать новый формат стриминговых данных.
+    </p>
+
+    <h4>The One Billion Row Challenge (1BRC)</h4>
+    <p>
+        Я хотел рассказать про этот челлендж еще в позапрошлом выпуске, но болел и мы решили сделать выпуск коротким.
+        А тут вышла еще одна статья, лучше предыдущей и раз уж мы затронули тему оптимизации, давайте обсудим
+        этот челлендж. Важно, что автор - не мастер по оптимизации и если мне попадется статья от эксперта, то
+        обязательно поделюсь с вами.
+    </p>
+
+    <p>
+        Итак, задача проста: прочитать файл с 1 миллиардом строк (13Гб) и вывести репорт. Каждая строка содержит 2 поля,
+        разделенные ";": название метеорологической станции (строка), температура (плавающая точка).
+        Отчет должен содержать: <code>имя_станции=мин,сред,макс_температура</code>, разделенные запятой.
+    </p>
+
+    <p>
+        Решение задачи "в лоб" дает результат 95 секунд. Следующий шаг добиться просто быстрого считывания файла, т.е.
+        просто открываем файл, вычитываем все и дискардим, закрываем файл. Можно файл читать через
+        <code>bufio.Scanner</code>, через <code>bufio.Reader</code> и напрямую, используя метод <code>Read()</code>.
+        Метод <code>Read()</code> позвлоляет читать в слайс определенного размера. Слайс размером 4Мб дал наилучший
+        результат - 0.98 секунды.
+    </p>
+
+    <p>
+        Следующий шаг - быстрый парсинг. Как раз pprof показывает, что больше всего времени уходит на
+        <code>bytes.Split()</code> и <code>strconv.ParseFloat()</code>. Для этого пишем кастомный Split(), который
+        копирует данные в заранее выделенный буфер, а не создает его каждый раз. А с темпиратурой работаем как с
+        целым числом - читаем побайтово температуру и если это число, то добавляем его в разряд единиц, предварительно
+        умножив результат на 10.
+    </p>
+
+    <p>
+        Далее, можно использовать <a href="https://github.com/dolthub/swiss">Swiss Map</a> - быстрая хэш-таблица,
+        поддерживаемая комьюнити. Swiss Map использует быстрый механизм хеширования и механизм параллельного лукапа.
+    </p>
+
+    <p>
+        Можно читать из файла и писать полученный результат в канал, из которого воркеры (go-рутины) будут читать.
+        А можно просто сделать дескриптор файла доступным/видимым для всех go-рутин.
+    </p>
+
+    <p>
+        Выводы: используем буферы, делаем профайлинг.
+    </p>
+</div>
+</body>
+</html>
