@@ -1,0 +1,127 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 46. Экстремальный бекап, новый GoLand, UUIDv7</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+    <style>
+        table.memory td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+        }
+        table.memory td.deleted {
+            background-color: #d5d5d5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>46. Экстремальный бекап, новый GoLand, UUIDv7</h1>
+        <h2>07.04.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/661319d0da0a0800168feb18?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/046_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://postgrespro.github.io/pg_probackup/">Документация pg_probackup</a></li>
+        <li><a href="https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-04.html#name-new-formats">Драфт с новыми версиями UUID (v6, 7, 8)</a></li>
+        <li><a href="https://blog.jetbrains.com/go/2024/03/26/data-flow-analysis-for-go/">DFA в новом GoLand 2024.1</a></li>
+    </ul>
+
+    <h4>pg_probackup</h4>
+
+    <p>
+        Если у вас размер БД менее 100Гб, то достаточно простой конфигурации: MASTER => REPLICA => BACKUP.
+        Если размер БД более 100Гб, то стоит знать про разные подходы к резервному копированию.
+    </p>
+
+    <p>
+        <code>pg_basebackup</code> работает по принципу копирования файлов: коприуется весь кластер целиком.
+        На момент завершения копирования, файлы могут быть изменены.
+        Для того чтобы вернуться к консистентному состоянию, необходимо "проиграть" WAL-файлы.
+    </p>
+
+    <p>
+        <code>pg_probackup</code> инкрементальное копирование, т.к. копируются только измененные данные.
+        Для максимально эффективного инкрементального бекапа, можно собрать PostgreSQL со специальным трекером
+        изменений страничек (page tracking). При этом, во время бекапа, pg_probackup будет использовать данные
+        этого трекера, чтобы понимать, какие страницы были изменены. Благодаря этому отдельному трекеру,
+        для PostgreSQL бекап - не транзакция, как в случае с pg_dump и резервное копирование выполняется через
+        копирование файлов.
+        Напомню, что <code>pg_dump</code> (pg_dumpall) выполняет выборку данные в рамках одной большой
+        транзакции с уровнем изоляции <code>REPEATABLE READ</code>.
+    </p>
+
+    <p>
+        Бэкапы хорошо проверять. Иногда это можно сделать с пользой для вашего клиента: например, ежедневно
+        восстанавливать дневной бэкап на выделенный сервер для аналитиков. Как правило у аналитиков тяжелые запросы
+        и они могут негативно сказаться на производительности основного сервера. Т.е. мы и бэкап проверили
+        (как правило атоматический цикл) и снизили нагрузку. Подобные дневные бэкапы также могут использовать
+        тестировщики для проверки новых фич на объеме данных.
+    </p>
+
+    <h4>UUID v7</h4>
+
+    <p>
+        С момента создания UUID стали активно использовать в качестве первичного ключа во многих БД, особенно в
+        распределенных системах. Но UUID v4 (random) не всегда удобен, т.к. не удобно сортировать и партиционировать.
+        Выделяют еще такие сомнительные недостатки, что в UUIDv1 хранится MAC-адрес и временная метка, что может
+        нести риски безопасности. Медленные UUIDv3 и UUIDv5, т.к. используют хэширование.
+    </p>
+
+    <p>
+        Преимущества UUID v7: уникальные, монотонные (первые 48 бит - это Unix timestamp), т.е. удобные для сортировки
+        и партиционирования.
+    </p>
+
+    <h4>GoLand 2024.1</h4>
+
+    <p>
+        Важные обновления:
+    </p>
+
+    <ul>
+        <li>Поддержка Go 1.22.</li>
+        <li>Локальное LLM AI автодополнение кода в комплекте, бесплатно.</li>
+        <li>Ускоренная индекса кода проекта и быстрая подсветка кода.</li>
+    </ul>
+
+    <p>
+        Команда GoLand адаптировала DFA (data flow analysis), используемый в CLion, для поиска ошибок в коде.
+        DFA покажет ошибки, связанные с неверными условиями (condition is always false) даже для случаев когда все
+        сильно запутано и перед условием есть еще куча условий и циклов. Также теперь можно увидеть потенциальные
+        nil pointer dereference.
+    </p>
+
+    <p>
+        JetBrains активно продвигает свой AI Assistant и я планирую его использовать и сравнить с Github Copilot,
+        который использую сейчас. О своем опыте расскажу об этом в следующих выпусках подкаста.
+    </p>
+</div>
+</body>
+</html>
