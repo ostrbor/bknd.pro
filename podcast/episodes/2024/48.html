@@ -1,0 +1,151 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 48. </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>48. Redis больше не FOSS</h1>
+        <h2>21.04.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/662465ec09a93200121a5796?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/048_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="http://invece.org/">Сайт Сальвадора Санфилиппо (Salvatore Sanfilippo)</a></li>
+        <li><a href="https://github.com/redis/redis/pull/13157/">Вот тот самый Pull Request со сменой лицензии</a></li>
+        <li><a href="https://redict.io/">1ый copyleft форк Redis: Redict</a></li>
+        <li><a href="https://www.linuxfoundation.org/press/linux-foundation-launches-open-source-valkey-community">2ой copyleft форк Redis: Valkey</a></li>
+        <li><a href="https://jkatz05.com/post/postgres/postgres-license-2024/">Статья Джонатана Каца о возможности изменения лицензии у PostgreSQL по аналогии с Redis</a></li>
+        <li><a href="https://github.com/valkey-io/valkey">Valkey на Github</a></li>
+        <li><a href="https://andrewkelley.me/post/redis-renamed-to-redict.html/">Статья Andrew Kelley (создатель языка программирования Zig) в поддержку Redict</a></li>
+        <li><a href="https://ssplisbad.com/">Подробно почему SSPL is BAD</a></li>
+        <li><a href="https://github.com/nalgeon/redka">Redka от Антона Жиянова</a></li>
+    </ul>
+
+    <h4>Redis больше не Open Source</h4>
+
+    <p>
+        Redict был написан Сальвадором Санфилиппо. Нам всем он известен под именем Redis.
+
+        Он поддерживал проект на протяжении 11 лет, но в 2018 году
+        потерял к этой деятельности интерес и ущел из проекта, чтобы посвятить себя написанию sci-fi.
+        Он действительно написал книгу "WHOPE" в 2022 и она издана на итальянском и английском языках, доступна
+        на Amazon. Вот что пишет сам Сальвадор о книге:
+    </p>
+
+    <blockquote>
+        The main themes are AI, climate change, programmers, the interaction between humanity and technology.
+    </blockquote>
+
+    <p>
+        Сейчас он пишет эмулятор ZX Spectrum и делится кодом и своими мыслями в github и X.
+    </p>
+
+    <p>
+        После прекращения работы над Redis, Сальвадор передал управление и поддержку компании Redis Labs.
+        Это компания, основанная в 2011 году, с израильскими корнями, головной офис которой находится в Калифорнии.
+        Согласно Wikipedia, R&D офисы компании находятся в Тель-Авиве, Лондоне, Остине (Техас) и Бенгалуру (Южная Индия).
+    </p>
+
+    <p>
+        20 марта 2024, Redis Labs сменили линцензию на проприетарную. Из комментарием к этому мерж-реквесту на GitHub
+        я узнал, что ряд инженеров из Alibaba Cloud, Amazon и многих других компаний, как и волонтеры-одиночки
+        в свободное от работы время из желания развивать открытый программный продукт, делали это на протяжении
+        долгих лет. Комьюнити ожидало, что Redis Labs при возникновении желания разрабатывать свою версию Redis'a,
+        должна сделать форк основного репозитория и найти ему стюартов (человек, который присматривает за проектом).
+        Вместо этого, Redis Labs сменило линцензию на основном репозитории. Это легально, но некрасиво.
+        Жадность победила.
+    </p>
+
+    <p>
+        <strong>Чем плоха новая лицензия Redis'а для нас, конечных пользователей?</strong>
+
+        SSPL (Server Side Public License) - это <strong>проприетарная</strong>
+        лицензия предложенная компанией "MongoDB, Inc", под которой распространяются также известные продукты:
+        Elasticsearch, Kibana, Graylog, которые до определенного моменты были с открытым исходным кодом.
+
+        Все дело в 13ом пункте лицензии: "Offering the Program as a Service.".
+        Короткое резюме лицензии SSPL - никто не имеет права предоставлять прямой доступ к программному продукту под
+        лицензией SSPL без нашего разрешения (и соответсвенно платы).
+        Например, если вы напрямую предоставляете доступ к Graylog документу, то это запрещено.
+        В противном случае вы должны предоставить (цитата):
+    </p>
+
+    <blockquote>
+        Corresponding Source for all programs that you use to make the Program or modified version available
+    </blockquote>
+
+    <p>
+        Проблема здесь в размытой формулировке. Если вы используете компьютер Dell, то судя по всему вы должны
+        предоставить исходники BIOS.
+    </p>
+
+    <p>
+        Redis уже сегодня законченный готовый продукт.
+        Очевидно, что его поддержкой можно было заниматься не прилагая больших усилий, но при этом принося большие
+        выгоды разработчикам и потребителям (ниже цены). Однако, если вы хотите получать прибыль от облачных
+        инсталляций, то copyleft лицензии вам не подойдут.
+    </p>
+
+    <p>
+        <strong>А теперь к хорошим новостям.</strong>
+        По прежнему, все комиты до злосчастного мерж-реквеста доступны под BSD-3 лицензией.
+        Появилось два copyleft форка: Redict (Remote Dictionary, оригинальное название) и Valkey. Оба форканулись от
+        Redis 7.2.4.1. Дрю ДеВолт (Drew DeVault) - стюард Redict и уже выпустили стабильную версию 7.3.0
+        и обещает консервативную (без резких изменений в сторону AI и т.д.) поддержку проекта.
+        А Valkey - под зонтиком Linux Foundation.
+    </p>
+
+    <p>
+        Свою поддержку этим двум форкам уже высказали известные разработчики из мира FOSS. Так, Andrew Kelley,
+        создатель языка Zig (можно писать на C/C++ в перемешку с Zig), поддержал Redict. А Valkey уже собрал 12к+
+        звезд на Github (Redict размещает исходный код на codeberg.org - очень любопытный Git хостинг для
+        FOSS проектов).
+    </p>
+
+    <p>
+        Из экзотики также отмечу <strong>Redka</strong> - Redis на SQLite от Антона Жиянова. На Github уже 2.1к+ звезд.
+    </p>
+
+    <h4>PostgreSQL наращивает популярность</h4>
+
+    <p>
+        Известный ежемесячный репорт по популярности СУБД "DB-engines" сообщает о возрастающей популярности
+        PosgreSQL. В общем рейтинге эта СУБД находится на 4ом месте и, если тренд сохранится (Microsoft SQL Server
+        падает, а PostgreSQL растет), то PostgreSQL имеет все шансы попасть на 3юю строчку, сразу после Oracle и
+        MySQL.
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+</div>
+</body>
+</html>
