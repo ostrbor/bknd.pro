@@ -1,0 +1,131 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 49. nextgres & debezium</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>49. nextgres & debezium</h1>
+        <h2>28.04.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/662dae2fccee9c0011243cae?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/049_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li><a href="https://nextgres.com/a/">Официальный сайт nextgres</a></li>
+        <li><a href="https://github.com/dhamaniasad/awesome-postgres">Awesome Postgres</a></li>
+        <li><a href="https://github.com/dimitri/pgloader">PGLoader, Migrate to PostgreSQL in a single command! (5.1k stars)</a></li>
+        <li><a href="https://github.com/paradedb/paradedb">ParadeDB, Postgres for Search and Analytics (3.9k stars)</a></li>
+        <li><a href="https://github.com/citusdata/citus">Citus, Distributed PostgreSQL as an extension (9.8k stars)</a></li>
+        <li><a href="https://debezium.io/">Debezium</a></li>
+    </ul>
+
+    <h4>nextgres</h4>
+
+    <p>
+        Йона Харрис (Jonah Harris) и Мейсон Шарп (Mason Sharp) на недавней конференции Postgres Conference 2024
+        в Сан Хосе (Калифорния) анонсировали nextgres. nextgres - это пропатченный <code>backend</code> процесс, который
+        имплементирует SQL-протокол MySQL. При работе с nextgres у вас будет ощущение работы с MySQL.
+    </p>
+
+    <p>
+        Авторы этого проекта - активные разработчики как MariaDB, так и PostgreSQL. Среди целей nextgres указано, что
+        в грядущих версиях backend-процесс будет способен работать по протоколам MongoDB и ElasticSearch.
+    </p>
+
+    <p>
+        Уже есть рабочая alfa версия проекта и демонстрация его работы на примере Wordpress + MySQL, где в качестве
+        СУБД используется nextgres, т.е. движок PostgreSQL.
+    </p>
+
+    <p>
+        Но что не так с MySQL? Пока что все хорошо. По-прежнему MySQL - это самая популярная СУБД с открытым исходным
+        кодом. Однако, PostgreSQL стремительно растет (как раз об этом я говорил в конце прошлого эпизода) и
+        завоевывает сердца разработчиков. Так, согласно опросам Stack Overflow в 2022 году PostgreSQL опередил MySQL.
+        MySQL старается не отставать, так в 8ых версиях (8.0, 8.1, 8.2), например, появились индексы на выражения,
+        улучшено партицирование, добавлены привычные нам SKIP LOCKED, SELECT ... FOR UPDATE и т.д. Т.е. MySQL тоже
+        активно развивается, но тред это пока не изменило и выглядит на догоняющий по функционалу продукт.
+    </p>
+
+    <p>
+        Итак, какие варианты использования nextgres могут быть? <strong>Во-первых</strong>, у вас в команде есть компетенции по
+        PostgreSQL и вы не хотите расширять тех. стек. <strong>Во-вторых</strong>, в MySQL нет такого богатого инструментария по
+        расширению СУБД, как в PostgreSQL. В PostgreSQL вы можете найти расширение почти на любой случай жизни.
+        Например, <code>pg_search</code> с реализацией BM25 алгоритма, аналогичный тому, что реализован в ElasticSearch.
+        Ранее упоминаемый <code>pg_cron</code>, <code>citus</code> для превращения PostgreSQL в распределенную СУДБ.
+        И даже такая экзотика вроде <code>PGStorm</code> для использования GPU для ускорения требовательных к CPU
+        задач. Всего перечисленного в MySQL попросту нет. В MySQL вы не разработчик, а в первую очередь клиент СУБД.
+        <strong>В-четвертых</strong>, PostgreSQL отлично работает с большими таблицами благодаря параллельным
+        запросам (parallel query), более продвинутые индексы (их больше, есть partial индексы и т.д.).
+    </p>
+
+    <p>
+        Кстати, если вы хотите уйти от ElasticSearch (как это хотим сделать мы), то обратите внимание на
+        <code>ParadeDB</code>. Это СУДБ для полнотекстового поиска на базе PostgreSQL.
+    </p>
+
+    <p>
+        Для баланса отмечу, что и в MySQL есть ряд преимуществ. <strong>Во-первых</strong>, MySQL Workbench.
+        Это удобная среда разработки, крайне удобна для новичков. Особенно мне нравится возможность создавать
+        Enhanced Entity-Relationship (EER) диаграммы. <strong>Во-вторых</strong>, MySQL все еще более популярен и
+        вы до сих пор встретите готовые раннеры LAMP, MAMP, XAMP и т.д, с MySQL в роли СУБД по-умолчанию.
+        <strong>В-третьих</strong>, исторически много приложений (магазины, CMS, CRM и т.д.) используют MySQL.
+    </p>
+
+    <p>
+        Если вы всё еще не определились с СУДБ, то подумайте про PostgreSQL. У него отличные перспективы.
+    </p>
+
+    <h4>Debezium</h4>
+
+    <p>
+        Хочу рассказать про любопытный продукт, о котором я узнал как раз в контексте миграций с одной СУБД на другую.
+        Это <code>Debezium</code> - сервис, который может подключиться почти к любой популярной СУБД (PostgreSQL,
+        MySQL, MongoDB, Oracle, SQL Server, Cassandra, Spanner и т.д. и отправлять через топик Kafka вам события о
+        вставках, обновлениях и удалениях данных.
+    </p>
+
+    <p>
+        Есть и более простой вариант установки, без Kafka - это <code>Debezium Server</code>. Сервер, с помощью
+        коннекторов читает из СУБД-источника, формут JSON-событие и отправляет в messaging-сервер (поддерживаются
+        Redis, Amazon Kinesis, Apache Pulsar, Google pub/sub).
+    </p>
+
+    <h4>Заметка о работе с pgx.Pool</h4>
+
+    <p>
+
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+</div>
+</body>
+</html>
