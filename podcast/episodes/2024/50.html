@@ -1,0 +1,85 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 49. nextgres & debezium</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5hY2FzdC5jb20vcHVibGljL3Nob3dzLzY0NzI3YzA3ZTY4OTk3MDAxMmZiMWMyMw">Google</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>50. Traefik 3, cmp.Or в Go 1.22</h1>
+        <h2>05.05.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/6637a3632c27a300120e1f13?theme=light"
+                frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/050_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>cmp.Or в Go 1.22</h4>
+
+    <p>
+        В Go 1.22 появилась функция cmp.Or, которая вызвала обсуждения среди разработчиков из-за её простоты и
+        потенциальной пользы. Функция cmp.Or позволяет вернуть первое ненулевое значение из предоставленных аргументов,
+        что удобно, например, для выбора значения переменной окружения или её дефолтного значения, если она не
+        установлена.
+    </p>
+
+    <p>
+        Для ознакомления с предысторией и обсуждением любой функции в языке Go можно использовать GitHub. Находя нужный
+        файл в репозитории Go, можно кликнуть на номер строки, выбрать "Git Blame" и проследить коммиты, добавляющие
+        изменения, что также предоставляет ссылки на соответствующие обсуждения.
+    </p>
+
+    <p>
+        В случае с cmp.Or было интересно, что предложение об этой функции появилось примерно год назад и изначально
+        встретило неодобрение сообщества, так как аналогичное обсуждение уже проводилось годами ранее. Несмотря на это,
+        функция нашла своё место в языке благодаря своей очевидной полезности в определённых контекстах, как, например,
+        в проектах Kubernetes, где разработчики часто реализовывали подобную логику.
+    </p>
+
+    <p>
+        Было также обсуждение нейминга функции. Изначальное предложение назвать функцию First было отвергнуто, так как
+        оно могло быть не совсем интуитивным. В конце концов, название Or было выбрано по аналогии с другими языками,
+        несмотря на то, что оно также может вызвать вопросы из-за отличий в логике.
+    </p>
+
+    <p>
+        Стоит отметить две особенности cmp.Or. Во-первых, все аргументы должны соответствовать ограничению comparable,
+        то есть функция не принимает любые типы данных. Вторая особенность заключается в отсутствии "short circuit
+        evaluation", то есть все аргументы функции вычисляются до вызова функции, что отличается от ленивого вычисления,
+        применяемого в типичных операциях с логическим "или".
+    </p>
+
+    <p>
+        Таким образом, cmp.Or пример того, как даже простые идеи могут вызывать широкое обсуждение и быть полезными в
+        разработке, подчёркивая важность обсуждений и обратной связи в сообществе программистов.
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+</div>
+</body>
+</html>
