@@ -222,6 +222,46 @@
         Самый важный пакет, <strong>app</strong> содержит бизнес логику.
     </p>
 
+    <h4>Работа с СУБД</h4>
+
+    <p>
+        Главный интерфейс <code>Store</code> (файл: server/channels/store/store.go)
+        состоит из семантически сгруппированных методов, каждый из которых
+        возвращает интерфейс, например, <code>TeamStore</code>:
+    </p>
+
+    <pre>type Store interface {
+	Team() TeamStore
+	Channel() ChannelStore
+	Post() PostStore
+	RetentionPolicy() RetentionPolicyStore
+	Thread() ThreadStore
+	User() UserStore
+	Bot() BotStore
+    // и еще 60+ сигнатур методов
+}
+    </pre>
+
+    <p>
+        Вот так выглядит TeamStore:
+    </p>
+
+    <pre>type TeamStore interface {
+	Save(team *model.Team) (*model.Team, error)
+	Update(team *model.Team) (*model.Team, error)
+	Get(id string) (*model.Team, error)
+	GetMany(ids []string) ([]*model.Team, error)
+    // и еще 40+ сигнатур методов
+}
+</pre>
+
+    <p>
+        Этот интерфейс реализован несколькими структурами, главная из которых <code>SqlStore</code>
+        (здесь выполняются SQL-запросы). Также есть реализации интфейса <code>Store</code> для мока работы с СУБД в
+        тестах, для трейсинг-обертки, для повтора выполнения запроса при ошибке сериализации транзакций в PostgreSQL
+        или дедлоков в MySQL, для кеш обертки и т.д.
+    </p>
+
     <h4>Выводы</h4>
 
     <p>
