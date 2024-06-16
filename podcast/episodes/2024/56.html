@@ -1,0 +1,238 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 56. rclone under the hood</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>56. rclone under the hood</h1>
+        <h2>16.06.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/666f3633ce005e001336f1c7?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/056_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://github.com/rclone/rclone">rclone (44k+ stars)</a>
+        </li>
+        <li>
+            <a href="https://docs.openstack.org/swift/latest/">OpenStack Swift docs</a>
+        </li>
+        <li>
+            <a href="https://github.com/hirochachacha/go-smb2/">SMB2/3 client library written in Go. (332 stars)</a>
+        </li>
+    </ul>
+
+    <h4>Что такое rclone?</h4>
+
+    <p>
+        rclone - это rsync для облачных хранилищ. Однако её можно использовать и для работы с локальной файловой
+        системой. Если вы хотите из командной строки копировать, скачивать, синхронизировать и даже монтировать
+        облачные хранилища, то rclone для этого подойдет идеально. Среди популярных бэкендов:
+    </p>
+
+    <ul>
+        <li>
+            Amazon S3 (а следовательно и хранилища, поддерживающие S3 API вроде Cloudflare R2, DigitalOcean Spaces
+            и т.д.);
+        </li>
+        <li>
+            FTP/SFTP;
+        </li>
+        <li>
+            Google Drive, Google Photos;
+        </li>
+        <li>
+            HTTP (read only);
+        </li>
+        <li>
+            Microsoft OneDrive и Azure стораджи;
+        </li>
+        <li>
+            OpenStack Swift (открытый стандарт, который поддерживается рядом коммерческих cloud провайдеров);
+        </li>
+        <li>
+            Internet Archine (archive.org); можно удобно скачать из интернет архива большой объем книг, старых
+            web-страниц и программ;
+        </li>
+        <li>
+            Server Message Block (SMB);
+        </li>
+    </ul>
+
+    <p>
+        Несмотря на множество контрибьюторов, проект, по большей части, поддерживается одним разработчиком из UK,
+        Ником Крей-Вудом (Nick Craig-Wood). Проект написан на Go, 44k+ звезд на GitHub, более 700 контрибьюторов.
+    </p>
+
+    <blockquote>
+        OpenStack - это IaaS платформа, набор открытых решений, с помощью которых можно сделать своё приватное
+        обалако вроде AWS.
+    </blockquote>
+
+    <h4>Что может rclone?</h4>
+
+    <ul>
+        <li>upload, download (многопоточное скачивание) files</li>
+        <li>rclone copy src dst</li>
+        <li>rclone copy dst src</li>
+        <li>rclone cat</li>
+        <li>
+            rclone sync проверяет чексуммы и синхронизирует изменения, <code>sync</code> позволяет однонаправленную
+            и двунаправленную синхронизацию
+        </li>
+        <li>
+            copy & sync позволяют использовать флаги:
+            включать (include или filter) и исключать (exclude или filter) файлы и директории по шаблону.
+        </li>
+        <li>
+            Фильтруемые файлы/директории можно задать как через конмандуню строку, так и через конфигурационный файл.
+            rclone serve http|ftp|sftp и даже расшарить как docker volume
+        </li>
+    </ul>
+
+    <p>
+        Есть набор расширяющих функционал виртуальных стораджей, из которых самые интересные это:
+    </p>
+
+    <ul>
+        <li>
+            <code>crypt</code> добавляет слой шифрования;
+        </li>
+        <li>
+            <code>union</code> позволяет создать синтетический сторадж, объединяющий несколько других стоарджей для
+            чтения и записи;
+        </li>
+    </ul>
+
+    <h4>Как используют rclone?</h4>
+
+    <p>
+        Самое очевидное применение - это создания резервных копий в обалчном хранилище. Есть известное <strong>правило
+        "3-2-1"</strong>, касающееся бэкапов.
+    </p>
+
+    <ol>
+        <li>Хранить три копии.</li>
+        <li>Две из них локально, но на разных устройствах.</li>
+        <li>Одна копия должна быть в облаке.</li>
+    </ol>
+
+    <p>
+        <code>rclone</code> идеально подойдет для решения этих задач.
+    </p>
+
+    <h4>Реализация интерактивной сборки конфига в CLI</h4>
+
+    <p>
+        Для работы с командной строкой используется популярный репозиторий <code>spf13/cobra</code> (36k stars).
+        В качестве http мультиплексора и раутера используется легковесный <code>go-chi/chi</code> (17k stars).
+    </p>
+
+    <p>
+        Сбор иехрархической информации организован плоско: в настоящий момент ты находишься на определенном шаге
+        и может перейти на любой другой. Состояние сохраняется в конфигруационном файле по мере ввода данных.
+    </p>
+
+    <h4>Встроенный ncdu</h4>
+
+    <p>
+        На моем Ubuntu Desktop я использую <code>ncdu</code> для быстрого визуального анализа самых больших
+        по размеру директорий/файлов и так могу быстро освободить место на жестких дисках. В rclone есть
+        встроенный ncdu
+    </p>
+
+    <h4>Удаленное управление rclode через HTTP API</h4>
+
+    <p>
+        rclone можно запустить в режиме API сервера для приема команд, которые он будет тут же исполнять. В этом
+        режиме можно выполнять все те же команды, что и в CLI. Например, зарегистрировать хранилище и
+        примонтировать его.
+    </p>
+
+    <h4>Пакеты fs и vfs</h4>
+
+    <p>
+        <code>fs</code> - это ключевой пакет проекта и здесь определены самые важные механики работы с
+        файловыми ситемами. Пакет <code>vfs</code> обеспечивает высокоуровневый функционал вокруг fs: лок файлов,
+        символические ссылки, кеширует директории и т.д. <strong>vfs</strong> предоставляет доступ к облачным
+        объектам похожим образом на то, как это реализовано в пакете <strong>os</strong>.
+    </p>
+
+    <p>
+        Краткое представление о том как устроено приложение можно получить глянув на типы в пакете <code>fs</code>.
+        В проекте 69 имплементаций этого
+        Файловая система - это всё, что удовлетворяет интерфейсу <code>fs.Fs</code>, а именно:
+    </p>
+
+    <ul>
+        <li>
+            может показать список директории (<code>метод List</code>);
+        </li>
+        <li>
+            получить доступ к объекту (<code>NewObject</code>);
+        </li>
+        <li>
+            Записать объект (<code>Put</code>);
+        </li>
+        <li>
+            Создать директорию (<code>Mkdir</code>);
+        </li>
+        <li>
+            Удалить директорию (<code>Rmdir</code>).
+        </li>
+    </ul>
+
+    <p>
+        В пакете <code>vfs</code> главный интерфейс - это <strong>Node</strong>:
+    </p>
+
+    <pre>
+type Node interface {
+	os.FileInfo
+	IsFile() bool
+	Inode() uint64
+	SetModTime(modTime time.Time) error
+	Sync() error
+	Remove() error
+	RemoveAll() error
+	DirEntry() fs.DirEntry
+	VFS() *VFS
+	Open(flags int) (Handle, error)
+	Truncate(size int64) error
+	Path() string
+	SetSys(interface{})
+}
+    </pre>
+
+    <div id="footer">
+        By <a href="https://bknd.pro">bknd.pro</a>
+    </div>
+</div>
+</body>
+</html>
