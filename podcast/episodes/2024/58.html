@@ -1,0 +1,185 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 58. Serverless arc & microservices</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>58. Serverless arc & microservices</h1>
+        <h2>30.06.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/6681b8d991bcf9d0d4478003?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/058_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://www.binaryheap.com/does-serverless-still-matter/">Does Serverless Still Matter?</a>
+        </li>
+        <li>
+            <a href="https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90">
+                Scaling up the Prime Video audio/video monitoring service and reducing costs by 90%
+            </a>
+        </li>
+    </ul>
+
+    <h4>Насколько актуальна для backend-разработчиков serverless архитектура?</h4>
+
+    <p>
+        Мне особенно интересно наблюдать за serverless (термин появился в 2012)
+        движением и его развитием со стороны, с позиции скептика. В первую очередь меня беспокоила
+        дороговизна и низкая прозводительность.
+        Стоит также отметить и общий скепсис комьюнити на счет проектов, целиком построенных
+        на serverless архитектуре. И сегодня я хочу поделиться двумя статьями по этой теме.
+        Итак, насколько актуална для backend-разработчиков serverless архитектура?
+    </p>
+
+    <h4>Does Serverless Still Matter?</h4>
+
+    <p>
+        Первая статья, в сегодняшнем обзоре - это публикация Бенджамина Пайла, одного из
+        заментных лидеров AWS комьюнити в США, и одного из первых пользователей (early adopter),
+        публикация под названием <strong>Does Serverless Still Matter?</strong>
+    </p>
+
+    <p>
+        Можно конечно сказать, что все началось с <strong>Google App Engine</strong>,
+        который запустили в preview в начале 2008 года. Но широко понятие serverless
+        архитектуры закрепилось после выхода AWS Lambda в 2014 году. AWS Lamda функция
+        запускается по событию (HTTP запрос, планировщик, загрузка файла в S3 сторадж,
+        обновление данных в DynamoDB и т.д.). Бесплатный план разрешает до 10е6 запросов.
+        Но там не все так просто, нужно понимать как долго будет выполняться Lambda-функция,
+        сколько она будет потреблять ресурсов.
+    </p>
+
+    <p>
+        Стоит различать два архитектурных решения: <strong>always on</strong> и
+        <strong>event-driven</strong>. AWS Lamda и аналогичные облачные решения
+        предлагали как раз событийную модель, при которой HTTP-запрос запускал
+        Lambda-функцию.
+    </p>
+
+    <p>
+        Появление и некий рассвет serverless архитектуры совпал с популярностью
+        микросервисной архитектуры и контейнеризации. В 2016 о serverless говорили
+        почти из каждого утюга и это был самый настоящий хайп, т.е. тема была
+        раздута комьюнити. И несмотря на задержку при холодном старте (старт фукнции,
+        которая долгое время не вызывалась, занимал некоторое время на "разогрев"),
+        находились энтузиасты, которые внедряли AWS Lambda в свои решения.
+    </p>
+
+    <p>
+        По мнению автора сейчас мы стали свидетелями заката serverless архитектуры,
+        т.к. Amazon, Google и MicroSoft сместили фокус с serverless на AI инструменты.
+    </p>
+
+    <p>
+        Автор это сатьи занимался активно продвижением serverless архитектуры и
+        это было модно, об этом говорили, создавали сообщества, а гагинты щедро
+        инвестировали в эту нишу. Но как только фокус сместился в сторону AI,
+        serverless перестал быть хайповой темой, то и тональность автора изменилась.
+        По моему мнению как раз сейчас стоит обращать внимание на эти решения,
+        когда нет хайпа. Именно сейчас будет яснее видны недостатки и преимущества
+        решений на базе serverless. Плюс, благодаря ранним адоптерам, вроде автора этой
+        статьи, сформировалась практика, которая позволит наступить на меньшее количество
+        граблей.
+    </p>
+
+    <h4>Что мне не нравится в serverless?</h4>
+
+    <p>
+        <strong>Высокая цена ошибки.</strong>
+        Вы можете написать скрипт с бесконечным циклом, который триггерит разные события
+        и <a href="https://www.reddit.com/r/aws/comments/oe2don/a_storyi_did_a_mistake_in_our_aws_account_that/">попасть на USD14000</a>.
+        И это еще небольшие проблемы, с которыми вы можете стокнуться.
+    </p>
+
+    <p>
+        <strong>Непредсказуемая инфраструктура.</strong>
+        Движение serverless проходило под слоганом:
+    </p>
+
+    <blockquote>run code without worrying about infrastructure</blockquote>
+
+    <p>
+        На деле вы заменяли одни проблемы работы с инфраструктурой на другие, работой с незнакомой
+        изменчивой закрытой средой. Т.е. время также уходило на то, чтобы заниматься настройкой,
+        но теперь это CloudWatch, лимиты на время выполнения, мониторинг вашего баланса, отслеживание
+        обновлений и т.д.
+    </p>
+
+    <p>
+        <strong>Инвестиции в изменчивые контракты.</strong>
+        Понятно, что для бизнеса важна добавленная стоимость. Насколько высока ценность
+        одного или другого решения и насколько это экономически эффективно? Мне хочется
+        вкладываться в более проверенные надежные решения и предлагать их. И мне совсем
+        не хочется тратить время на непровернные технологии. Изменчивый контракт AWS -
+        это для меня ненадежный фундамент. Я предпочту инвестировать время в изучение
+        оркестратора, чем в чтение документации о сервисах AWS.
+    </p>
+
+    <p>
+        Однако, serverless не ограничивается только AWS Lambda. В одном из следующих
+        выпусков я подробно расскажу про немаленький банк в UK, который полностью работает
+        в облаке Amazon. 1500 микросервисов, 9000 подов.
+    </p>
+
+    <h4>Переход к монолиту у Prime Video и сохранение 90% стоимости</h4>
+
+    <p>
+        Amazon Prime Video - video-on-demand сервис, вроде Netflix'а. Команда отслеживания
+        качества видео VQA (video quality analysis) изначально реализовала прототип своего
+        серваса используя AWS Step Functions и AWS Lambda. Сервис автоматически обнаруживал
+        и сообщал о проблемах с аудио-видео (битые блоки, синхронизация аудио/видео и т.д.).
+    </p>
+
+    <p>
+        Первое решение быстро уперлось в лимиты AWS Step Functions: анализу подвергается
+        каждая секунда видео. Следущее узкое место - это передача файлов между Lambda-функциями.
+        Одна лямбда разбивает видео на фреймы и сохраняет их на некоторое время в AWS S3, а
+        другая лямбда скачивает эти фреймы из S3. С учетом высокой частоты таких запросов это
+        тоже стоит дорого.
+    </p>
+
+    <p>
+        В итоге команда перешла к монолиту и равзернула его на AWS ECS (Elastic Container Service).
+        Экономия на инфраструктуре при этом составила 90%.
+    </p>
+
+    <p>
+        Я бы сделал для себя следующий вывод, известный вам всем: лучше начинать с монолита.
+        Переход к микросервисной архитектуре чаще сложнее и должен быть хорошо аргументирован.
+    </p>
+
+    <h4></h4>
+
+    <div id="footer">
+        By <a href="https://bknd.pro">bknd.pro</a>
+    </div>
+</div>
+</body>
+</html>
