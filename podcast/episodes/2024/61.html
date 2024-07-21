@@ -1,0 +1,127 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 61. sshd, basebackup, enum, rclone</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>61. sshd, basebackup, enum, rclone</h1>
+        <h2>21.07.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/669d13f4fc4972011bdf48bb?theme=light"
+                frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/061_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://www.qualys.com/2024/07/01/cve-2024-6387/regresshion.txt">regreSSHion: RCE in OpenSSH's
+                server, on glibc-based Linux systems (CVE-2024-6387)</a>
+        </li>
+    </ul>
+
+    <p>
+        Last week, I dealt with a <strong>critical SSH vulnerability</strong> that allows root access to a server.
+        This vulnerability is known as regreSSHion because it existed in early versions of SSH, was fixed, but then a
+        line of code was accidentally removed, causing the bug to return.
+    </p>
+
+    <p>
+        This vulnerability was discovered by a security company whose specialists were studying the source code. They
+        found areas that could lead to server instability. This bug only occurs if SSH was built using the glibc
+        library.
+    </p>
+
+    <p>
+        The vulnerability works like this: when a user tries to log in to a server via SSH using a password, they have
+        about 2 minutes to enter it. The server won’t keep the connection open indefinitely. After 2 minutes, the server
+        processes a signal to disconnect. This processing is done concurrently. In this concurrent environment, a race
+        condition can occur, leading to memory corruption. This, in turn, causes the control to shift to a random memory
+        area. If malicious code resides in that area, it will execute with root privileges since the SSH daemon runs
+        with root privileges.
+    </p>
+
+    <p>
+        The malicious code, as I understand it, needs to be embedded in the connection. It will be received by the
+        remote server and temporarily stored in memory.
+    </p>
+
+    <p>
+        Concurrency not only decreases the readability of the source code but also leads to hard-to-detect and resolve
+        bugs. This case is no exception. As described, such an attack has a non-deterministic nature. First, you need to
+        trigger the race condition, which may not happen. Then, you need the server to jump to the correct memory
+        address, which is also a probabilistic event.
+    </p>
+
+    <p>
+        This vulnerability was tested on 32-bit architecture. Initially, it took 30 days to gain access. After improving
+        the algorithm, it now takes 6 hours. Most servers are 64-bit, where the address space is larger, making the
+        exploit even less likely. However, security experts believe it is a solvable task.
+    </p>
+
+    <p>
+        I decided to update the SSH daemon on our servers. Some of our dedicated servers run Ubuntu 20 and even 17,
+        which don't need the OpenSSH-server update. Other machines run Ubuntu 22, which requires patching, but I didn't
+        have to do it myself since Hetzner, our provider, updated all cloud servers.
+    </p>
+
+    <h4>Fixing pg_basebackup Bug</h4>
+
+    <p>
+        I also fixed a bug with pg_basebackup. Sometimes, we couldn't back up one of the databases.
+    </p>
+
+    <p>
+        This utility might seem strange. First, when you run it, you need to pass a connection string. Usually, when we
+        want to make a binary backup, we either copy or sync files. pg_basebackup does the same but over a network
+        interface. Why? As I understand it, this utility waits for a checkpoint when connecting. Only the server knows
+        when the checkpoint occurs. After that, it can start copying files. But what if the files change during this
+        time? We run the backup at night, but even then, files might change, for example, during autovacuuming.
+        Normally, a backup results in corrupted files, partially written, partially empty, possibly copied in the middle
+        of a transaction. Such a database is unusable and needs fixing. For this, we add log files to the backup because
+        Postgres writes any changes to log files first, then to the database. Thanks to log files, we can restore a
+        consistent version of the database.
+    </p>
+
+    <p>
+        The problem is we run the backup utility with an option that adds log files at the end of the backup. If the
+        backup takes a long time or if the database is actively written to, many log files appear, and old ones might be
+        deleted. The log files created at the start of the backup must be added to the backup. If they are deleted per
+        the retention policy, the utility returns an error.
+    </p>
+
+    <p>
+        To solve this, I changed the option values. Now, the utility opens two connections—one for the base backup and
+        another for logs. We no longer wait for the base backup to complete before copying the necessary log files.
+    </p>
+
+    <div id="footer">
+        By <a href="https://bknd.pro">bknd.pro</a>
+    </div>
+</div>
+</body>
+</html>
