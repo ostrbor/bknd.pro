@@ -1,0 +1,117 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 62. AWS certs, Monzo bank on AWS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>62. AWS certs, Monzo bank on AWS</h1>
+        <h2>28.07.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/66a6765e1ce75694ad9c8086?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/062_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://aws.amazon.com/solutions/case-studies/">Успешный опыт использования AWS (case studies)</a>
+        </li>
+        <li>
+            <a href="https://medium.com/@psvee/learnings-from-monzo-aws-reinvent-a-deep-dive-into-building-a-digital-bank-cbf8ba309099">Хорошее саммари тех стека Monzo</a>
+        </li>
+        <li>
+            <a href="https://aws.amazon.com/solutions/case-studies/monzo/">AWS в банке Monzo</a>
+        </li>
+    </ul>
+
+    <h4>AWS certification</h4>
+
+    <p>
+        Знание облачных инфраструктур сильно повышает шансы на поиск работы в США/Канаде. Я попробовал разобраться
+        насколько важно знание AWS инфраструктуры при поиске работы.
+    </p>
+
+    <p>
+        Существует 4 уровня сложности AWS сертификаторв: базовый (foundational), специалист (assiciate), профессионал
+        (professional) и сертификаты специализации (speciality). Каждый AWS сертификат валиден 3 года. Стоимость
+        прохождения варьируется в зависимости от уровня и иногда страны, в которой будете сдавать экзамен:
+        от 100 до 350 USD (цена приблизительная на момент публикации подкаста). Для подготовки достаточно бесплатных
+        ресурсов и бесплатных курсов, но есть и платные, стоимость которых достигает USD4000. Нередко сам работодатель
+        оплачивает прохождение курсов. Экзамен проходит online в спец. центрах, которые принимают разные экзамены.
+        Время экзамена 130 минут. Экзамен включает 65 вопросов.
+    </p>
+
+    <p>
+        Наличие AWS сертификата увеличит шансы прохождения <strong>HR prescreen</strong>, а также позволяет компании
+        с такими работниками размещаться в <strong>реестре сертифицированных агенств AWS</strong>.
+    </p>
+
+    <p>
+        Согласно исследованию и прогнозу Burning Glass Tech, в 2025 по сравнение с 2020 потребность в облачных
+        инфраструктурах возрастет на 28%.
+    </p>
+
+    <p>
+        Если у вас есть опыт с облачными инфраструктурами, то никто не спросит у вас сертификат. Если у вас есть
+        сертификат, но нет опыта - это тоже плохой сценарий. Я бы ориентировался на прохождение сертификата на текущем
+        месте работы. Отношение к сертификату также должно быть как к инструменту, <strong>который поможет понять
+        что вы не знаете или знаете слабо</strong>.
+    </p>
+
+    <h4>Monzo на AWS</h4>
+
+    <p>
+        Monzo - действующий online-банк в UK с 9+ млн. клиентами. Для нас интересно то, что приложение целиком работает
+        на AWS и с использованием 1500+ микросервисов.
+    </p>
+
+    <p>
+        Одно из преимуществ AWS для банков по крайней мере в UK - это легкость соответствия требованиям к банкам, если
+        используется AWS.
+    </p>
+
+    <p>
+        Что они используют: стек, каждый из компонентов которого легко масштабируется горизонтально. В стеке:
+        k8s, etcd (распределенное key-value хранилище), Apache Cassandra (NoSQL СУБД с линейным ростом пропускной
+        способности read/write с ростом числа серверов), envoy proxy (sidecar на C++ от Lyft для Service Discovery),
+        логи и зашифрованные резервные копии данных в AWS S3, Kafka MQ для упорядоченных сообщений и NSQ для
+        неупорядоченных (например, push-нотификации об успешном завершении транзакции), кластер Prometheus для метрик.
+
+        Код написан на Go (небольшой размер контейнеров, малое потребление ресурсов).
+    </p>
+
+    <p>
+        На поддержание всей инфраструктуры в Monzo заняты, по их словам, "всего 8 человек". Я потыкался в калькуляторе и
+        у меня вышло примерно от USD 200 000 в месяц на подобную инфраструктуру.
+    </p>
+
+    <div id="footer">
+        By <a href="https://bknd.pro">bknd.pro</a>
+    </div>
+</div>
+</body>
+</html>
