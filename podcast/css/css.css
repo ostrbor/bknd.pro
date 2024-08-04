@@ -64,6 +64,13 @@ h2 {
 .episode > h3 > .date {
     color: var(--gray);
 }
+.question {
+    text-decoration: underline;
+}
+.answer {
+    padding-left: 2em;
+    margin-top: 0;
+}
 #footer {
     text-align: right;
     margin: 2rem 0;

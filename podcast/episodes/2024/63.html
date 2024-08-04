@@ -1,0 +1,135 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 63. Request deduplication</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>63. Request deduplication</h1>
+        <h2>04.08.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/66af9f451f6556b4b6715f90?theme=light"
+                frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/063_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <p class="question">
+        Почему лучше не использовать fingerprint (отпечаток) запроса для предотвращения задвоений?
+    </p>
+    <p class="answer">
+        Мы можем действительно хотеть повторить тот же запрос, например, в игре мы хотим еще раз купить
+        зелье лечения и просто кликаем несколько раз на соответсвующую кнопку.
+        Или мы хотим купить несколько раз BTC за USDT. Т.е. есть сценарии, когда повтор запроса - это желательное
+        действие. Однако, полезно проверять также и отпечаток и не полагаться только на идентификатора запроса.
+    </p>
+
+    <p class="question">
+        Почему не нужно обновлять кеш ответов на запросы?
+    </p>
+    <p class="answer">
+        В условиях конкурентного создания ресурса может возникнуть ситуация, когда клиент А не получит ответ сразу,
+        клиент Б обновит ресурс, клиент А повторит запрос и получит кеш, который был создан до запроса от клиента Б.
+        Основная цель кеширования ответов (by design) - предотвращение повторного выполнения работы. На момент запроса А
+        мы
+        сформировали ответ. Повторный запрос от клиента А и должен вернуть тот самый ответ, который мы должны были
+        получить при первом неудачном запросе. Обновление кеша может стать и причиной необычного поведения
+        пользователей:
+        некоторые могут использовать регулярное повторение запроса для того чтобы отслеживать обновление ресурса, т.е.
+        использовать API не по прямому назначению, и вам это поведение потом прийдется поддерживать. Также, предположим,
+        что клиент написал плохо код на своей стороне и после успешного получения ответа на <strong>резервацию
+        остатков товара на складе</strong> он первый раз получает успех, но падает, делает повтор и получает
+        отказ, т.к. клиент Б также успел зарезервировать этот же товар.
+    </p>
+
+    <p>
+        When designing an API server, it's crucial to consider that the requests we process can sometimes be duplicated.
+        This can be problematic if we don't want the handler to execute multiple times. There's a design pattern called
+        Request Deduplication that can help address this issue. Let's dive into it.
+    </p>
+
+    <p>
+        Duplication is generally undesirable when handling non-idempotent methods like POST or DELETE. It's also an
+        issue if the handler is costly in terms of money, time, or resources. If the request body contains a unique
+        identifier, preventing duplication is straightforward—just store this ID in a cache and check it whenever the
+        handler runs. But what if there's no ID in the request? That's where the Request Deduplication pattern comes
+        into play.
+    </p>
+
+
+    <h4>The Request Deduplication Pattern</h4>
+    <p>
+        The pattern involves requiring clients to include a unique ID in their requests, usually called requestId. This
+        ID helps the server recognize repeated requests and handle them appropriately. So, why not put the requestId in
+        the headers instead of the body? The HTTP semantics suggest headers should contain meta-information, and
+        requestId fits well there. Additionally, it might be easier to extract IDs from headers, especially given the
+        variety of request formats like XML and JSON.
+    </p>
+
+    <h4>Common Duplication Scenarios</h4>
+    <p>
+        Duplications often occur due to:
+        Multiple submissions by clicking a button several times.
+        JavaScript failing to disable a button quickly (debouncing issues).
+        The server processing the request, but the response not reaching the client.
+        Retry attempts due to timeouts.
+        Bug-induced request resending after a process restart.
+        Queuing and batch processing of requests.
+        Solutions to Avoid Duplications
+        A straightforward solution is to ask the client to include a requestId in their requests. This helps the server
+        identify duplicate requests and respond accordingly. If a second request with the same ID arrives, instead of
+        returning an error, it's recommended to cache the first response and return it for repeated requests. This
+        approach avoids inconsistencies, although it might return outdated data if the resource changes after the first
+        request.
+    </p>
+
+    <h4>Hashing as an Alternative</h4>
+    <p>
+        Why not eliminate the requestId field entirely? By hashing the request body, we can determine if a duplicate has
+        arrived. This method generates a requestId derived from the request content, relieving the client of generating
+        unique IDs, which they might not always handle well. However, using explicit requestIds is beneficial because
+        implicit schemes might prevent users from intentionally sending the same request twice, like creating identical
+        resources.
+    </p>
+
+    <h4>Handling ID Collisions</h4>
+    <p>
+        Be mindful of ID collisions, especially when accepting client-generated IDs. Relying solely on requestId as a
+        cache key is risky. For example, a cached response for creating an order might be mistakenly returned for a user
+        creation request if they share the same requestId. Ensure that your system can differentiate between these
+        requests to avoid such pitfalls.
+    </p>
+
+    <p>
+        By implementing a solid Request Deduplication strategy, we can protect our servers from unwanted duplicate
+        requests, saving resources and ensuring a smoother experience for users and developers alike.
+    </p>
+
+    <div id="footer">
+        By <a href="https://bknd.pro">bknd.pro</a>
+    </div>
+</div>
+</body>
+</html>
