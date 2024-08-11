@@ -1,0 +1,184 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 64. TIOBE index, ORM in prod, StackOverflow survey</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>64. TIOBE index, ORM in prod, StackOverflow survey</h1>
+        <h2>11.08.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/66b8f7d002d146a034933c6a?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/064_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://www.tiobe.com/tiobe-index/">TIOBE Index</a>
+        </li>
+        <li>
+            <a href="https://www.timescale.com/blog/orms-in-production-postgresql-friend-or-foe/">Timescale: ORMs in Production PostgreSQL: Friend or Foe?</a>
+        </li>
+        <li>
+            <a href="https://www.edgedb.com/blog/why-orms-are-slow-and-getting-slower">EdgeDB: Why ORMs are slow (and getting slower)</a>
+        </li>
+        <li>
+            <a href="https://survey.stackoverflow.co/2024/">StackOverflow: отчет опроса разработчиков 2024</a>
+        </li>
+        <li>
+            <a href="https://stackoverflow.blog/2024/07/24/developers-want-more-more-more-the-2024-results-from-stack-overflow-s-annual-developer-survey/">StackOverflow: результаты опроса</a>
+        </li>
+    </ul>
+
+    <h4>Go зашел в TOP-10 ЯП по индексу TIOBE</h4>
+
+    <p>
+        Методология TIOBE вызывает вопросы. Купить их данные можно за USD5000. Компания TIOBE из Нидерландов занимается
+        анализом качества кода.
+    </p>
+
+    <p>
+        Я лично вижу серьезную тенденцию в Go - это GUI-фреймворки. Очевидно, разработчикам на Go хочется эффективно
+        кроссплатформенно писать GUI приложения. По крайней мере иметь для этого инструменты. Каждые 2-3 недели
+        тут и там появляются новости о релизе очередного GUI-фреймворка.
+    </p>
+
+    <h4>ORM в продакшене</h4>
+
+    <p>
+        В блоге timescale вышла очередная статья о том нужно ли использовать ORM. Я предлагаю рассмотреть преимущества
+        ORM, которые выделил автор статьи и отнестись к ним критически.
+    </p>
+
+    <p>
+        Появление ORM вполне понятно: разработчики на ОО-языках стремились сократить рутину по преобразованию данных
+        из объектов в поля таблицы и наоборот, из туплов результатов выборок в объекты.
+    </p>
+
+    <p>
+        <strong>Один язык программирования.</strong> В теории, можно не знать как устроена СУБД и использовать только
+        ORM. Это возможно на простых проектах, где нагрузка на СУБД маленькая. Например, десктоп-приложения с небольшим
+        количеством пользователей и небольшим объемом данных. <strong>Однако</strong>, язык запросов ORM зачастую
+        слишком сложен и требует понимания как SQL, так и особенностей синтаксиса и замысла каждого конкретного ORM.
+        Все равно прийдется учить SQL.
+    </p>
+
+    <p>
+        <strong>Бизнес-логика в сущностях.</strong> У объектов, которые используются в качестве DTO могут быть также
+        методы. Т.е. объект `User` может содержать не только данные из СУБД, но и методы для определения тоталов,
+        калькуляции задолженности или определения маски доступов и т.д.
+    </p>
+
+    <p>
+        <strong>Простой синтаксис запросов.</strong> Базовый синтаксис ORM намекает на спектр проблем, которым
+        лучше ограничить использование этого самого ORM. <strong>Однако,</strong> за простотой базового функционала
+        ORM скрываются неэффективные запросы, например, выборка всех полей всех JOIN-таблиц. В дополнение к этому,
+        если в проекте больше одной таблицы и есть связи, то ORM будет выполнять слишком много ненужного меппинга для
+        связанных таблиц.
+    </p>
+
+    <p>
+        <strong>Безопасность.</strong> Т.к. используется API ORM, то как правило нет возможности напрямую передать
+        строку запроса в СУБД и тем самым создать почву для возможной SQL-инъекции. <storng>Однако</storng>, сами ORM
+        могут иметь уязвимости и разрешать сырые запросы.
+    </p>
+
+    <p>
+        Команда EdgeDB опубликовала результаты бенчмарка сырых SQL-запросов и популярными TypeScript/JavaScript ORM'ами
+        Prisma, Sequelize, TypeORM. ORM деградирует скорость выполнения запросов в 4 раза. Статья хорошая, с описанием
+        методологии.
+    </p>
+
+    <h4>Developers want more, more, more: the 2024 results from Stack Overflow’s Annual Developer Survey</h4>
+
+    <p>
+        <strong>90% разработчиков используют официальную документацию.</strong> Это сильно контрастирует с тем временем,
+        когда я начинал свою карьеру в 2005 году: я читал переведенные на русский книги, искал обрывочную информацию на
+        русских форумах и очень не любил документацию, потому что не был к ней приучен (она была на английском и
+        культура написания документации была не такой как сейчас: документация была ориентирована на уже опытных
+        разработчиков).
+    </p>
+
+    <p>
+        <strong>PostgreSQL</strong> второй год подряд в лидерах: 48.7% разработчиков предпочитают её. Напомню, что в
+        2018 году, 6 лет назад, MySQL была на первой позиции с 59%. Топ СУБД:
+    </p>
+
+    <ul>
+        <li>PostgreSQL: 48.7%</li>
+        <li>MySQL: 40.3%</li>
+        <li>SQLite: 33.1%</li>
+        <li>Microsoft SQL Server: 25.3%</li>
+        <li>MongoDB: 24.8%</li>
+    </ul>
+
+    <p>
+        <strong>AI dev tools</strong> используют 70% респондентов. Самые популярные инструменты (admired):
+    </p>
+
+    <ul>
+        <li>ChatGPT: 74.4%</li>
+        <li>Visual Studio Intellicode: 73%</li>
+        <li>GitHub Copilot: 72.1%</li>
+    </ul>
+
+    <p>
+        Многие хотят попробовать Google Gemini, но удовлетворены им всего 62.1%.
+    </p>
+
+    <p>
+        <strong>О вознаграждении</strong> рассказало 48000+ респондентов. Если наложить вышеупомянутый индекс TIOBE на
+        топ-з/платы (медиана), то в лидерах разработчики на Go ($76_433) и Fortran ($70_351). При этом оплата за Go
+        сильно упала, что свидетельствует о насыщении разработчиками. Если смотреть на динамиу оплаты 2023 к 2024, то
+        хорошо подросла оплата за Nim ($80_000 => $94_924). По прежнему, разработчики Erlang самые оплачиваемые
+        ($100_636) и даже чуть подросли. В целом, заметно снижение оплаты труда разработчиков почти по всем ЯП.
+    </p>
+
+    <blockquote>
+        What is your current total annual compensation (salary, bonuses, and perks, before taxes and deductions)?
+        Please enter a whole number in the box below, without any punctuation. If you are paid hourly, please estimate
+        an equivalent yearly salary. If you prefer not to answer, please leave the box empty.
+    </blockquote>
+
+    <p>
+        <strong>AI - угроза для вашей работы?</strong> 68.3% считают, что нет. 19.6% не уверены и 12.1% считают, что AI
+        - это угроза.
+    </p>
+
+    <p>
+        <strong>На полной удаленке</strong> по прежнему высокий, но падающий процент. В этом году 38%, а 2022 было 43%.
+        Полностью в офисе работает всего 20% (здесь рост на 5%). И неизменное количество сотрудников, которые совмещают
+        удаленку и офис - 42%.
+    </p>
+
+    <p>
+        <strong>Расстраивает</strong> технический долг (62.4%), комплексный тех. стек (32.9%), надежность софта (31.5%),
+        слежение за работой (27.1%).
+    </p>
+</div>
+</body>
+</html>
