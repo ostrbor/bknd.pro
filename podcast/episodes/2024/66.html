@@ -1,0 +1,190 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 66. Go 1.23 iterators, to OSS or not?</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>66. Go 1.23 iterators, to OSS or not?</h1>
+        <h2>25.08.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/66cb4b45451ebdde6bbd4dc5?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/066_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://tip.golang.org/blog/go1.23">Go 1.23 is released</a>
+        </li>
+        <li>
+            <a href="https://antonz.org/go-1-23/">Go 1.23: Interactive release notes</a>
+        </li>
+        <li>
+            <a href="https://cs.opensource.google/go/go/+/refs/tags/go1.23.0:src/iter/iter.go">
+                Новый <code>iter</code> пакет
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/golang/go/issues/61405">spec: add range over int, range over func (proposal)</a>
+        </li>
+        <li>
+            <a href="https://opensource.guide/getting-paid/">Getting Paid for Open Source Work</a>
+        </li>
+    </ul>
+
+    <h4>Вышел Go 1.23.0</h4>
+
+    <p>
+        13 августа вышел Go 1.23.0. Коротко о самом важном изменении в языке и SDK.
+    </p>
+
+    <p>
+        Улучшена скорость сборки проекта с PGO, а также улучшено КПД от PGO.
+    </p>
+
+    <p>
+        Несмотря на то, что в новой версии Go появилось сразу 3 новых пакета в SDK (iter, structs, unique),
+        нас интересует <code>iter</code>, т.к. остальные два имеют редкую область применения.
+        Напомню, что в версии Go 1.22.0 также расширился функционал range-клаузы в цикле for: начиная с этой версии
+        можно получить ряд чисел. Так, <code>range 10</code> вернет значения от 0 до 9 включительно. В Go 1.23.0
+        добавились <strong>итераторы</strong>. Proposal был предложен в июле 2023 года и вот, спустя чуть более чем год
+        мы получили обновления в языке. Определение итератора в Go:
+    </p>
+
+    <blockquote>
+        An iterator is a function that passes successive elements of a sequence to a callback function
+    </blockquote>
+
+    <p>
+        Теперь можно итерировать по функциям, которые принимают в качестве аргументов 0, 1 или 2 generic значения.
+        <strong>Для чего это нужно?</strong> Если вы создаете некий тип или функцию, по результатам которой чаще всего
+        будут выполнять итерации, то теперь можно использовать range по функции. Например, вот так теперь может
+        выглядеть хелпер-функция для обратной итерации по слайсу:
+    </p>
+
+    <pre>// Backward returns an iterator over index-value pairs in the slice,
+// traversing it backward with descending indices.
+func Backward[Slice ~[]E, E any](s Slice) iter.Seq2[int, E] {
+	return func(yield func(int, E) bool) {
+		for i := len(s) - 1; i >= 0; i-- {
+			if !yield(i, s[i]) {
+				return
+			}
+		}
+	}
+}</pre>
+
+    <p>
+        А её использование будет выглядеть так:
+    </p>
+
+    <pre>s := []string{"hello", "world"}
+for i, x := range slices.Backward(s) {
+	fmt.Println(i, x)
+}</pre>
+
+    <p>
+        Т.е. код, использующий итераторы будет более читаемым. Теперь, для того чтобы получить ключи map и отсортировать
+        их, достаточно написать это:
+    </p>
+
+    <pre>slices.Sorted(maps.Keys(m))</pre>
+
+    <p>
+        Для удобства написания таких функций <strong>в пакете <code>iter</code></strong>
+        добавлено два новых типа: <code>Seq[V any]</code> и <code>Seq2[K, V any]</code>.
+    </p>
+
+    <p>
+        Итого, если вы видите в пакете файл <code>iter.go</code>, значит в этом пакете есть хелпер generic функции для
+        удобных итераций. Если создаете свой тип и по нему часто будут выполнять итерации, то рассмотрите вариант
+        реализации идеоматичных итераторов. При этом обратите внимание на предложенный в SDK нейминг для таких функций.
+    </p>
+
+    <h4>Делать ли коммерческий проект с открытым исходным кодом?</h4>
+
+    <p>
+        Чаще всего проекты с открытым кодом воспринимают как хобби ("код во имя кода").
+        Некоторые проекты намеренно отказываются даже от donation чтобы как можно меньше чувствовать
+        обязанность перед донорами.
+    </p>
+
+    <p>
+        <strong>Что дает проект с открытым исходным кодом?</strong> По исследованию Facebook и Walmart, половина из
+        опрошенных соискателей на позицию разработчика знали про OSS проекты этих компаний и это привлекло их интерес
+        к этим компаниям. Компании, делающие вклад в поддержку OSS проектов гордятся этим.
+        <strong>Выше кредит доверия</strong> со стороны потенциальных покупателей продукты, т.к.
+        качество закрытого продукта сложно оценить.
+    </p>
+
+    <p>
+        <strong>Какие риски видят для себя компании, использующие OSS?</strong>
+
+        Это, во-первых,
+        <strong>неконтролируемые обновления</strong>. Во-вторых, поддержку проекта могут забросить и не вносить
+        security обновления. Предположим, что ты зависишь от какой-то библиотеки и в ней обнаружили уязвимость.
+        Хорошо, если ты мониторишь свои кодовые зависимости на уязвимости, но часто это не так. Разработчики
+        теряют интерес к проектам и ты остаешься с устаревающей дырявой зависимостью.
+
+        <strong>Открытая природа</strong> OSS проектов. Такие проекты легко изучать на уязвимости.
+
+        <strong>Внедрение вредоносного софта</strong>. Вы не знаете разработчиков каждой библиотеки, от которой
+        зависите, поэтому есть вероятность затащить себе в проект бэкдор. Так, в прошлом году github
+        <a href="https://github.blog/security/vulnerability-research/security-alert-social-engineering-campaign-targets-technology-industry-employees/">опубликовал</a>
+        интересный способ атаки северокорейских взломщиков (не называю их хакерами). Взломщики клонировали
+        профиль влиятельного разарботчика в github или другой соц. сети, под прикрытием фейкового аккаунта
+        контактировали с разработчиками в тех. компаниях и предлагали поучаствовать в Open Source проекте. Жертва
+        скачивала зависимости (npm) и затаскивала себе вредоносный софт.
+
+        <strong>Неоднородное качество кода</strong>, т.к. к работе привлекаются волонтеры разного уровня и в OSS
+        проектах часто нехватает код-ревью.
+    </p>
+
+    <p>
+        <strong>Полезные советы</strong> можно почерпнуть на reddit в фиде
+        <a href="https://www.reddit.com/r/opensource/">opensource</a>. David, maintainer AnkiDroid, делится
+        следующим (напомню, речь про коммерческий проект): начинать лучше с закрытого кода и задуматься о его
+        публикации, если:
+    </p>
+
+    <ul>
+        <li>компания стала больше;</li>
+        <li>компания перестала расти;</li>
+        <li>
+            в рамках этого проекта появился небольшой подпроект, который можно опубликовать, что удовлетворить свое
+            open source желание.
+        </li>
+    </ul>
+
+    <p>
+        <strong>Какие проекты хороши для того чтобы опубликовать их исходный код?</strong> Библиотеки, building blocks
+        кодовых проектов. <strong>Open core</strong>, ядро открытое, но весь обвес доступен только в платной версии
+        (например, gitlab, MongoDB).
+    </p>
+</div>
+</body>
+</html>
