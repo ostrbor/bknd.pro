@@ -1,0 +1,140 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 68. auto_explain, ClickHouse, import cycle in Go</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>68. auto_explain, ClickHouse, import cycle in Go</h1>
+        <h2>07.09.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/66ddcb91505674fba48f6fa3?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/068_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://blog.jauhar.dev/blog/2023/10/29/why-circular-import-is-illegal-in-go/">
+                Why Circular Import Is Illegal In Go
+            </a>
+        </li>
+        <li>
+            <a href="https://www.postgresql.org/docs/current/auto-explain.html">
+                auto_explain — log execution plans of slow queries
+            </a>
+        </li>
+        <li>
+            <a href="https://materializedview.io/p/unpacking-the-buzz-around-clickhouse">
+                Unpacking the Buzz around ClickHouse
+            </a>
+        </li>
+    </ul>
+
+    <h4>Отсутствие циклических зависимостей в коде - это хорошо</h4>
+
+    <p>
+        На этой неделе мне довелось делать обширный рефакторинг в проекте, написанном на Go. После нескольких часов
+        написания кода я запустил тесты и получил ошибку: <strong>import cycle not allowed</strong>.
+    </p>
+
+    <p>
+        Такую ошибку мы получаем в Go, если пакет A использует код из пакета B, а, в свою очередь, пакет B импортирует
+        пакет A. Говоря просто, A и B как-то очень тесно зависят друг от друга. И так как в Go такая ситуация
+        недопустима, <strong>то первая идея</strong> - объединить пакеты A и B в один, т.е. перенести код из B в A или
+        наоборот. Другое решение - выделить общий код в пакет C, который будут импортировать как A, так и B.
+        В моем случае я объединил оба пакета и, признаюсь, код стал сильно проще.
+    </p>
+
+    <p>
+        <strong>Почему в Go запрещены циклические зависимости?</strong> Для того чтобы это понять нужно смоделировать
+        ошибку циклической инициализации:
+    </p>
+
+    <pre>// Available at: https://play.golang.com/p/nOlfgNEhdCi
+package main
+
+var A int = B
+var B int = A
+
+func main() {}
+
+// Compile error message:
+// ./prog.go:3:5: initialization cycle for A
+// 	./prog.go:3:5: A refers to
+// 	./prog.go:4:5: B refers to
+// 	./prog.go:3:5: A
+</pre>
+
+    <p>
+        Как в случае кода выше присвоить начальное значение переменной A или B? Это невозможно. Отследить такие
+        циклические инициализации в рамках одного пакета несложно, но дольше и ресурснее в пределах нескольких пакетов.
+        Для такого отслеживания понадобился бы анализ исходного кода всех этих пакетов, что осложняет
+        <strong>инкрементную компиляцию</strong>.
+    </p>
+
+    <p>
+        <strong>Инкрементная компиляция</strong> позволяет собирать только те пакеты Go-проекта, которые перетерпели
+        изменения. Вносим правки в пакет A, только он и компилируется. Это почти всегда так. За счет этого получаем
+        быструю компиляцию. Теперь представим, что нужно проанализировать код всех пакетов и убедиться, что нет
+        циклических инициализаций. Отказ же от циклических зависимостей делает такой анализ ненужным и, соответственно,
+        скорость компиляции проекта высокой.
+    </p>
+
+    <blockquote>
+        Пакет в Go - это единица компиляции (compilation unit).
+    </blockquote>
+
+    <p>
+        <strong>А как в других языках программирования?</strong> В Rust, например, циклические зависимости модулей
+        разрешены (модули - аналог пакетов в Go), но они же запрещены на более высоком уровне, на уровне крейтов
+        (крейт - аналог модуля в Go).
+    </p>
+
+    <h4>auto_explain — log execution plans of slow queries</h4>
+
+    <p>
+        Начиная с 12 версии PostgreSQL, из коробки, можно включить модуль <code>auto_explain</code>. Этот модуль
+        логгирует (в stderr, stdout, файл и т.д. - зависит от настроек логов в вашем инстанесе PostgreSQL)
+        план выполнения запросов, выполняющихся более <code>auto_explain.log_min_duration</code> мс. Логгировать можно
+        в JSON, YAML, текстовом форматах. В лог попадет расшифровка плана выполнения запроса как если бы вы сделали
+        EXPLAIN для медленного запроса. Конфигурация модуля позволяет настраивать параметры EXPLAIN: ANALYZE, включение
+        таймингов, буферов и т.д.
+    </p>
+
+    <h4>Unpacking the Buzz around ClickHouse</h4>
+
+    <p>
+        <strong>Для каких задач предпочесть ClickHouse?</strong> Для начала немного про
+        <strong>OLAP (Online Analytical Processing)</strong>. Такие аналитические базы данных оптимизированы под
+        выполнение запросов с агрегатными (те, которые возвращают одно значение для набора значений) функциям, например,
+        AVG, SUM, COUNT и т.д. На сайте <a href="https://benchmark.clickhouse.com/">бенчмарков</a> видно, что для
+        подобных выборок с агрегатными функциями и группировками PostgreSQL работает в 700 раз медленнее, а MySQL в
+        2000 раз медленнее. <strong>Для чего же нужны такие запросы?</strong> 
+    </p>
+</div>
+</body>
+</html>
