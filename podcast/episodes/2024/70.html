@@ -1,0 +1,205 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 70. Elvish, Temporal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>70. Elvish, Temporal</h1>
+        <h2>22.09.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/66f07653f3953ecef19e9717?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/070_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://elv.sh/learn/scripting-case-studies.html">Elvish: Scripting case studies</a>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/playlist?list=PLDWZ5uzn69ezR6D6FUj_iBSOyRc9xaZFP">
+                Плейлист с конференции GopherCon UK 2024
+            </a>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=YzIiUjgnSsA">
+                How to write a programming language and shell in Go with 92% test coverage and instant CI/CD-Qi Xiao
+            </a>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=zpP8aMqEna0">
+                Event Driven Workflows - Andrew Wormald, Luno
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/temporalio/temporal">
+                Temporal service (11.4k stars)
+            </a>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=wMUKhtRhlmY">
+                Intro to Temporal Architecture: Workflow Engine
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/emirpasic/gods">
+                GoDS (Go Data Structures) - Sets, Lists, Stacks, Maps, Trees, Queues, and much more (16.1k stars)
+            </a>
+        </li>
+    </ul>
+
+    <p>
+        Я добрался до докладов с недавней Go-конференции, прошедшей в Лондоне. Все видео с докладами доступны на
+        YouTube. Я расскажу коротко о докладах, которые меня заинтересовали.
+    </p>
+
+    <p>
+        При просмотре видео с конференций неплохо себе напоминать, что докладчики зачастую работают в крупных компаниях
+        и их опыт нерелевантен 80% индустрии (малый и средний бизнес).
+    </p>
+
+    <h4>Elvish - шелл нового поколения</h4>
+
+    <p>
+        Доклад меня привлек техническими деталями как написан этот shell. Я и сам писал свою оболочку в студенческие
+        годы, когда изучал POSIX-стандарты и соответствующее API. Если хотите написать свою оболочку или разобраться
+        в работе существующих, то это отличный доклад.
+    </p>
+
+    <p>
+        Командные оболочки нового поколения - это скорее языки программирования, чем toolbox. Герой этого эпизода -
+        <code>Elvish</code>. Скрипты на "эльфийском" шелле читать проще, чем на bash/sh особенно, если вы знакомы с Go.
+        Elvish поддерживает массивы и хеш-таблицы как структуры данных. В традиционных оболочках любые структуры
+        данных - это в первую очередь текст с разделителями, который нужно как-то особенно парсить.
+        Также в elvish включены функции из Go SDK для работы с текстом, регулярными выражениями, путями в FS, сигналами,
+        флагами, файлами и т.д.
+    </p>
+
+    <p>
+        Понять нравится вам язык или нет быстрее всего можно заглянув на официальный сайт, на страничку
+        "Scripting case studies". Мне также понравилось, что в elvish включен файловый менеджер (Ctrl-N),
+        визуальная навигация по истории директорий (Ctrl-L) и истории (Ctrl-R).
+    </p>
+
+    <p>
+        Я редко пишу скрипты на shell, но каждый раз когда приходится это делать, то вызывает страдания.
+        Подумываю перейти на оболочку нового поколения вроде elvish и ставить её в том числе на сервера (экстра 10Мб).
+    </p>
+
+    <h4>EDA - Event Driven Architecture</h4>
+
+    <p>
+        Luno - платформа для криптоинвесторов. Пользовательская база приложения: более 13 миллионов. В основе работы
+        Luno EDA, т.е. событийно-ориентированная архитектура.
+    </p>
+
+    <p>
+        Во-первых, <strong>что такое EDA?</strong>
+    </p>
+
+    <blockquote>
+        EDA - is a design paradigm where systems react to changes in state or specific updates, known as "events",
+        by triggering their own execution in response to these events.
+    </blockquote>
+
+    <p>
+        EDA можно противопоставить polling-модели, в которой нужно получать следующий пакет данных для обработки.
+        В EDA в среднем время между появлением события и его обработкой минимально.
+    </p>
+
+    <p>
+        Докладчик презентов их собственных продукт <code>luno/workflow</code>, аналог <code>temporal</code>,
+        о котором сегодня и поговорим.
+    </p>
+
+    <p>
+        <strong>Важно!</strong> Событийно-ориентированная архитектура сложна. Избегайте её до того момента, когда
+        она абсолютно неизбежна. Вы будете часто видеть слова "modern" и "distributed systems" вместе, потому что
+        эти архитектуры дорого продаются и выгодны менеджерам по продажам. Не позволяйте себя ввести в заблуждение.
+        Распределенные системы решают задачи распределения пользовательской нагрузки, но вместе с тем привносят
+        ряд проблем.
+    </p>
+
+    <p>
+        Итак, <strong>что такое temporal?</strong>
+        В недетерминированных процессах результат точно предсказать нельзя при одних и тех же входных данных:
+        есть ли в доступе файловая система, каково будет время ответа удаленного сервера, будет ли доступно достаточно
+        оперативной памяти и т.д.?
+        <strong>Как решить проблемы</strong> при возникновении таких ситуаций? Вариантов два: повтор операции,
+        возвращение к исходному состоянию.
+        <strong>Повысим градус сложности</strong> и представим, что наш процесс (workflow) состоит из цепочки
+        таких действий (activity функций). И нас интересует чтобы процесс выполнился до своего завершения. Т.е. нужна
+        оркестрация (управление) такими действиями.
+    </p>
+
+    <blockquote>
+        temporal - это middleware, который предлагает инструменты надежного выполнения процессов (workflows).
+    </blockquote>
+
+    <p>
+        Коротко, temporal - сервер, связывающий по protobuf (protocol buffers) воркеров и их клиентов.
+        Воркеры нацелены на выполнение всех действий многоступенчатого процесса (workflow).
+    </p>
+
+    <p>
+        <strong>Чем это отличается от обычной очереди?</strong>
+    </p>
+
+    <p>
+        Предположим, мы хотим сделать телеграм-бот по чтению телеграм канала (поток текстовых сообщений),
+        формированию саммари (отчет) за день и генерации аудиосообщения с ключевыми темами, которые обсуждались.
+        Наш процесс (workflow) генерации отчета должен состоять из следующих этапов (предположим, что сообщения
+        накапливаются в СУБД):
+    </p>
+
+    <ul>
+        <li>разделение всех сообщений за день на тестовые порции (читаем из СУБД);</li>
+        <li>
+            в цикле:
+            <ul>
+                <li>отправка такой текстовой порции в OpenAI для получения порции текстового репорта;</li>
+                <li>сохранение промежуточного текстового репорта;</li>
+            </ul>
+        </li>
+        <li>формирование итогового текстового репорта;</li>
+        <li>генерация аудио итогового текстового репорта.</li>
+    </ul>
+
+    <p>
+        Впечатления от использования:
+    </p>
+
+    <ul>
+        <li>отличная документация, написанная для людей, без обилия перекрестных ссылок</li>
+        <li>быстрый UI на Svelte (преподносится как "unique value propositions"), график выполнения Activity</li>
+        <li>среди зависимостей есть два пакета для использования UUID, два пакета для работы с PostgreSQL (pq и pgx). Почему?</li>
+        <li>в БД 43 таблицы, хранящие данные о кластере temporal, воркерах, задачах, очередях и т.д.</li>
+        <li>можно перезагружать сервер: продюсеры и воркеры не будут падать, а будут дожидаться поднятия сервера</li>
+    </ul>
+</div>
+</body>
+</html>
