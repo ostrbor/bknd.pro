@@ -1,0 +1,140 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 72. PostgreSQL 17, Go for scripts, Complex Forms</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>72. PostgreSQL 17, Go for scripts, Complex Forms</h1>
+        <h2>06.10.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/67029c3dfc23de5763935bd9?theme=light" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/072_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://www.postgresql.org/about/news/postgresql-17-released-2936/">PostgreSQL 17 Released!</a>
+        </li>
+        <li>
+            <a href="https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-SQLJSON-TABLE">документация PostgreSQL: JSON_TABLE</a>
+        </li>
+        <li>
+            <a href="https://www.crunchydata.com/blog/real-world-performance-gains-with-postgres-17-btree-bulk-scans">Real World Performance Gains With Postgres 17 B-tree Bulk Scans</a>
+        </li>
+        <li>
+            <a href="https://leg100.github.io/en/posts/building-bubbletea-programs/">Tips for building Bubble Tea programs</a>
+        </li>
+        <li>
+            <a href="https://github.com/leg100/pug">pug: Drive terraform at terminal velocity. (439 stars)</a>
+        </li>
+    </ul>
+
+    <h4>Написание скриптов на Go</h4>
+
+    <h4>Вышел PostgreSQL 17</h4>
+    <p>
+        26 сентября 2024 вышла новая, 17, версия СУБД PostgreSQL. Проведена работа по оптимизации.
+        Ключевое:
+    </p>
+
+    <ol>
+        <li>
+            Переработано <strong>управление памятью при VACUUM</strong>.
+        </li>
+        <li>
+            Оптимизирован <strong>доступ к стораджу</strong> для высококонкурентного доступа.
+        </li>
+        <li>
+            Bulk load and export.
+        </li>
+        <li>
+            Скорость выполнения запросов.
+        </li>
+        <li>
+            JSON_TABLE().
+        </li>
+        <li>
+            <strong>Удвоена скорость записи WAL</strong>.
+        </li>
+        <li>
+            Быстрее работают выборки с IN клаузой по B-tree. 30% рост производительности!
+        </li>
+        <li>
+            Повышена скорость билда BRIN индекса.
+        </li>
+        <li>
+            Сортировочные семантики (collations) теперь встроены в PostgreSQL 17 и делают выборки с сортировками
+            независимыми от платформы, на которой запущена СУБД.
+        </li>
+        <li>
+            Упрощена миграция с одной мажорной версии на другую в части слотов логической репликации: их теперь не
+            нужно будет удалять.
+        </li>
+        <li>
+            Добавлены <strong>инкрементные бэкапы</strong> с помощью <code>pg_basebackup</code>, а с помощью
+            <code>pg_combinebackup</code> можно воссоздать базу данных на основе базового и инкрементных бэкапов.
+        </li>
+        <li>
+            <code>EXPLAIN</code> теперь показывает время потраченное на I/O, а также потраченную память.
+        </li>
+        <li>
+            Больше статистики по работе текущего процесса: системная вьюшка <code>pg_stat_activity</code> и причины
+            ожидания (состояние waiting). Бэкенд может ждать блокировку таблицы, ждать WAL, checkout, IO, доступ к буферу,
+            ожидание клиента и т.д.
+        </li>
+    </ol>
+
+    <h4>JSON_TABLE()</h4>
+
+    <p>
+        Вместе с функциям JSON_EXISTS, JSON_QUERY, JSON_VALUE для работы с JSON объектами в СУБД
+        добавлена также функция JSON_TABLE.
+        <strong>JSON_TABLE()</strong> - это SQL/JSON функция для предоставления JSON объекта в виде таблицы.
+    </p>
+
+    <p>
+        Функция принимает второй аргумент, которые описывает нужную схему представления (view). Доступно форматирование,
+        приведение типов, построчное представление вложенных массивов (NESTED) как если бы вы сделали JOIN.
+    </p>
+
+    <p>
+        Аналогичная функция уже завоевала популярность в MySQL, Oracle и SQL Server.
+        Функция непростая и её релиз откладывался командой PostgreSQL 2 года.
+        Официальная документация на сегодня - лучший источник информации по этой функции.
+    </p>
+
+    <h4>Tips for building Bubble Tea programs</h4>
+
+    <p>
+        Обстоятельная очень хорошая статья от Луиса Гармана, создателя Terraform TUI на базе Bubble Tea фреймворка,
+        о том как последний использовать максимально эффективно. Просто хочу посоветовать статью, т.к. в ней чистый
+        спресованный опыт написания таких консольных интерактивных приложений, в частности использование Bubble Tea.
+    </p>
+</div>
+</body>
+</html>
