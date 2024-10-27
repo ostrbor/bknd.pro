@@ -1,0 +1,96 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 75. LRO API Design Pattern</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>75. LRO API Design Pattern</h1>
+        <h2>27.10.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/671e5b5c7be55ae189a66d38" frameBorder="0"
+                width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/075_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <p>
+        APIs usually respond to requests quickly. But what happens when a request takes a long time to process? That’s
+        where the LRO (Long-Running Operations) design pattern comes in. It’s a smart way to handle tasks that take a
+        while to complete, but it brings some challenges, especially with how clients handle waiting and errors.
+    </p>
+
+    <h4>Why is LRO Important?</h4>
+
+    <p>
+        Sometimes, the server needs more time to process a request. Maybe it’s a complex operation or something
+        involving large data. In these cases, simply telling the client, "Wait, we’ll get back to you" isn’t enough.
+        Many clients won’t read the documentation properly, so they might stop waiting after a few minutes and try
+        again, which only adds to the server load. Or, they might not know how long to wait or whether the server is
+        even doing anything useful.
+    </p>
+
+    <p>
+        Then there’s the issue of cancellations. What if the client wants to stop the process or pause it? And, if the
+        connection drops, does the process restart from scratch?
+    </p>
+
+    <h4>How LRO Works</h4>
+    <p>
+        The LRO pattern works like this: first, the client creates an LRO object. This object has an operation ID (ID),
+        which the client can use to track the progress of the task. The client can also pause, resume, or cancel the
+        operation at any point.
+    </p>
+
+    <p>
+        Typically, the LRO object will have a few key fields: an ID, a result field (which contains the operation's
+        final output), and a done field to indicate whether the operation is finished or still in progress. Sometimes,
+        checking if the result field is empty can tell you if the process is done. But for operations where there’s
+        nothing to return (like deleting a file), the done field is crucial.
+    </p>
+
+    <h4>Handling Errors in LRO</h4>
+    <p>
+        One tricky thing about LROs is how to handle errors. Normally, an API would return a status code like 500 for an
+        error. But with LROs, it’s not always clear if that error is related to tracking the operation or the operation
+        itself. So, instead of just using status codes, LROs return errors as JSON objects within the response body.
+        This helps keep things clear.
+    </p>
+
+    <p>
+        Also, it’s better to use numerical error codes instead of readable text codes. Why? Text codes are harder to
+        change later if needed (like fixing a typo), while numerical codes are easier for machines to process and more
+        flexible. The explanation of the error can go in a separate details field for clarity.
+    </p>
+
+    <h4>In Summary</h4>
+    <p>
+        The LRO pattern is essential for APIs dealing with long-running tasks. It helps clients track progress, pause or
+        cancel tasks, and handle errors more effectively. While it has its challenges, like managing client expectations
+        and dealing with errors, it’s a powerful tool when designed and implemented properly.
+    </p>
+</div>
+</body>
+</html>
