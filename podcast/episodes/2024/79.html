@@ -1,0 +1,129 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 79. Side Effects</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>79. Side Effects</h1>
+        <h2>24.11.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/6743494f5f96507d492168e1" frameBorder="0"
+                width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/079_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <p>
+        Side effects are a core concept in functional programming (FP), but they’re relevant in every programming
+        paradigm. So, what exactly is a side effect, and why should we care about them?
+    </p>
+
+    <h4>What Is a Side Effect?</h4>
+    <p>
+        In simple terms, a side effect is any impact a function has on the outside world beyond returning a value. Think
+        of a function as a black box: you pass in some data and get a result. If the function also writes to a file,
+        modifies a global variable, or sends data over the network, that’s a side effect.
+    </p>
+
+    <p>
+        This doesn’t mean side effects are inherently bad. In fact, in web development, side effects like saving data to
+        a database or sending a response over the network are often the main purpose of the code! But understanding and
+        managing side effects is key to writing maintainable and predictable software.
+    </p>
+
+    <h4>Why Side Effects Matter</h4>
+    <p>
+        Guy Steele, a well-known computer scientist and co-author of Java and JavaScript specifications, highlights
+        three programming breakthroughs that simplified our work by managing complexity. These are:
+    </p>
+
+    <p>
+        Structured Programming: Before structured programming, goto statements let you jump to any line of code, making
+        programs hard to follow. By limiting flow control to a few patterns (like loops and conditionals), code became
+        easier to read and understand.
+    </p>
+
+    <p>
+        Object-Oriented Programming (OOP): In the pre-OOP era, global variables were everywhere, accessible from any
+        part of the program. OOP introduced the idea of encapsulation, restricting access to data. Even without classes,
+        you can apply this principle by using local variables to limit a function's scope.
+    </p>
+
+    <p>
+        Functional Programming (FP): FP emphasizes separating code with side effects from code without them. This makes
+        programs easier to reason about and debug.
+    </p>
+
+    <h4>FP’s Approach to Side Effects</h4>
+    <p>
+        Functional programming doesn’t eliminate side effects but organizes them better. For example, imagine you have a
+        list of email addresses, and you need to generate personalized messages and send them.
+    </p>
+
+    <p>
+        In an imperative approach, you might loop through the list, generate a message, and send it in one go. FP
+        suggests splitting this into two steps:
+    </p>
+
+    <ul>
+        <li>Transform the list of addresses into a list of messages.</li>
+        <li>Send the messages.</li>
+    </ul>
+    <p>
+        This separation clarifies what the code is doing at each stage and isolates the part that interacts with
+        external systems.
+    </p>
+
+    <h4>Recognizing Side Effects</h4>
+    <p>
+        A function has side effects if it:
+    </p>
+
+    <ul>
+        <li>Writes to a file or database.</li>
+        <li>Sends data over a network.</li>
+        <li>Modifies arguments passed by reference.</li>
+        <li>Updates global or external variables.</li>
+        <li>Even a simple assignment can indicate a side effect if it changes anything outside the function's scope.
+        </li>
+    </ul>
+
+    <h4>Why the Name “Side Effect”?</h4>
+    <p>
+        The term “side effect” might sound negative, as if it’s an unintended consequence. But in many cases, especially
+        in web development, side effects like saving data or sending responses are exactly the point of our code. Maybe
+        “external effect” would have been a better name, but here we are.
+    </p>
+
+    <h4>Final Thoughts</h4>
+    <p>
+        Managing side effects is about making your code clearer and more predictable. By isolating side effects and
+        structuring code thoughtfully, you reduce bugs and make future changes easier. Whether you’re writing FP, OOP,
+        or procedural code, keeping an eye on those “extra wires” connected to your functions is always a good idea.
+    </p>
+</div>
+</body>
+</html>
