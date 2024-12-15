@@ -1,0 +1,160 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 81. Continuous Integration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>81. Continuous Integration</h1>
+        <h2>15.12.2024</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/675f053227740406d8d329ce" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/081_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://go.dev/blog/15years">Go Turns 15</a>
+        </li>
+        <li>
+            <a href="https://martinfowler.com/articles/continuousIntegration.html?ref=blog.vvsevolodovich.dev">Continuous Integration (Martin Fowler)</a>
+        </li>
+    </ul>
+
+    <h4>Языку программирования Go исполнилось 15 лет!</h4>
+
+    <p>
+        За последние пять лет пользовательская база Go утроилась - Go самый быстрорастущий ЯП. В облачных решениях Go
+        сохраняет свою высокую популярность.
+    </p>
+
+    <p>
+        Одно из самых заметных изменений в языке с тех пор - это переменная цикла for. Начиная с Go 1.22 переменные,
+        объявленные в цикле for, видны только внутри одной итерации цикла.
+    </p>
+
+    <h4>Continuous Integration by Martin Fowler</h4>
+
+    <p>
+        Статья Мартина Фаулера, который применяет CI на протяжении более 20 лет.
+    </p>
+
+    <p>
+        Continuous Integration (CI) - это практика, при которой разработчики объединяют свои изменения в центральный
+        репозиторий как минимум раз в день. Каждое объединение сопровождается автоматической сборкой и запуском набора
+        тестов. <strong>Намного проще интегрировать код, написанный за 2 часа, чем за 2 дня и тем более за 2 недели</strong>.
+    </p>
+
+    <blockquote>Integration is not a painless process</blockquote>
+
+    <p>
+        Интеграция работы нескольких разработчиков — это долгий и непредсказуемый процесс.
+
+        <strong>Pre-Release Integration</strong>. Проект разбивается на слабосвязанные unit'ы и на финальном этапе
+        они сливаются в одну кодовую базу.
+
+        Другой популярный подход - это <strong>feature branching</strong>. При таком подходе разработчики работают над
+        своими фичами в отдельных ветках и интегрируют их в основную ветку как только их фича завершена.
+    </p>
+
+    <p>
+        Вот частые проблемы, если заниматься раздельное разработкой и потом интегрировать:
+    </p>
+
+    <ol>
+        <li>Изменения в основной ветке вынуждают адаптировать свою feature ветку.</li>
+        <li>Переключение на следующую задачу отягощено поддержкой code review пул-реквеста прошлой задачи.</li>
+        <li>Редкий рефакторинг, т.к. он приводит к большому расхождению в коде и триггерит проблемы выше.</li>
+    </ol>
+
+    <p>
+        Идея CI - не "убегать" от основной ветки разработки более чем на несколько часов (максимум день) разработки.
+        Слияние (интеграция) будет в таком случае легким.
+    </p>
+
+    <p>
+        <strong>Как выглядит процесс разработки при CI у обычного разработчика вроде нас с тобой?</strong>
+        Мы делает <code>git pull</code> главной ветки (mainline). Билдим проект, запускаем тесты, чтобы убедиться, что
+        у нас рабочая версия (всякое бывает). Вносим правки. Спустя пару часов, перед пушем, подтягиваем изменения
+        и видим, что коллеги внесли свои коммиты. Мы проверяем все ли ок работает с учетом новых коммитов и, наконец,
+        пушим изменения в main-ветку. CI агент замечает, что появились новые коммиты в репозитории на сервере и
+        запускает сборку проекта и его тесты. По итогу нам приходит нотификация, что все выполнилось успешно на сервере.
+    </p>
+
+    <h4>Ключевые практики Continuous Integration</h4>
+
+    <p>
+        <strong>Использование системы контроля версии</strong>.
+    </p>
+
+    <p>
+        <strong>Автоматизация билда приложения</strong>.
+    </p>
+
+    <p>
+        <strong>Писать self-testing код</strong>.
+    </p>
+
+    <p>
+        <strong>Все разработчики должны вносить правки в mainline по крайней мере один раз в день</strong>.
+        По начала это кажется невыполнимым, но просто требует практики. Также такой подход упрощает написание
+        авто-тестов, т.к. внесенные правки небольшие.
+    </p>
+
+    <p>
+        <strong>Если билд сломался, то чиним его немедленно</strong>.
+        Т.е. все случается в mainline, то билд проекта в этой ветке должен работать. Самым быстрым и простым решением
+        будет revert последнего комита, который сломал билд. Также на уровне CI Service можно настроить
+        <code>pre-tested commits</code> (варианты Pending Head могут отличаться по названию). При этом комит попадает
+        в систему контроля версий <u>строго после</u> успешного билда/тестов.
+    </p>
+
+    <p>
+        <strong>Билд должен быть быстрым</strong>. Разработчики при CI должны получать фидбек максимально быстро.
+        CI цикл (билд/тест) должен случаться не более чем за 10 минут.
+    </p>
+
+    <p>
+        <strong>Скрывать незаконченные фичи</strong>. При таком итеративном подходе, когда мы пушим изменения как только
+        небольшая порция готова и билд не падает неизбежно у нас будут фичи, которые еще рано показывать пользователю.
+        Скрываем их либо с помощью <strong>feature flags</strong>, либо просто не добавляя в UI.
+    </p>
+
+    <blockquote>Integration is primarily about communication</blockquote>
+
+    <blockquote>
+        The interplay between self-testing code, Continuous Integration, and Refactoring is particularly strong.
+    </blockquote>
+
+    <h4>Границы применимости CI</h4>
+
+    <p>
+        В проекта с открытым исходным кодом лучше подходит feature brunching, т.к. участники плохо знают друг друга
+    </p>
+</div>
+</body>
+</html>
