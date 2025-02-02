@@ -71,6 +71,11 @@ h2 {
     padding-left: 2em;
     margin-top: 0;
 }
+.warning {
+    font-size: 2em;
+    background-color: #ffcccc;
+    padding: 0 0.2em;
+}
 #footer {
     text-align: right;
     margin: 2rem 0;
