@@ -1,0 +1,107 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 87. Data Centers, Nvidia, DeepSeek, Ollama</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>87. Data Centers, Nvidia, DeepSeek, Ollama</h1>
+        <h2>02.02.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/679f9278f0c4d186914a194d" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/087_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://github.com/ollama/ollama">Get up and running with Llama 3.3, DeepSeek-R1, Phi-4, Gemma 2, and other large language models. (117k stars)</a>
+        </li>
+        <li>
+            <a href="https://arxiv.org/html/2412.19437v1">DeepSeek-V3 Technical Report</a>
+        </li>
+    </ul>
+
+    <h4>Отчет <abbr title="The International Energy Agency">IEA</abbr> по датацентрам</h4>
+
+    <p>
+        <strong>Хватает ли ёмкостей современных датацентров?</strong> Краткий ответ - нет. TSMC не успевает производить
+        чипы. Дата-центры не успевают расширяться под возрастающий спрос: развитие BigData и аналитики, криптовалют с
+        блокчейном, одновременно развиваются облачные сервисы и, сейчас, AI. Дата-центры строят с опережением.
+    </p>
+
+    <p>
+        IEA появилась в 1973 году в ответ на энергетический кризис. Из-за сговора арабских стран и введения эмбарго
+        на поставку нефти развитым странам, поддержавшим Израиль в войне с Сирией и Египтом, нефть подорожала с 3 до
+        12 долларов. В ответ развитые страны создали IEA (Международное Энергетическое Агенство), которое мониторит
+        рынок энергоресурсов. Меня заинтересовал их отчет от конца 2024 года про датацентры.
+    </p>
+
+    <p>
+        <strong>Как IEA повлияло на регулирование энергоресурсов в мире?</strong>
+        После кризиса 1973 года IEA ввело требование для стран-участников (~ЕС, Турция, Австралия, США, Япония)
+        хранить стратегические запасы нефти, эквивалентные как минимум 90 дням чистого импорта.
+        Это помогло снизить уязвимость перед возможными перебоями в поставках.
+    </p>
+
+    <p>
+        Забавный факт: по отчетам IEA <strong>уголь</strong> до сих пор в лидерах и втрое опережает ядерную энергию в
+        <a href="https://www.iea.org/data-and-statistics/charts/world-electricity-generation-in-the-stated-policies-scenario-2010-2035">доле сгенерированных Ватт-часов.</a>
+        <strong>Почему уголь всё ещё лидирует в производстве энергии?</strong> Уголь очень дешевый и стабильно
+        генерирует тепло, а значит и электроэнергию (т.е. не зависит от погоды, ветра, Солнца и т.д.)
+    </p>
+
+    <p>
+        С января 2023 года инвестиции в датацентры в США удвоились и превысили инвестиции в нефтегазовый сектор.
+        Сейчас эти стремительные инвестиции связаны с AI.
+        Интересен <a href="https://www.iea.org/data-and-statistics/charts/household-adoption-rates-of-digital-technologies-in-the-united-states">график адпотации AI домохозяйствами</a>.
+    </p>
+
+    <p>
+        Только один Amazon <a href="https://www.bloomberg.com/professional/insights/data/amazon-bets-150-billion-on-data-centers-required-for-ai-boom/">планирует инвестиции в 150 млн долларов</a>
+        в строительство дата-центров. Компания предвидит также взырвной рост спроса на вычислительные мощности для AI.
+    </p>
+
+    <p>
+        <strong>Что с Nvidia</strong> на фоне выхода новостей про DeepSeek. Фондовый рынок - это рынок ожиданий.
+        Акции Nvidia упали с 7300 до 6000 примерно, т.е. на 18%. Я попробовал DeepSeek 7b локально - хорошая модель.
+        На моем стареньком лептопе с NVidia GPU генерирует со скоростью 5 токенов в секунду. И ризонинг модель очень
+        хорошая: я задал задачу на составление 1000 из 8и 8ёрок. Она 20 минут искала решение и расписывала разные
+        подходы к их решению и почему отвергала один и выбирала другой. Правда работать с ней можно на английском
+        и китайском. Если спросить что-то по-русски, то в ответ скорее всего получите микс из китайского, английского и
+        русского. <strong>Резюмируя</strong>, появление DeepSeek наоборот подстегнет развитие и внедрение отрасли и
+        потребность в серверах только вырастет. Т.е. сейчас модели с хорошим ризонингом стоят дорого (USD200 за o1), но
+        с появлением конкурентов цена может сильно снизится.
+    </p>
+
+    <p>
+        В IT-индустрии ожидается рост Data Center Architect, Power Engineer, операторы, системный администраторы,
+        сетевые инженеры, мониторинг, охлаждение и т.д. И конечно, для программистов будет много дополнительной работы
+        по интеграции существующих бизнесов с AI языковыми моделями.
+    </p>
+</div>
+</body>
+</html>
