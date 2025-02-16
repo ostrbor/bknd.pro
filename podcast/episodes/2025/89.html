@@ -1,0 +1,152 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 89. Go 1.24</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>89. Go 1.24</h1>
+        <h2>16.02.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/67b2183f4d9bd1092c723d8c" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/089_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://golangci-lint.run/usage/linters/">
+                golangci-lint is a fast linters runner for Go.
+            </a>
+        </li>
+    </ul>
+
+    <p>
+        Вышла новая версия Go 1.24.0 и если кратко, то изменений не так много. Предлагаю консервативно подождать
+        месяц и апаться, но я локально установил новую версию и уже ею пользуюсь. Что появилось самого полезного
+        в новой версии?
+    </p>
+
+    <p>
+        Были внесены незначительные дополнения в спецификацию языка: теперь можно создавать <strong>type aliases</strong>
+        у generic типов. Я вобще не использую тайп алиасы в своих проектах, поэтому, думаю, изменение нужно лишь для
+        консистентности языка.
+    </p>
+
+    <p>
+        Общее повышение производительности 2-3% за счет улучшенной malloc маленьких объектов, новой имплементации
+        mutex'а, который используется для внутренних задач в рантайме и улучшенных хеш-таблиц.
+    </p>
+
+    <p>
+        build, install и test команды теперь могут возвращать результаты в JSON формате.
+    </p>
+
+    <h4>go tool</h4>
+
+    <p>
+        <strong>Вы используете линтеры?</strong> или любой другой тулинг, например, для кодогенерации? Теперь можно
+        сделать <code>go get -tool</code> и зависимость будет прописана в <code>go.mod</code> проекта.
+        <code>go tool &lt;command&gt;</code> запустит установленную команду. <strong>Внимание!</strong> При установке
+        зависимостей указывайте точную версию инструмента.
+    </p>
+
+    <p>
+        Например, <code>golangci-lint</code> - компиляция линтеров под одним зонтиком - ставится следующей командой:
+    </p>
+
+    <code>
+        go get -tool github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.5
+    </code>
+
+    <p>
+        Теперь запуск линтера делаем так:
+    </p>
+
+    <code>
+        go tool golangci-lint run
+    </code>
+
+    <p>
+        Если нужная версия линтера не установлена, то она будет установлена и запущена. В следующих эпизодах поговорим
+        про этот инструмент.
+    </p>
+
+    <h4>omitzero</h4>
+
+    <p>
+        <code>omitzero</code> можно будет использовать вместо <code>omitempty</code>. При этом <code>omitzero</code>
+        работает корректно для неинициализированного типа <code>time.Time</code>.
+    </p>
+
+    <h4>Swiss table</h4>
+
+    <p>
+        По-видимому это будет дополнительный популярный вопрос на интервью.
+        Бесплатное ускорение работы с хеш-таблицами. Алгоритм портирован из популярной библиотеки <code>Abseil</code>
+        от Google для разработчиков на C++. Бенчмарки показывают ускорение до 30% на хеш-таблицах размером более 1024
+        записей.
+    </p>
+
+    <h4>HTTP протоколы</h4>
+
+    <p>
+        В настройках транспорта клиента или сервера можно указывать версию HTTP-протокола: <code>SetHTTP1(true)</code>
+        или <code>SetHTTP2(true)</code>.
+    </p>
+
+    <h4>Обновления в пакете crypto</h4>
+
+    <p>
+        Можно не упомнить про пакет crypto. Будьте уверены, он будет обновляться почти во всех новых версиях, т.к.
+    </p>
+
+    <ul>
+        <li>появляются уязвимости и их латают (patches);</li>
+        <li>находятся способы ускорить криптографические функции;</li>
+        <li>SDK подтягивается до свежих криптографических стандартов.</li>
+    </ul>
+
+    <h4>weak pointers (слабые указатели)</h4>
+
+    <p>
+        В SDK появился пакет <code>weak</code> для создания слабых указателей, которые будут обнулены, а объекты, на
+        которые они указывают будут удалены как только запустится GC. Подобные указатели есть в других ЯП, например, в
+        C#.
+    </p>
+
+    <p>
+        В ЯП с GC управление памятью происходит скрытно от программистов, для компенсации этого придумываются разные
+        полумеры вроде weak-указателей. В определенных алгоритмах такие указатели могут быть полезными, например при
+        навигации по гигантскому дереву или для LRU-кеша.
+    </p>
+
+    <p>
+        Любой weak указатель может стать обычным и наоборот.
+    </p>
+</div>
+</body>
+</html>
