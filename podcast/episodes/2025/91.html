@@ -1,0 +1,166 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 91. Object storage is all you need</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>91. Object storage is all you need</h1>
+        <h2>02.03.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/67c4976622548f8888e36c9c" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/091_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://www.youtube.com/watch?v=ei0wwTy6_G4">
+                Object storage is all you need
+            </a>
+        </li>
+        <li>
+            <a href="https://notes.eatonphil.com/2024-09-29-build-a-serverless-acid-database-with-this-one-neat-trick.html">
+                Build a serverless ACID database with this one neat trick (atomic PutIfAbsent)
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/slatedb/slatedb">
+                A cloud native embedded storage engine built on object storage. (1.8k stars)
+            </a>
+        </li>
+    </ul>
+
+    <h4>Сложные продукты - это то, что нужно клиенту</h4>
+
+    <p>
+        Всю прошедшую неделю мне помогала делать рефакторинг идея, которую мы с тобой обсудили за пределами подкаста:
+        бизнесу/клиенту нужны сложные решения. Мысль на первый взгляд очевидная, но когда ты имеешь дело со сложным
+        кодом тебе хочется его упростить. Есть разные подходы как можно это сделать, но отменить всёвозрастающую
+        сложность просто невозможно. Именно сложные продукты и нужны клиентам.
+    </p>
+
+    <p>
+        Эта мысль хорошо была развита в упомянутой тобой книге "Living With Complexity" авторства Donald A. Norman.
+        Коротко замысел книги можно выразить слоганом "Complexity is good". В следующих эпизодах, я думаю, мы вернемся
+        к этой книге. Ну а пока даже её тайтл помогает пережить сложные куски кода и умерить стремление к непрерывному
+        упрощению.
+    </p>
+
+    <p>
+        Почему эта идея важна? Дело в том, что может возникнуть кажущееся противоречие между принципом
+        <strong>KISS</strong> или подходами <strong>Clean Code</strong> и принятием, что упрощение невозможно.
+        Но сложность - это не значит, что сделано что-то неправильно.
+    </p>
+
+    <h4>Object storage is all you need</h4>
+
+    <p>
+        В наших проектах мы стремимся все же к упрощению: мы аскетично придерживаемся минимально возможного стека.
+        Так нам проще выживать и продолжать писать новый код, а не только заниматься поддержкой старого.
+        Наше кредо для всех небольших проектов - <strong>Postgres может быть storag'ем любых данных</strong>.
+        Нужен key-value, документный, структурированный сторадж? Или нужен сторадж для очередей или логов? Используй
+        PostgreSQL! Это работает очень хорошо до определенного порога.
+    </p>
+
+    <p class="warning">
+        Избегайте хранения файлов в реляционной СУБД!
+    </p>
+
+    <p>
+        Мне показался интересным доклад <strong>Justin Cormack</strong> (CTO, Docker) под названием <strong>Object
+        storage is all you need</strong>.
+    </p>
+
+    <p>
+        Что такое object storage? Самый первый и яркий пример этого хранилища - это Amazon S3 (Simple Storage Service).
+        <i>В 85 эпизоде я рассказывал пример доставки гиганстких видео файлов с использованием Cloudflare R2.</i>
+        Jeff Bezos сформулировал это короткой запоминающейся полутехнической фразой:
+    </p>
+
+    <blockquote>
+        malloc for the internet
+    </blockquote>
+
+    <p>
+        S3 появился в 2006 году. Более техническое объяснение, что такое object storage:
+    </p>
+
+    <ul>
+        <li>key-value хранилище с HTTP API</li>
+        <li>размер файлов до 5Тб</li>
+        <li>объекты обновляются целиком, нельзя обновить часть</li>
+        <li>99.999999999% доступность (11 девяток)</li>
+    </ul>
+
+    <p>
+        Что можно сказать про производительность такого хранилища?
+    </p>
+
+    <ul>
+        <li>high latency, т.е. ответ мы получаем не быстро</li>
+        <li>high parallelism</li>
+        <li>5GBit throughput по одному подключению</li>
+    </ul>
+
+    <p>
+        Примерно год назад в AWS S3 появилась возможность записи (PUT метод) с заголовком
+        <strong>If-None-Match: *</strong>. Эта особенность позволяет записывать объект, только если его нет в хранилище.
+        Таким образом S3 предоставляет примитив конкурентного доступа с взаимным исключением (mutual exclusion
+        concurrency primitive).
+    </p>
+
+    <p>
+        Есть <strong>хорошая статья</strong> как используя только этот примитив, автор написал супер простую
+        транзакционную serverless СУБД, которой ничего не нужно кроме AWS S3 с упомянутым
+        <strong>conditional writes</strong>. Принцип достаточно
+        прост: мы ведем последовательный журнал запросов на изменение состояния и периодически выполняем compact:
+        собираем все изменения в актуальный snapshot. Работы и эксперименты продолжаются и скорее всего в ближайшем
+        будущем появятся проекты, в том числе OS-проекты, которые используют только S3 в качестве файловой системы.
+        SlateDB (OSS), Turbopuffer (закрытый, локальный SSD диск в качестве кеша).
+    </p>
+
+    <p>
+        Другой интересный демо проект - это виртуальный диск бесконечного размера, который использует локальный SSD диск
+        в качестве кеша. Так вместо Amazon Elastic Block Store (Amazon EBS) в бенчмарке стоимостью USD3000 в месяц
+        можно получить такой же диск, но он будет стоить USD5 в месяц. При этом такой виртуальный диск в облаке, т.е.
+        потенциально доступен другим севрисам, приложениям и т.д.
+    </p>
+
+    <p>
+        Есть уже эксперименты с реализацией Leader Election на базе S3, WarpStream (not OSS) - Kafka,
+        но с хранилищем в S3.
+    </p>
+
+    <p>
+        В ближайшее время мы скорее всего увидим больше продуктов, которые используют только объектное хранилище, а
+        локальные диски в качестве кеша. Также, стоит, по-видимому, делать ставку на снижение latency таких хранилищ.
+        Главное преимущество в пользу такого хранилища - упрощение распределенных систем, т.е. сторадж большой, он
+        доступен всем нодам.
+    </p>
+</div>
+</body>
+</html>
