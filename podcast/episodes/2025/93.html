@@ -1,0 +1,161 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 93. os.Root, ReactJS to Go, tsgo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>93. os.Root, ReactJS to Go, tsgo</h1>
+        <h2>16.03.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/67d766e634deae95a503d159" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/093_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://dagger.io/blog/replaced-react-with-go">
+                We Replaced Our React Frontend with Go and WebAssembly
+            </a>
+        </li>
+        <li>
+            <a href="https://go-app.dev/">
+                Go-app: Go-app is a package for building progressive web apps (PWA) with the Go programming language
+                (Golang) and WebAssembly (Wasm)
+            </a>
+        </li>
+        <li>
+            <a href="https://go.dev/blog/osroot">
+                Traversal-resistant file APIs
+            </a>
+        </li>
+    </ul>
+
+    <h4>We Replaced Our React Frontend with Go and WebAssembly</h4>
+
+    <p>
+        <strong>Dagger</strong> - это инструмент для автоматизированной сборки для сложных проектов. С его помощью
+        можно в Go коде описать процесс сборки, а так как это Go-код, то допустимо использовать всё что угодно:
+        условия, циклы, HTTP-вызовы, подключения к СУБД и т.д. Это как если бы вы писали скрипты, но здесь всё на Go.
+        Плюс к этому Dagger более производительно кеширует Docker-сборки, а именно глобально для всех собираемых
+        проектов. Вобщем, если обычного <code>Dockerfile</code> не хватает, то можете глянуть в сторону Dagger.
+    </p>
+
+    <p>
+        Код Dagger открыт, плюс, команда предоставляет SaaS, у которого есть как TUI, так и WebUI.
+    </p>
+
+    <p>
+        Разработчики Dagger поддерживали две сходные по функционалу кодовые базы: TUI (Terminal User Interface)
+        на Go и WebUI на React. Новую версию фронтенда переписанли на Go с использованием Go-app.
+        Теперь оба проекта на Go, что упростило их поддержку.
+    </p>
+
+    <p>
+        <strong>Как работает go-app?</strong> Вы пишете код на Go, который умеет работать с DOM-деревом, делать HTTP-
+        запросы из браузера и т.д. А т.к. это код на Go, то можно использовать то же самое SDK для работы с нужными
+        вам API. Т.е. поддерживаете одну кодовую базу как для TUI, так и для WebUI (т.е. вашего WASM-приложения).
+    </p>
+
+    <h4>Файловая песочница в Go 1.24</h4>
+
+    <p>
+        В официальном блоге ЯП Go вышла публикация про новое API <code>os.Root</code> в SDK Go1.24+.
+    </p>
+
+    <p>
+        Существует класс уязвимостей, позволяющая атакующему выйти получить доступ к файлам за пределами
+        разрешенных директорий. Атака осуществляется за счет манипулирования входными путями, например,
+        <code>../../../etc/passwd</code> или манипулированием символическими ссылками, если у атакующего есть доступ к
+        файловой системе. Атакующий может в бесконечном цикле подменять файл на символическую ссылку на какой-то другой
+        файл и потом возвращать обратно файл, чтобы это был обычный файл, например. Такой тип атаки называется
+        <strong>symlink race attack</strong>.
+    </p>
+
+    <p>
+        <strong>Как защищаться?</strong>
+        Первый способ - проверять пользовательский ввод, но это не защитит от TOCTOU атак.
+        <strong>Второй способ</strong> лучше - в Linux есть системные вызовы, которые ограничивают дерево файловой системы
+        указанной родительской директорией: <code>openat</code> и <code>openat2</code>. В качестве первого аргумента
+        нужно передать дескриптор открытой директории.
+    </p>
+
+    <p>
+        Этот механизм использует новое API <code>os.OpenRoot</code>:
+    </p>
+
+    <pre>
+root, err := os.OpenRoot("/some/root/directory")
+if err != nil {
+    return err
+}
+defer root.Close()</pre>
+
+    <p>
+        У открытого Root доступно следующее API:
+    </p>
+
+    <pre>
+func (*Root) Create(string) (*File, error)
+func (*Root) Lstat(string) (fs.FileInfo, error)
+func (*Root) Mkdir(string, fs.FileMode) error
+func (*Root) Open(string) (*File, error)
+func (*Root) OpenFile(string, int, fs.FileMode) (*File, error)
+func (*Root) OpenRoot(string) (*Root, error)
+func (*Root) Remove(string) error
+func (*Root) Stat(string) (fs.FileInfo, error)</pre>
+
+    <p>
+        Однако, защиту выше можно обойти, если у атакующего есть доступ к файловой системе и он может смонтировать
+        раздел в режиме <code>--bind</code> (меппинг директории по другому пути в файловой системе).
+    </p>
+
+    <p>
+        Когда использовать <code>os.Root</code>? Когда в коде используется <code>filepath.Join</code>.
+    </p>
+
+    <h4>Компилятор TypeScript на Go</h4>
+
+    <p>
+        Несколько дней назад главный архитектор TypeScript в MicroSoft анонсировал новый компилятор TypeScript
+        <code>tsgo</code>, который билдит проекты примерно в 10 раз быстрее.
+    </p>
+
+    <p>
+        Текущий компилятор (а точнее транспилятор - преобразователь, слово trans) написан на TypeScript, а значит
+        <strong>работает в single-thread</strong> режиме. Построение AST-деревьев можно легко делать конкурентно, а
+        значит потенциально быстрее. Новый компилятор на Go почти готов и ожидается полные переход на него в ближашие
+        месяцы.
+    </p>
+
+    <p>
+        Также, стоит отметить, что появление таких проектов позитивно сказывается и на сам ЯП Go: уже нашли способ
+        оптимизировать escape-анализ, чтобы в 5 раз ускорить сборку <code>tsgo</code>, а значит и других проектов.
+    </p>
+</div>
+</body>
+</html>
