@@ -1,0 +1,147 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 95. Building Bluesky</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>95. Building Bluesky</h1>
+        <h2>30.03.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/67e9adab5fb59eadfc700341" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/095_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://newsletter.pragmaticengineer.com/p/bluesky">
+                Building Bluesky: a Distributed Social Network (Real-World Engineering Challenges)
+            </a>
+        </li>
+        <li>
+            <a href="https://atproto.com/">
+                The AT Protocol official web site.
+            </a>
+        </li>
+    </ul>
+
+    <p>
+        Bluesky - это отличный пример эффективных маленьких команд разработчиков. Представьте, что аналог Twitter/X
+        делает команда из <strong>трех</strong> разработчиков. И только спустя год, прирост в несколько миллионов
+        пользователей команда увеличивается до 12 человек и остается компактной по сей день.
+    </p>
+
+    <p>
+        Сам по себе проект Bluesky любопытен с технической точки зрения. Что такого особенного в Bluesky?
+        <strong>AT protocol</strong> (Authenticated Transfer Protocol) - это <u>открытый стандарт</u> для
+        децентрализованных социальных сетей.
+    </p>
+
+    <ul>
+        <li>
+            <strong>Децентрализация.</strong> Можно поднимать свои Personal Data Servers (PDS), которые будут
+            коммуницировать с другими PDS и размещать информацию на своем личном PDS. Если твой PDS отключится от сети,
+            то весь контент, размещенный на нем, перестанет быть доступен.
+        </li>
+        <li>
+            <strong>Open source.</strong> Репозитории PDS, реализация AT-протокола, web и мобильные клиент доступны
+            на Github под MIT лицензией (copyleft).
+        </li>
+        <li>
+            Маленькая команда разработчиков.
+        </li>
+    </ul>
+
+    <p>
+        На бурный старт проекта повлиял новостной фон о том, что Илон Маск собирается купить Twitter. Пользователи
+        заинтересовались альтернативами. Сам Bluesky вышел из недр компании Twitter как экспериментальный проект
+        по разработке децентрализованного протокола для управления аккаунтами пользователей. Экс руководство Twitter
+        видело Bluesky ядром соц сети, а Twitter - его клиентом.
+    </p>
+
+    <p>
+        Напомню, что Илон Маск на тот момент уже анонсировал изменения в модерации контента в соц. сети. Также
+        будущий CEO известен своими политическими предпочтениями, что тоже оттолкнуло часть аудитории. Наконец,
+        непредсказуемые кадровые решения - увольнение ключевых сотрудников, радикальное сокращение штата. Эти
+        особенности Илона Маска оттолкнули часть лояльных пользователей в пользу альтернатив. <strong>За несколько
+        дней</strong> до продажи Twitter Илону Маску Bluesky открыли waitlist для ранних пользователей.
+    </p>
+
+    <p>
+        В марте 2023 Bluesky стал приглашать больше пользователей и за 6 месяцев нарастил пользовательскую базу до
+        1 000 000 пользователей. Сейчас по моему мнению bsky.app стал прибежищем микроблоггеров, критикующих Илон Маска.
+    </p>
+
+    <h4>Первая версия архитектуры</h4>
+
+    <p>
+        <strong>PostgreSQL</strong> в качестве СУБД, т.к. неясна структура данных на этапе прототипирования. Запущена
+        на старте была в AWS с репликами, на которые происходит автоматическое переключение в случае недоступности
+        главного инстанса СУБД (Postgres multi-availability zone instance).
+        <strong>AWS auto-scaling groups</strong> в качестве рантайма - это набор EC2 (Elastic Compute Cloud) с Docker.
+        И, наконец, load balancer. Всё настраивается в Pulumi - это IaC решение наподобии Terraform от Hashicorp.
+    </p>
+
+    <p>
+        Интересная особенность AT protocol - делегирование управлением выдачи контента. На своем PDS (Personal Data
+        Server) вы можете реализовать свой алгоритм ранжирования и выдачи контента. Из чего состоит распределенный
+        кластер?
+    </p>
+
+    <ul>
+        <li>PDS. Первые принадлежат bsky.app, но никто не мешает вам запустить свой.</li>
+        <li>AppView - клиентский сервис, предоставляющий интерфейс пользователям.</li>
+        <li>Relay - краулеры, собирающие записи с PDS.</li>
+        <li>
+            Feed Generators - отдельный класс сервисов, который занимается фильтрацией, ранжированием контента,
+            полученного от relay.
+        </li>
+    </ul>
+
+    <h4>Проблемы с PostgreSQL</h4>
+
+    <p>
+        PostgreSQL использовался как в Appview - агрегатор, к которому делает запросы клиент для получения контента,
+        так и с PDS. Спустя 3 месяца работы beta версии команда всё чаще стала испытывать проблемы с PostgreSQL:
+    </p>
+
+    <ul>
+        <li>Конкурентная модификация данных (lock contention) и как следствие деградация производительности.</li>
+        <li>Непредсказуемая работа планировщика, который может выполнять тот же SQL в 1000 раз медленнее.</li>
+        <li>
+            Сложность горизонтального масштабирования. База данных в PostgreSQL не распределенная по архитектуре,
+            благодаря чему эта СУБД может обеспечивать достаточно надежные транзакции с разными уровнями изоляции.
+        </li>
+    </ul>
+
+    <p>
+        На PDS также сложно поддерживать PostgreSQL, поэтому перешли на SQLite. Для каждого пользователя своя база
+        данных, а значит свой файл.
+    </p>
+</div>
+</body>
+</html>
