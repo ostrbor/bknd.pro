@@ -1,0 +1,147 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 97. MCP</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>97. Antropic MCP</h1>
+        <h2>13.04.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/67fbeed2629a2f3636659739" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/097_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://en.wikipedia.org/wiki/Anthropic">
+                Anthropic
+            </a>
+        </li>
+        <li>
+            <a href="https://docs.anthropic.com/en/docs/agents-and-tools/mcp">
+                Model Context Protocol (MCP)
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/SWE-agent/SWE-agent">
+                SWE-agent takes a GitHub issue and tries to automatically fix it, using GPT-4, or your LM of choice. It
+                can also be employed for offensive cybersecurity or competitive coding challenges. [NeurIPS 2024] (15.4k
+                stars)
+            </a>
+        </li>
+        <li>
+            <a href="https://arxiv.org/abs/2410.06992">
+                SWE-Bench+: Enhanced Coding Benchmark for LLMs
+            </a>
+        </li>
+    </ul>
+
+    <h4>MCP = Более тесная интеграция LLM с продуктом</h4>
+
+    <blockquote>MCP — это открытый протокол, который стандартизирует способ предоставления контекста приложениями большим
+        языковым моделям (LLMs). Представьте себе MCP как разъём USB-C для AI-приложений. Точно так же, как USB-C
+        обеспечивает стандартный способ подключения устройств к различным периферийным устройствам и аксессуарам, MCP
+        предоставляет единый стандарт для подключения AI-моделей к различным источникам данных и инструментам.</blockquote>
+
+    <p>
+        Разработан компанией Antropic, разработчиком Claude AI для написания кода. Идея в том, чтобы предоставить LLM
+        возможность эффективного взаимодействия с внешними системами, например, файловой системой или СУБД.
+    </p>
+
+    <p>
+        Компания предлагает наборы SDK для разработки таких адаптеров, которые они называют <strong>серверами</strong>.
+        Устанавливаешь Claude Desktop, чуть правишь конфиг, перезагружаешь и твой Claude Desktop может взаимодействовать
+        с твоим сервером, а значит, с твоим приложением.
+    </p>
+
+    <h4>К чему можно дать доступ через MCP?</h4>
+
+    <blockquote>
+        AWS KB Retrieval - Retrieval from AWS Knowledge Base using Bedrock Agent Runtime<br/>
+        Brave Search - Web and local search using Brave's Search API<br/>
+        EverArt - AI image generation using various models<br/>
+        Everything - Reference / test server with prompts, resources, and tools<br/>
+        Fetch - Web content fetching and conversion for efficient LLM usage<br/>
+        Filesystem - Secure file operations with configurable access controls<br/>
+        Git - Tools to read, search, and manipulate Git repositories<br/>
+        GitHub - Repository management, file operations, and GitHub API integration<br/>
+        GitLab - GitLab API, enabling project management<br/>
+        Google Drive - File access and search capabilities for Google Drive<br/>
+        Google Maps - Location services, directions, and place details<br/>
+        Memory - Knowledge graph-based persistent memory system<br/>
+        PostgreSQL - Read-only database access with schema inspection<br/>
+        Puppeteer - Browser automation and web scraping<br/>
+        Redis - Interact with Redis key-value stores<br/>
+        Sentry - Retrieving and analyzing issues from Sentry.io<br/>
+        Sequential Thinking - Dynamic and reflective problem-solving through thought sequences<br/>
+        Slack - Channel management and messaging capabilities<br/>
+        Sqlite - Database interaction and business intelligence capabilities<br/>
+        Time - Time and timezone conversion capabilities
+    </blockquote>
+
+    <h4>Claude Desktop</h4>
+
+    <h4>Claude Code</h4>
+
+    <strong>Личный опыт использования.</strong>
+
+    <p>
+        npm пакет устанавливается одной командой, проходите авторизацию, закидываете деньги и даете задачи. Claude
+        Code работает с файловой системой и AI. Может использовать MCP серверы.
+    </p>
+
+    <h4>Перспективы: SWE-Bench+: Enhanced Coding Benchmark for LLMs</h4>
+
+    <p>Большие языковые модели (LLMs) находят широкое применение в области разработки программного обеспечения (SE), в
+        частности для помощи в программировании. Для оценки их эффективности в практических задачах был создан набор
+        данных <strong>SWE-bench</strong>, включающий 2 294 реальных GitHub-issue и соответствующих pull-запроса из 12
+        популярных Python-репозиториев.</p>
+
+    <p>На основе этого набора данных были разработаны и протестированы современные инструменты, использующие LLM. Однако
+        до сих пор отсутствовал систематический анализ качества самого набора данных.</p>
+
+    <p>В данной работе представлен эмпирический анализ SWE-bench. Исследование включало ручную проверку случаев, когда
+        связка SWEAgent + GPT-4 успешно решала задачи, сравнивая созданные моделью патчи с реальными pull-запросами. На
+        момент анализа этот инструмент возглавлял рейтинг SWE-bench.</p>
+
+    <p>Результаты анализа выявили серьезные проблемы качества данных в SWE-bench:</p>
+
+    <ul>
+        <li><strong>32,67%</strong> успешных решений были получены благодаря прямому наличию ответа в описании issue или
+            комментариях (проблема утечки решения).
+        </li>
+        <li><strong>31,08%</strong> принятых патчей были подозрительными из-за слабых тестов, неспособных адекватно
+            проверить корректность решений.
+        </li>
+    </ul>
+
+    <p>После исключения этих случаев фактический процент успешно решённых задач с использованием SWEAgent+GPT-4 снизился
+        с <strong>12,47%</strong> до <strong>3,97%</strong>.</p>
+</div>
+</body>
+</html>
