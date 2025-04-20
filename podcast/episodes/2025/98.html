@@ -1,0 +1,93 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 98. Software Architecture</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>98. Software Architecture</h1>
+        <h2>20.04.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/680527cf3808841569e30018" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/098_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <p>
+        Recently, I finished reading the book Master Software Architecture and wanted to share some quick takeaways.
+        I’ll also explain the difference between architecture and design, talk a bit about e2e tests, and how all of
+        this applies in a real startup.
+    </p>
+
+    <h4>Architecture vs Design</h4>
+
+    <p>
+        Architecture is a macro view of the application – the big picture, how different parts connect.
+        Design is a micro view – the details inside each part.
+    </p>
+
+    <h4>Interesting Ideas From the Book</h4>
+
+    <p>
+        There were a few points that stood out:
+    </p>
+
+    <p>
+        The 4 Drivers – These are the things that influence decisions when building software, like business goals, user
+        needs, technical limits, and more.
+    </p>
+
+    <p>
+        Deployment Strategies – Different ways to release software:
+        all at once, blue-green (switch between two environments), rolling (update bit by bit), canary (release to a
+        small group first).
+    </p>
+
+    <p>
+        Testing Pyramid – A reminder that end-to-end (e2e) tests are fragile, they cover a lot, but they are also slow.
+        So it's better not to rely too much on them.
+    </p>
+
+    <p>
+        Applying It All to a Startup – Startups go through several phases:
+    </p>
+
+    <ul>
+        <li>Early days: everything is simple.</li>
+        <li>As you add more features: the code gets messy, harder to maintain. You need to organize the project and the
+            team better.
+        </li>
+        <li>When users grow: performance problems appear. One solution is to split modules into services and replicate
+            them.
+        </li>
+        <li>Each decision adds complexity – that's normal. Every fix makes the system a bit harder to manage.</li>
+    </ul>
+
+    <h4>Project Paradox</h4>
+    <p>At the start, projects are simple and clean. But as features and users grow, things naturally get more
+        complicated. Managing this complexity is what good software architecture is all about.</p>
+</div>
+</body>
+</html>
