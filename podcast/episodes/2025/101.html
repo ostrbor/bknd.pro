@@ -1,0 +1,143 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 101. Graceful Shutdown</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>101. Graceful Shutdown</h1>
+        <h2>11.05.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/6820db33182b2144af04aaca" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/101_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://victoriametrics.com/blog/go-graceful-shutdown/">
+                Graceful Shutdown in Go: Practical Patterns
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/tienanr/docurift">
+                DocuRift is an intelligent API documentation generator that automatically analyzes your API traffic and generates comprehensive documentation in multiple formats. It works as a proxy server that captures API requests and responses, then generates OpenAPI and Postman collection documentation. (140 stars)
+            </a>
+        </li>
+    </ul>
+
+    <h4>Graceful Shutdown или Плавное Выключение</h4>
+
+    <p>
+        Ключевые меры для плавной остановки:
+    </p>
+
+    <ul>
+        <li>перестаем выделять новые ресурсы;</li>
+        <li>завершаем уже запущенные процессы;</li>
+        <li>освобождение ресурсов: сеть, диски, подключения к БД/кешу</li>.
+    </ul>
+
+    <p>
+        <strong>Как работает Docker-рантайм?</strong>
+    </p>
+
+    <p>
+        <strong>А как работают сигналы?</strong>
+        В ядре находится очередь сигналов и за каждым процессом закреплены обработчики сигналов. Если необходимо, то
+        сам процесс должен обратиться к ядру с запросом на регистрации обработчика того или иного сигнала ОС.
+        Не для всех сигналов можно зарегистрировать обработчик, для <code>SIGKILL (9)</code> и <code>SIGSTOP (19)</code>
+        этого сделать нельзя,
+        поэтому остановка процесса будет происходить всегда. А вот сигналы <code>SIGINT (2)</code>, когда нажимаем Ctrl+C
+        или <code>SIGTERM (15)</code> (вежливое завершение). Часто мы встречаемся с сигналом <code>SIGHUP (1)</code>,
+        изначально посылаемый при отключение терминала, но часто используемый для перезагрузки конфигурационных файлов.
+    </p>
+
+    <p>
+        Для того чтобы поймать сигнал в Go как в примере ниже создается канал единичного размера:
+    </p>
+
+    <pre>func main() {
+    signalChan := make(chan os.Signal, 1)
+    signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+    // Setup work here
+
+    <-signalChan
+
+    fmt.Println("Received termination signal, shutting down...")
+}</pre>
+
+    <p>
+        Однако, стоит учитывать, что можно принять много сигналов одного типа и эти сигналы, как уже было сказано,
+        выстраиваются в очередь. <strong>Ядро ждет</strong> выполнения обработчика сигнала до того как вызывать его
+        еще раз для следующего сигнала в очереди.
+    </p>
+
+    <p>
+        <strong>А как работает рантайм?</strong> Docker шлёт <code>SIGTERM</code>, ждет 10 секунд (значение
+        по-умолчанию) и посылает <code>SIGKILL</code>. Если это Kubernetes, то он похоже расширяет graceful period
+        до 30 секунд или около того. В случае K8s также стоит учитывать, что есть ingress, который может продолжать
+        слать трафик вашему сервису, поэтому нужно сообщить ему, что этого делать не нужно через <code>readinessProbe</code>.
+    </p>
+
+    <p>
+        Наконец, мы можем мягко положить сервер:
+    </p>
+
+    <pre>ctx, cancelFn := context.WithTimeout(context.Background(), timeout)
+err := server.Shutdown(ctx)</pre>
+
+    <p>
+        Либо завершатся все рутины обработчиков запросов, либо сработает таймаут - только после этого выполнение
+        <code>Shutdown()</code> завершится. Возможно, захочется, чтобы рутины тоже узнали о том, что сервер завершает
+        свою работу, для этого есть два варианта: обогащение контекста запроса через middleware и глобальный контекст
+        HTTP-сервера (поле <code>BaseContext</code> структуры <code>http.Server</code>). Конечно, важно, чтобы
+        работающие рутины учитывали возможно закрытый контекст.
+    </p>
+
+    <p>
+        Последний шаг - <strong>освобождение ресурсов!</strong> Без этого СУБД или Message Broker или кеш-сервер должны
+        полагаться на таймауты, чтобы освободить ресурсы, а это может стать причиной проблем в будущем, когда
+        понадобится обрабатывать бОльшее количество запросов.
+    </p>
+
+    <h4>Ошибка в написании обработчика сообщений брокера</h4>
+
+    <p>
+        Я недавно осознал ошибку, допущенную при написании обарботчика сообщений от брокера сообщений.
+        В дашборде RabbitMQ я заметил, что количество консумеров равно 0, но процессы были запущены.
+        Оказалось, что я написал обработку таким образом, что каждое сообщение очереди я обрабатываю в бесконечном цикле
+        с ретраями. Когда возникает проблема с обработкой сообщения, то я просто делаю ретрай с exp back-off стратегией.
+        Через некоторое время по таймаутам брокера сообщений соединение с консумером разрывается. Правильно делать
+        fail fast без циклов! Т.е. считали сообщение, попытались обработать. Если успех, то шлем ACK, если нет - NACK и
+        возвращаем сообщение в очередь до следующей попытки.
+    </p>
+
+    <h4>Интересная идея: автодокументация Rest API сервисов</h4>
+</div>
+</body>
+</html>
