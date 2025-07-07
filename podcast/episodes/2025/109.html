@@ -1,0 +1,125 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 109. Go1.25: JSON v2</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>109. Go1.25: JSON v2</h1>
+        <h2>07.07.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/686bd9b38d2a216e1214d0a4" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/109_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://learning.postman.com/docs/sending-requests/capturing-request-data/capturing-http-requests/">
+                Capture HTTP requests in Postman
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/LonamiWebs/Telethon">
+                Telethon: Pure Python 3 MTProto API Telegram client library, for bots too! (11k stars)
+            </a>
+        </li>
+        <li>
+            <a href="https://antonz.org/go-1-25/">
+                Go 1.25 interactive tour (Anton Zhiyanov)
+            </a>
+        </li>
+        <li>
+            <a href="https://antonz.org/go-json-v2/">
+                JSON evolution in Go: from v1 to v2 (Anton Zhiyanov)
+            </a>
+        </li>
+    </ul>
+
+    <h4>Postman предоставляет прокси подобно mitmproxy</h4>
+
+    <h4>Telethon для написания клиентов - мой проект</h4>
+
+    <h4>Go: JSON v2</h4>
+
+    <p>
+        В версии 1.25, которая выйдет этой осенью появится JSON v2. Это не значит, что нужно обязательно переходить на
+        эту версию, однако ознакомиться с её функционалом будет полезно. Пакет реализован с использованием дженериков.
+        Находится в директории v2 в <code>encoding/json</code>. Состоит всего из 7 функций. Также появился
+        <code>encoding/json/jsontext</code> - это такой движок, а точнее потоковый токенайзер и парсер JSON объектов.
+        Можно получать последовательно токены, анализировать, писать токены. v2 же занимается
+        меппингом из внутреннего представления в типы Go и наоборот. Планируется, что v1 и v2 будут работать на базе
+        <code>jsontext</code> пакета.
+    </p>
+
+    <p>
+        Маршалинг в v2 по скорости остался почти такой же, а вот анмашралинг ускорился от 3 до 10 раз.
+    </p>
+
+    <p>
+        <code>MarshalWrite</code> и <code>UnmarshalRead</code> для работы с одним JSON-объектом.
+    </p>
+
+    <p>
+        Добавлены опции, которые позволяют конфигурировать как будет работать маршалинг и анмаршалинг. Можно использовать
+        опции из пакета <code>json/v2</code> и из <code>json/jsontext</code>
+    </p>
+
+    <ul>
+        <li><strong>StringifyNumbers</strong> аналогично опции <code>string</code> в первой версии</li>
+        <li><strong>FormatNilSliceAsNull</strong> можно вернуть дефолтное поведение и выводить nil слайс как nil</li>
+        <li><strong>FormatNilMapAsNull</strong> форматирует пустой map в <code>{}</code> по-умолчанию, но можно переопределить</li>
+        <li><strong>OmitZeroStructFields</strong> аналогично опции <code>omitzero</code> в json теге при объявлении поля структуры</li>
+        <li><strong>MatchCaseInsensitiveNames</strong> v2 мепит по точному соответсвию, если имя json-поля не задано, но эта опция позволяет вернуть поведение v1</li>
+        <li><strong>SpaceAfterColon</strong>, <strong>SpaceAfterComma</strong> можно слегка повысить читаемость</li>
+        <li><strong>jsontext.Multiline(true)</strong> можно красиво отформатировать JSON</li>
+        <li><strong>jsontext.WithIndent</strong>, <strong>jsontext.WithIndentPrefix</strong></li>
+    </ul>
+
+    <p>
+        <strong>Добавлены опции</strong> вроде <code>inline</code> для embed (встроенных) структур и <code>unknown</code>.
+        Последняя очень полезна для отладки - позволяет при Unmarshal накапливать все необъявленные в структуре Go
+        поля: <code>Data map[string]any `json:",unknown"`</code>
+    </p>
+
+    <p>
+        Для кастомного маршалинга по-прежнему поддерживаются <code>MarshalJSON</code> и <code>UnmarshalJSON</code>, но
+        рекомендуется для повышения производительности использовать <code>MarshalJSONTo</code> и <code>UnmarshalJSONFrom</code>.
+    </p>
+
+    <p>
+        <strong>Важные резличия v1 и v2:</strong>
+    </p>
+
+    <ul>
+        <li>v2 маршалит nil слайсы в []</li>
+        <li>v2 маршалит nil map в {}</li>
+        <li>v2 маршалит []byte в base64 строку (можно изменить опцией format: array в теге)</li>
+        <li>v2 запрещает невалидные UTF-8 символы в строках (опция AllowInvalidUTF8 может отменить это поведение)</li>
+    </ul>
+</div>
+</body>
+</html>
