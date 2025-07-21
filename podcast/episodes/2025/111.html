@@ -1,0 +1,121 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 111. Testing on the Clock</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>111. Testing on the Clock</h1>
+        <h2>21.07.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/687e3e23fd9acfeba4279d1c" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/111_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://trendshift.io/">
+                Trendshift
+            </a>
+        </li>
+        <li>
+            <a href="https://build-your-own.org/database/">
+                Книга: Build Your Own Database From Scratch in Go
+            </a>
+        </li>
+    </ul>
+
+    <h4>Trendshift</h4>
+
+    <p>
+        Я часто смотрю свежие тренды - что появляется в Go, но иногда захожу посмотреть на Rust, C++ и т.д.
+        Тренды разных языков программирования на Trendshift могут помочь:
+    </p>
+
+    <ul>
+        <li>понять куда развивается ЯП</li>
+        <li>узнать мажорные популярные проекты, о которых не знал в своем ЯП</li>
+        <li>найти инструмент, о котором возможно не знал</li>
+        <li>выбрать новый ЯП, если устал от своего или хочешь перемен</li>
+    </ul>
+
+    <h4>Книга: Build Your Own Database From Scratch in Go</h4>
+
+    <p>
+        Начал читать на этой неделе. Как создать свою СУБД на Go в 3000 строк кода и познакомиться с ключевыми
+        концепциями движков баз данных: B+Tree индекс и манипуляции данными с ним, атомик-транзакции, надежность,
+        concurrency-контроль и даже язык запросов. И всё на 3000 срок кода. Когда закончу чтение обязательно сделаем
+        эпизод по этой книге.
+    </p>
+
+    <h4>Тестирование прототипа в сжатые сроки</h4>
+
+    <p>
+        Что мы знаем о Lean MVP, Walking Skeleton или Rapid prototyping? Это названия процессов, когда надо затащить
+        проект очень быстро.
+    </p>
+
+    <p>
+        Мне нужно закончить к среде этой недели MVP проекта и я делаю его очень быстро, вместе с Antropic Claude,
+        Github Copilot, однострочным автокомплитом в GoLand. Приходится принимать решения очень быстро. Что делать,
+        когда <strong>нет времени</strong> на плотное тестирование? Я так уже делал и считаю это оптимальным - пишем
+        единственный тест, который проверяет <strong>happy path</strong> (успешный сценарий). Какие преимущества?
+    </p>
+
+    <ul>
+        <li>
+            требования меняются и писать с плотным покрытием тестами невыгодно; <u>мало тестов -
+            гибкость перед изменениями</u>
+        </li>
+        <li>
+            фокус на одном рабочем потоке - один интеграционный end-to-end тест доказывает ценность MVP
+        </li>
+    </ul>
+
+    <p>
+        Тестирование одного happy path можно сравнить с конвеером на заводе. Есть главная артерия-конвеер и по нему
+        идет 95% деталей, но есть и отбракованные 5%. Мы тестируем, что работает главный сценарий, а бракованные детали
+        просты скидываем с конвеера (естественно логгируем и сохраняем состояние для дальнешей отладки процесса).
+    </p>
+
+    <p>
+        У подхода есть и существенные очевидные недостатки:
+    </p>
+
+    <ul>
+        <li>мы сильно залезаем в долг, что ОК для прототипа - накапливаем много тех. долга на старте</li>
+        <li>неполно реализуем требования, т.е. тесты гарантируют работу только одного сценария из гигантского множества</li>
+    </ul>
+
+    <p>
+        Такое прототипирование должно идти <strong>вместе с сознательным отказом от совершенства</strong>!
+        Приоритет не unit-тестам, а более высокоуровневым интеграционным (пишем в СУБД, делаем API-запросы к mock-серверам)
+        e2e/workflow тест.
+    </p>
+</div>
+</body>
+</html>
