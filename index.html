@@ -1,18 +1,126 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Backend Software Developers</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Development Team</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
-<body class="container">
-    <div>
-        <a href="/podcast/">Backend Podcast</a>
-    </div>
-    <div>
-        Email: <a href="mailto:contact@bknd.pro">contact@bknd.pro</a>
-    </div>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">DevTeam</div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Backend Development Experts</h1>
+            <p>We build scalable, robust backend systems that power your business. From e-commerce platforms to API integrations, we deliver solutions that work.</p>
+            <a href="#contact" class="cta-button">Let's Talk</a>
+        </div>
+    </section>
+
+    <section id="services" class="section services">
+        <div class="container">
+            <h2 class="section-title">What We Do</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🛒</div>
+                    <h3>E-commerce Systems</h3>
+                    <p>Complete e-commerce platforms with payment processing, inventory management, and order fulfillment systems.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📦</div>
+                    <h3>Courier Integration</h3>
+                    <p>Seamless integration with USPS, DHL, FedEx, UPS and international courier services for automated shipping.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🏭</div>
+                    <h3>Warehouse Automation</h3>
+                    <p>Smart warehouse management systems with inventory tracking, automation workflows, and real-time monitoring.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3>APIs</h3>
+                    <p>High-performance REST APIs designed to handle requests with optimal response times.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">☁️</div>
+                    <h3>Cloud Infrastructure</h3>
+                    <p>Cloud-native solutions using AWS, Hetzner, Google cloud services for maximum scalability, reliability, and cost-effectiveness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="section">
+        <div class="container">
+            <h2 class="section-title">Meet Our Team</h2>
+            <div class="team">
+                <div class="team-member">
+                    <div class="member-photo"><img src="images/artem.jpeg" alt="Artem"></div>
+                    <h3 class="member-name">Artem</h3>
+                    <p class="member-role">Lead Backend Engineer</p>
+                    <p>
+                        Backend engineering — scalable Go & PostgreSQL solutions that automate, integrate, and deliver results
+                    </p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo"><img src="images/boris.jpeg" alt="Boris"></div>
+                    <h3 class="member-name">Boris</h3>
+                    <p class="member-role">Senior Backend Engineer</p>
+                    <p>
+                        15+ years building simple, stable software in Go, PostgreSQL, JavaScript, and Python
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section blog">
+        <div class="container">
+            <h2 class="section-title">Technical Insights</h2>
+            <div class="blog-posts">
+                <article class="blog-post">
+                    <h3>Go Context Package</h3>
+                    <p>
+                        Explore how Go’s context package powers cancellation, deadlines,
+                        and data passing across goroutines, with practical examples and best practices
+                        for resource management in concurrent applications.
+                    </p>
+                    <a href="/articles/2023-go-context.html" class="read-more">Read More →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title section-title--on-dark">Get In Touch</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>Email</h3>
+                    <p><a href="mailto:hello@devteam.com">contact@bknd.pro</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>Location</h3>
+                    <p>Remote Team</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Backend Development Team. Building the future, one API at a time.</p>
+        </div>
+    </footer>
 </body>
 </html>

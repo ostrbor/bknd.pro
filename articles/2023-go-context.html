@@ -1,165 +1,231 @@
-<html lang="ru">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Backend Dev Team: Go context package</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="../podcast/css/pico.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Context Package - Backend Development Team</title>
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<main class="container">
-    <h1>
-        Contexts in Go
-    </h1>
+    <header>
+        <nav class="container">
+            <a href="../index.html" class="logo">DevTeam</a>
+            <ul class="nav-links">
+                <li><a href="../index.html#services">Services</a></li>
+                <li><a href="../index.html#team">Team</a></li>
+                <li><a href="../index.html#blog">Blog</a></li>
+                <li><a href="../index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <p>
-        If you take a look at the SDK's src directory, among the list of packages, 'context' stands out as the most
-        ambiguous name. The 'context' package <a href="https://github.com/golang/go/issues/14660">migrated to Go 1.7</a>
-        from <a href="http://golang.org/x/net/context">golang.org/x/net/context</a> (note the path: 'net' is
-        not accidental; this package was used for canceling HTTP requests). Brad Fitzpatrick, a Go developer from 2010
-        to 2020, suggested <a href="https://github.com/golang/go/issues/14660">in his proposal</a>
-        the potential use of context not only for canceling HTTP requests but also
-        for stopping TCP dialers (establishing TCP connections), halting OS child processes launched through os/exec,
-        canceling SQL queries, and more. When you encounter a function or method that takes a context.Context, you
-        should perceive it as an opportunity to control the cancellation of its execution.
-    </p>
+    <section class="article-hero">
+        <div class="container">
+            <h1>Contexts in Go</h1>
+            <p class="article-meta">Understanding Go's context package for cancellation and control flow</p>
+        </div>
+    </section>
 
-    <p>
-        How can you achieve the task of cancellation without the context package? One of the most obvious ways to
-        implement cancellation is by using a 'done' channel as the first argument to the function. Excellent examples
-        can also be found in the article <a href="https://go.dev/blog/pipelines">https://go.dev/blog/pipelines</a>
-        <script src="https://gist.github.com/ostretsov/ff18bb21c57edcd19b997906ba10277a.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/leNXi5gHVGH">Run in Go Playground</a>
-    </p>
+    <div class="article-container">
+        <article class="article-content">
+            <div class="article-body">
+                <p>
+                    If you take a look at the SDK's src directory, among the list of packages, 'context' stands out as the most
+                    ambiguous name. The 'context' package <a href="https://github.com/golang/go/issues/14660">migrated to Go 1.7</a>
+                    from <a href="http://golang.org/x/net/context">golang.org/x/net/context</a> (note the path: 'net' is
+                    not accidental; this package was used for canceling HTTP requests). Brad Fitzpatrick, a Go developer from 2010
+                    to 2020, suggested <a href="https://github.com/golang/go/issues/14660">in his proposal</a>
+                    the potential use of context not only for canceling HTTP requests but also
+                    for stopping TCP dialers (establishing TCP connections), halting OS child processes launched through os/exec,
+                    canceling SQL queries, and more. When you encounter a function or method that takes a context.Context, you
+                    should perceive it as an opportunity to control the cancellation of its execution.
+                </p>
 
-    <p>
-        And here's the implementation of timeout-based cancellation:
-        <script src="https://gist.github.com/ostretsov/14f36c4879bc63bdaabdb57e5c4b6ac4.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/UcMiJ_Th_XU">Run in Go Playground</a>
-    </p>
+                <h2>Cancellation Without Context</h2>
+                <p>
+                    How can you achieve the task of cancellation without the context package? One of the most obvious ways to
+                    implement cancellation is by using a 'done' channel as the first argument to the function. Excellent examples
+                    can also be found in the article <a href="https://go.dev/blog/pipelines">https://go.dev/blog/pipelines</a>
+                </p>
 
-    <p>
-        To address the task of procedure cancellation in Go, the SDK provides the 'context' package. The 'context'
-        package is a micro-framework designed for communicating with procedures, often through signals to cancel their
-        execution.
-    </p>
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/ff18bb21c57edcd19b997906ba10277a.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/leNXi5gHVGH" class="playground-link">Run in Go Playground</a>
 
-    <p>
-        I couldn't find references to the specific choice of this name for the packages. By examining <a
-            href="https://www.dre.vanderbilt.edu/~schmidt/PDF/Context-Object-Pattern.pdf">the first publication</a> about
-        the Context Object pattern (Context Object, A Design Pattern for Efficient Information Sharing across Multiple
-        System Layers, 2005), the reasons for such a package name become clear. Quote from the publication:
-    <blockquote>
-        This pattern provides an efficient, and application
-        transparent way of sharing information between different layers in a software system.
-    </blockquote>
-    The 'context' package in Go also serves for passing information between layers of an application, but in Go, the
-    emphasis is more on information related to the cancellation of procedure execution. The task of communication with a
-    procedure can also be solved by using a different approach, through a manager (Peter Sommerlad, “The Manager Design
-    Pattern," Pattern Languages of Program Design 3, Addison-Wesley, 1998.), but this solution has a significant
-    drawback: concurrent work with the manager requires synchronization between goroutines, for example, through
-    Mutexes.
-    </p>
+                <p>And here's the implementation of timeout-based cancellation:</p>
+                
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/14f36c4879bc63bdaabdb57e5c4b6ac4.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/UcMiJ_Th_XU" class="playground-link">Run in Go Playground</a>
 
-    <p>
-        A bit about how context works in Go. The 'context' package provides the 'Context' interface, along with several
-        implementations, which can be composed into a chain. This is convenient if you have multiple reasons to cancel a
-        function (cancel call, timeout, deadline), and the cancellation should occur when any of them happen. Any
-        user-defined context is a child of another context, which is called the parent. Only the empty context
-        (context.Background() or context.TODO()) has no parent. This hierarchy is important because it determines which
-        of the context chain will be canceled when the parent is canceled.
-        <script src="https://gist.github.com/ostretsov/8bce80d75c5123edb04bd9c5be0912b8.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/pQ5hD8ouKCQ">Run in Go Playground</a>
-    </p>
+                <h2>The Context Package</h2>
+                <p>
+                    To address the task of procedure cancellation in Go, the SDK provides the 'context' package. The 'context'
+                    package is a micro-framework designed for communicating with procedures, often through signals to cancel their
+                    execution.
+                </p>
 
-    <p>
-        Cancellation of the parent context leads to the cancellation of all child contexts.
-        <script src="https://gist.github.com/ostretsov/1854e2848dbda7f79d10cd59551b0959.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/0eez_X3UoeF">Run in Go Playground</a>
-    </p>
+                <p>
+                    I couldn't find references to the specific choice of this name for the packages. By examining <a
+                        href="https://www.dre.vanderbilt.edu/~schmidt/PDF/Context-Object-Pattern.pdf">the first publication</a> about
+                    the Context Object pattern (Context Object, A Design Pattern for Efficient Information Sharing across Multiple
+                    System Layers, 2005), the reasons for such a package name become clear. Quote from the publication:
+                </p>
 
-    <p>
-        Cancellation of a child context does not cancel the parent.
-        <script src="https://gist.github.com/ostretsov/613aaf6b55f1a7caa4e387c7699315ac.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/XF4mXj4nCkn">Run in Go Playground</a>
-    </p>
+                <blockquote>
+                    This pattern provides an efficient, and application
+                    transparent way of sharing information between different layers in a software system.
+                </blockquote>
 
-    <p>
-        It is essential to understand that the context itself does not cancel the execution of a function. It merely
-        provides a mechanism for cancellation that needs to be implemented independently. Therefore, it is crucial to
-        inspect the source code of external packages and check how context is actually used.
-        <script src="https://gist.github.com/ostretsov/e3b4e0ab5dc79de7d5a1363ef90a7293.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/MoEsvLe1tZW">Run in Go Playground</a>
-    </p>
+                <p>
+                    The 'context' package in Go also serves for passing information between layers of an application, but in Go, the
+                    emphasis is more on information related to the cancellation of procedure execution. The task of communication with a
+                    procedure can also be solved by using a different approach, through a manager (Peter Sommerlad, "The Manager Design
+                    Pattern," Pattern Languages of Program Design 3, Addison-Wesley, 1998.), but this solution has a significant
+                    drawback: concurrent work with the manager requires synchronization between goroutines, for example, through
+                    Mutexes.
+                </p>
 
-    <p>
-        "go vet" will complain if the context cancellation function is not called.
-        <script src="https://gist.github.com/ostretsov/6a9f5db1e05ff35dbaf7373233d8665c.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/OqARYME2vxq">Run in Go Playground</a>
-    </p>
+                <h2>How Context Works</h2>
+                <p>
+                    A bit about how context works in Go. The 'context' package provides the 'Context' interface, along with several
+                    implementations, which can be composed into a chain. This is convenient if you have multiple reasons to cancel a
+                    function (cancel call, timeout, deadline), and the cancellation should occur when any of them happen. Any
+                    user-defined context is a child of another context, which is called the parent. Only the empty context
+                    (context.Background() or context.TODO()) has no parent. This hierarchy is important because it determines which
+                    of the context chain will be canceled when the parent is canceled.
+                </p>
 
-    <p>
-        But what will happen if the context cancellation function is not called?
-        In the case of timerCtx, a timer is started, and when the time expires, a goroutine is launched, which then
-        calls the cancel function. Only after that, garbage collection occurs (i.e., resource cleanup). In the case of
-        cancelCtx, calling the cancel function clears the map of child contexts. If you are using custom contexts, you
-        may encounter goroutine leaks because only custom contexts initiate a goroutine waiting for the cancellation of
-        a parent or child context.
-        <script src="https://gist.github.com/ostretsov/20935b56ab85593ec1ae59a1aa407470.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/IVMEiXWQgBl">Run in Go Playground</a>
-    </p>
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/8bce80d75c5123edb04bd9c5be0912b8.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/pQ5hD8ouKCQ" class="playground-link">Run in Go Playground</a>
 
-    <p>
-        If you plan to use the context solely for passing data, it is better to create a specialized structure for this
-        purpose. Otherwise, you lose all the benefits of static typing since values in the context are stored as 'any'
-        type. The following recommendation may be useful: use context solely for cancellation and store values in the
-        context only when it is justified.
-    </p>
+                <p>Cancellation of the parent context leads to the cancellation of all child contexts.</p>
 
-    <p>
-        How are values stored in cancelCtx? Each subsequent context holds a reference to the previous context. The
-        cancel context (context.cancelCtx) used under the hood as a context for cancellation by deadline/timeout
-        (timerCtx) holds references to all child contexts to be able to cancel them when the parent context is canceled.
-        <script src="https://gist.github.com/ostretsov/17901c8d6c73ba69c39ab48013c35be2.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/Dhs0HA_b4_1">Run in Go Playground</a>
-    </p>
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/1854e2848dbda7f79d10cd59551b0959.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/0eez_X3UoeF" class="playground-link">Run in Go Playground</a>
 
-    <p>
-        Let's consider the usage of context in an HTTP server from the net/http package. The context here serves for
-        passing the HTTP server itself and the TCP address on which it is running. You can also enrich the context with
-        additional data using your own middlewares. Since the base context of the server (Server.BaseContext) passed to
-        each request can be overridden (default is context.Background()), you can use the context, for example, to
-        signal an imminent server restart (see a ready-made implementation in the SDK signal.NotifyContext).
-        <script src="https://gist.github.com/ostretsov/73e3c782acbb83407ccc14db4592f8b9.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/5l6yBh3gcP1">Run in Go Playground</a>
-    </p>
+                <p>Cancellation of a child context does not cancel the parent.</p>
 
-    <p>
-        In addition to middlewares, you can augment the context with data related to newly established TCP connections
-        through the ConnContext function of the server.
-        <script src="https://gist.github.com/ostretsov/8eff34243e8cfef01271894b52f2b40b.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/byTLceFApTS">Run in Go Playground</a>
-    </p>
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/613aaf6b55f1a7caa4e387c7699315ac.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/XF4mXj4nCkn" class="playground-link">Run in Go Playground</a>
 
-    <p>
-        Some packages provide ready-made solutions for timeout cancellation. For example, you can use
-        http.TimeoutHandler if you need to limit the response time of a handler. The handler itself will continue its
-        execution until the program finishes if it does not explicitly check whether the request context is canceled.
-        <script src="https://gist.github.com/ostretsov/e5a37733801dffff19acf7b5a756f3ac.js"></script>
-        <a target="_blank" href="https://go.dev/play/p/w0H8WRj3Vl1">Run in Go Playground</a>
-    </p>
+                <h2>Important Considerations</h2>
+                <p>
+                    It is essential to understand that the context itself does not cancel the execution of a function. It merely
+                    provides a mechanism for cancellation that needs to be implemented independently. Therefore, it is crucial to
+                    inspect the source code of external packages and check how context is actually used.
+                </p>
 
-    <p>
-        A few concluding recommendations:
-    <ul>
-        <li>Ensure that you cannot solve the task without using goroutines. If you can do without goroutines, you can do
-            without the context package.
-        </li>
-        <li>If you do not plan to cancel a procedure, pass an empty context (context.Background() or context.TODO()).
-        </li>
-        <li>If an external function takes a context.Context, check how it is used by inspecting its source code. The
-            context package provides mechanisms for cancellation, but not the cancellation of the procedure itself.
-        </li>
-    </ul>
-    </p>
-</main>
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/e3b4e0ab5dc79de7d5a1363ef90a7293.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/MoEsvLe1tZW" class="playground-link">Run in Go Playground</a>
+
+                <p>"go vet" will complain if the context cancellation function is not called.</p>
+
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/6a9f5db1e05ff35dbaf7373233d8665c.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/OqARYME2vxq" class="playground-link">Run in Go Playground</a>
+
+                <h2>Resource Management</h2>
+                <p>
+                    But what will happen if the context cancellation function is not called?
+                    In the case of timerCtx, a timer is started, and when the time expires, a goroutine is launched, which then
+                    calls the cancel function. Only after that, garbage collection occurs (i.e., resource cleanup). In the case of
+                    cancelCtx, calling the cancel function clears the map of child contexts. If you are using custom contexts, you
+                    may encounter goroutine leaks because only custom contexts initiate a goroutine waiting for the cancellation of
+                    a parent or child context.
+                </p>
+
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/20935b56ab85593ec1ae59a1aa407470.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/IVMEiXWQgBl" class="playground-link">Run in Go Playground</a>
+
+                <h2>Context Values</h2>
+                <p>
+                    If you plan to use the context solely for passing data, it is better to create a specialized structure for this
+                    purpose. Otherwise, you lose all the benefits of static typing since values in the context are stored as 'any'
+                    type. The following recommendation may be useful: use context solely for cancellation and store values in the
+                    context only when it is justified.
+                </p>
+
+                <p>
+                    How are values stored in cancelCtx? Each subsequent context holds a reference to the previous context. The
+                    cancel context (context.cancelCtx) used under the hood as a context for cancellation by deadline/timeout
+                    (timerCtx) holds references to all child contexts to be able to cancel them when the parent context is canceled.
+                </p>
+
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/17901c8d6c73ba69c39ab48013c35be2.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/Dhs0HA_b4_1" class="playground-link">Run in Go Playground</a>
+
+                <h2>HTTP Server Usage</h2>
+                <p>
+                    Let's consider the usage of context in an HTTP server from the net/http package. The context here serves for
+                    passing the HTTP server itself and the TCP address on which it is running. You can also enrich the context with
+                    additional data using your own middlewares. Since the base context of the server (Server.BaseContext) passed to
+                    each request can be overridden (default is context.Background()), you can use the context, for example, to
+                    signal an imminent server restart (see a ready-made implementation in the SDK signal.NotifyContext).
+                </p>
+
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/73e3c782acbb83407ccc14db4592f8b9.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/5l6yBh3gcP1" class="playground-link">Run in Go Playground</a>
+
+                <p>
+                    In addition to middlewares, you can augment the context with data related to newly established TCP connections
+                    through the ConnContext function of the server.
+                </p>
+
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/8eff34243e8cfef01271894b52f2b40b.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/byTLceFApTS" class="playground-link">Run in Go Playground</a>
+
+                <p>
+                    Some packages provide ready-made solutions for timeout cancellation. For example, you can use
+                    http.TimeoutHandler if you need to limit the response time of a handler. The handler itself will continue its
+                    execution until the program finishes if it does not explicitly check whether the request context is canceled.
+                </p>
+
+                <div class="code-block">
+                    <script src="https://gist.github.com/ostretsov/e5a37733801dffff19acf7b5a756f3ac.js"></script>
+                </div>
+                <a target="_blank" href="https://go.dev/play/p/w0H8WRj3Vl1" class="playground-link">Run in Go Playground</a>
+
+                <div class="recommendations">
+                    <h3>Recommendations</h3>
+                    <ul>
+                        <li>Ensure that you cannot solve the task without using goroutines. If you can do without goroutines, you can do
+                            without the context package.
+                        </li>
+                        <li>If you do not plan to cancel a procedure, pass an empty context (context.Background() or context.TODO()).
+                        </li>
+                        <li>If an external function takes a context.Context, check how it is used by inspecting its source code. The
+                            context package provides mechanisms for cancellation, but not the cancellation of the procedure itself.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Backend Development Team. Building the future, one API at a time.</p>
+        </div>
+    </footer>
 </body>
 </html>
