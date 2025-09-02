@@ -602,6 +602,8 @@ fmt.Println(len(order1), cap(order1)) // prints 2 2</code></pre>
                 Note that a slice’s capacity grows in steps as you keep appending:
             </p>
 
+            <img src="images/slices/chart_slice.svg" alt="slice cap growth" />
+
             <p>
                 Go chooses the next capacity (the step height) based on the element’s byte size.
                 For single-byte elements like <code>[]byte</code>, growth is very fast at first but slows quickly.
