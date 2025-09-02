@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Slices - Backend Development Team</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="https://unpkg.com/prismjs@1/themes/prism.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/prismjs@0.0.1/themes/prism-okaidia.css"/>
+    <style type="text/css">
+        .token.operator {
+            background: none !important;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="container">
+        <a href="../index.html" class="logo">DevTeam</a>
+        <ul class="nav-links">
+            <li><a href="../index.html#services">Services</a></li>
+            <li><a href="../index.html#team">Team</a></li>
+            <li><a href="../index.html#blog">Blog</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="article-hero">
+    <div class="container">
+        <h1>Go Slices</h1>
+        <p class="article-meta">
+            Arrays vs. slices in Go: a hands-on tour of len/cap, append growth, slicing pitfalls, and copy for leak-free speed
+        </p>
+    </div>
+</section>
+
+<div class="article-container">
+    <article class="article-content">
+        <div class="article-body">
+            <p>
+                The design of arrays and slices in Go took almost a year!
+                This foundational functionality is essential to understand if you want to write efficient code.
+                After working through this material, you’ll be able to manipulate slices naturally.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                Let’s start with a quick check. What does the following snippet print?
+            </p>
+
+            <pre><code class="language-go">a := []int{1, 2, 3, 4, 5, 6, 7}
+b := append(a[:3], a[5:]...)
+fmt.Printf("%v, len(b) = %d, cap(b) = %d", b, len(b), cap(b))</code></pre>
+
+            <p>Answer choices:</p>
+
+            <pre>1. [1 2 5 6 7], len(b) = 5, cap(b) = 5
+2. [1 2 3 5 6 7], len(b) = 6, cap(b) = 6
+3. [1 2 3 6 7], len(b) = 5, cap(b) = 7
+4. [1 2 3 6 7], len(b) = 5, cap(b) = 5
+5. [1 2 3 4 6 7], len(b) = 6, cap(b) = 6
+6. [1 2 3 7], len(b) = 4, cap(b) = 4</pre>
+
+            <div class="article-gap"></div>
+
+            <p>Even an experienced Go developer can get tripped up by this.</p>
+
+            <p>To understand slices, you first have to understand <strong>arrays</strong>. The line</p>
+
+            <pre><code class="language-go">var buf1 [2]byte</code></pre>
+
+            <p>
+                declares a variable buf1 that contains exactly 2 bytes.
+                <strong>You cannot change an array’s length!</strong> If you need to store more than 2 bytes,
+                you create a new array of the required size:
+            </p>
+
+            <pre><code class="language-go">var buf1 [2]byte
+buf1[0], buf1[1] = 78, 73
+
+var buf2 [4]byte // 4-byte array
+buf2[0], buf2[1] = buf1[0], buf1[1] // copy buf1 into buf2
+buf2[2], buf2[3] = 67, 69 // additional data
+fmt.Println(buf2)
+// Output:
+// [78 73 67 69]</code></pre>
+
+            <div class="article-gap"></div>
+
+            <p>
+                Where do arrays show up? Programs often operate on fixed units of data—bytes, packets, memory pages.
+                In all these cases, the unit’s size (i.e., number of bytes) is known in advance.
+                For example, an IPv4 address is 4 bytes, and an IPv6 address is 6 bytes.
+                A sha512 checksum is 64 bytes.
+                The ASCII table describes how to interpret 7 bits of a single byte for character data.
+                A chessboard is always 64 squares.
+                A PostgreSQL page is 8192 bytes (you can change it, but you have to recompile the DBMS).
+            </p>
+
+            <p>
+                Finally, slices—behind the scenes—use arrays!
+                At runtime, <strong>only</strong> slices can create an array of length n.
+                Array lengths are <strong>always</strong> fixed before the program is compiled.
+                We’ll come back to slices after arrays. For now, pretend slices don’t exist in Go.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                When you create an array, a contiguous block of memory is allocated,
+                and the variable’s name lets you access that memory directly.
+                The array’s address is the same as the address of its first element:
+            </p>
+
+            <pre><code class="language-go">a := [...]byte{1, 2, 3} // "..." becomes 3
+fmt.Printf("%p, %p", &a, &a[0]) // addresses match</code></pre>
+
+            <img src="images/slices/array_3_elems.svg" />
+
+            <div class="article-gap"></div>
+
+            <p>
+                The simplest way to picture arrays is as a struct where all fields share the same type:
+            </p>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th width="20%"></th>
+                    <th>Structure</th>
+                    <th>Array</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Declaration</td>
+                    <td>
+                        <pre><code class="language-go">type threeInts struct {
+    f0 int
+    f1 int
+    f2 int
+}
+var a threeInts</code></pre>
+                    </td>
+                    <td>
+                        <pre><code class="language-go">var a [3]int</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Accessing data</td>
+                    <td>By field name
+                        <pre><code class="language-go">a.f1</code></pre>
+                    </td>
+                    <td>By element index
+                        <pre><code class="language-go">a[1]</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Can its size change?</td>
+                    <td>No, the field set is known at compile time</td>
+                    <td>No, the length is known at compile time</td>
+                </tr>
+                <tr>
+                    <td>Copied when passed to a function</td>
+                    <td>
+                        <pre><code class="language-go">f := func(ti threeInts) {
+    // ti is a copy of a
+}
+f(a)</code></pre>
+                    </td>
+                    <td>
+                        <pre><code class="language-go">f := func(ti [3]int) {
+    // ti is a copy of a
+}
+f(a)</code></pre>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p>
+                You access a struct field by name and an array element by index. You cannot add a new field to a struct at
+                runtime. Likewise with arrays—their size is constant for the lifetime of the program.
+            </p>
+
+            <p>
+                Note that passing a large array to a function is memory-wasteful because it gets copied. You can avoid
+                copying by passing a pointer to the array:
+            </p>
+
+            <pre><code class="language-go">f := func(ti *[3]byte) {
+    fmt.Println(ti)
+}
+a := &[3]byte{1, 2, 3}
+f(a)</code></pre>
+
+            <div class="article-gap"></div>
+
+            <p>
+                Can you compare two arrays?
+            </p>
+
+            <pre><code class="language-go">checksum1 := sha512.Sum512([]byte{'x', 'y', '1'}) // Sum512() returns [64]byte
+checksum2 := sha512.Sum512([]byte{'x', 'y', '2'})
+fmt.Println(checksum1 == checksum2)</code></pre>
+
+            <p>
+                Just like structs, arrays are comparable if they contain <strong>comparable</strong> types.
+            </p>
+
+            <h2>comparable</h2>
+
+            <p>
+                <strong>You cannot compare slices, maps, or functions (func)!</strong>
+                That means you also cannot compare arrays or structs that contain slices, maps, or functions:
+            </p>
+
+            <pre><code class="language-go">type s struct {
+    fn func()
+}
+
+func1 := func() { fmt.Println("I'm func1!") }
+
+s1 := s{func1}
+s2 := s{func1}
+
+fmt.Println(func1 == nil)   // OK
+fmt.Println(func1 == func1) // INVALID OPERATION!
+fmt.Println(s1 == s2)       // INVALID OPERATION!
+</code></pre>
+
+            <p>
+                The only exception is comparing slices, maps, and functions to <code>nil</code>.
+                You can read more about comparable in the <a href="https://go.dev/ref/spec">Go spec</a>.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                In practice, arrays are rarely used precisely because <strong>an array’s size can only be a constant</strong>!
+                Imagine slices are unavailable. You want to ask the user for the number of items <code>n</code> in an
+                order and create an array of length <code>n</code>. In Go that’s impossible:
+            </p>
+
+            <pre><code class="language-go">type item struct {
+	price, qty int
+}
+
+var n int
+_, err := fmt.Scanf("%d", &n)
+if err != nil {
+    panic(err)
+}
+
+var order [n]item // WON’T COMPILE
+                  // you cannot create an array of n items
+</code></pre>
+
+            <p>
+                You can still solve the problem <strong>using only arrays</strong>. Think about possible approaches.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                A simple approach is to create a very large array that can fit almost any order:
+            </p>
+
+            <pre><code class="language-go">// previous code omitted where
+// n is the number of items the user entered
+
+var order [100]item
+</code></pre>
+
+            <img src="images/slices/order_items_100.svg"/>
+
+            <p>
+                When working with the order, you must always take <code>n</code> into account, i.e.,
+                how many elements of <code>order</code> contain meaningful data. In the figure, n = 2,
+                so only the first two elements hold user data.
+                The remaining space may come in handy if items are added later.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                We can improve the previous approach.
+                It’s convenient to group the items and their count n into a struct.
+                Let’s call it <code>itemsHeader</code>:
+            </p>
+
+            <pre><code class="language-go">const itemsCap = 100 // array capacity
+type itemsHeader struct {
+	items [itemsCap]item
+	n     int
+}
+
+var order1 itemsHeader
+order1.n = n
+// fill order1.items with user data</code></pre>
+
+            <p>
+                Our solution is still suboptimal: every time you pass <code>order1</code> as a function argument,
+                its entire contents will be copied along with the 100-element array.
+                To avoid copying, keep only a pointer to the array:
+            </p>
+
+            <pre><code class="language-go">const itemsCap = 100
+type itemsHeader struct {
+	items *[itemsCap]item
+	n     int
+}</code></pre>
+
+            <p>
+                Now we can operate on the order and pass it to functions
+                without the overhead of copying the underlying (backing) array <code>items</code>.
+                The drawback is obvious: we always need memory for <code>itemsCap = 100</code> items,
+                even if there are only 2–3.
+            </p>
+
+            <p>
+                <strong>Arrays in Go are for data whose size is known at compile time!</strong>
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                Here’s a full implementation that prints the order’s contents—using <strong>only arrays</strong>:
+            </p>
+
+            <pre><code class="language-go">const itemsCap = 100 // capacity of the items array
+
+type itemsHeader struct {
+    items *[itemsCap]item // pointer to the array
+    n     int             // logical length
+}
+
+type item struct {
+    price, qty int
+}
+
+func (h *itemsHeader) print(w io.Writer) {
+    for i := 0; i < h.n; i++ {
+        fmt.Fprintf(w, "%d: $%d x %d\n", i, h.items[i].price, h.items[i].qty)
+    }
+}
+
+func main() {
+    order1 := itemsHeader{new([itemsCap]item), 2}
+    order1.items[0] = item{17, 1}
+    order1.items[1] = item{29, 2}
+    order1.print(os.Stdout)
+	// Output:
+	// 0: $17 x 1
+	// 1: $29 x 2
+}</code></pre>
+
+            <div class="article-gap"></div>
+
+            <p>
+                The length <code>n</code> denotes the number of items in the order;
+                changing it lets us add or remove items at runtime.
+                For convenient appends we can write:
+            </p>
+
+            <pre><code class="language-go">func (h *itemsHeader) appendItem(i item) {
+	if h.n == itemsCap-1 {
+		panic("overflow")
+	}
+	h.items[h.n] = i
+	h.n++ // increase logical length
+}</code></pre>
+
+            <p>
+                We’ve covered appending—how do we delete element <code>i</code> from a slice?
+                First, consider how we’d do it with arrays. The simplest way, without preserving order,
+                is to replace element <code>i</code> with the last element and decrement the header’s logical length <code>n</code>:
+            </p>
+
+            <pre><code class="language-go">func (h *itemsHeader) remove(i int) {
+	if i >= h.n {
+		panic("out of bound")
+	}
+	if i != h.n-1 {
+		h.items[i] = h.items[h.n-1]
+	}
+	h.n--
+}</code></pre>
+
+            <p>
+                If we want to preserve order, we need to shift all elements left:
+            </p>
+
+            <img src="images/slices/del_shift_left.svg" />
+
+            <p>
+                For this, the built-in <code>copy</code> is convenient (see below).
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                For us—as for Go’s designers—it’s obvious that dynamic-length arrays,
+                appending, and deleting elements are extremely common in practice.
+                We showcased helper functions for arrays, but writing a bespoke <code>itemsHeader</code>,
+                <code>appendItem</code>, <code>removeItem</code>, etc., for every case would be cumbersome.
+            </p>
+
+            <p>
+                Fortunately, Go has a simple, convenient mechanism for variable-length arrays: slices.
+            </p>
+
+            <p>
+                Slices are structured almost exactly like the <code>itemsHeader</code> from the previous example.
+                Let’s create a slice with length 2 and capacity 100 using the built-in <code>make</code>:
+            </p>
+
+            <pre><code class="language-go">length := 2
+capacity := 100
+order1 := make([]item, length, capacity)</code></pre>
+
+            <p>
+                This call creates an array of <code>capacity</code> elements and returns a structure (highlighted in green) like this:
+            </p>
+
+            <img src="images/slices/slice_header.svg" alt="slice header" />
+
+            <p>
+                This structure describes a slice and is called the <strong>slice header</strong>.
+                The header contains a pointer to the array, <code>array</code>, and the slice’s length <code>len</code> and capacity <code>cap</code>.
+                Just like our <code>itemsHeader</code>.
+                Note that the <code>make</code> constructor for slices can take variables for length and capacity!
+                That means for slices—and only slices—we can ask the user for sizes at runtime and allocate
+                the required memory.
+            </p>
+
+            <p>
+                You can think of a slice header (or simply, a slice)
+                as a flashlight that “illuminates” the <code>len</code> elements of the array you can access
+                (the accessible elements are shaded blue).
+            </p>
+
+            <div class="article-gap"></div>
+
+            <h2>zero vs empty</h2>
+
+            <p>
+                You can declare a slice without creating an array:
+            </p>
+
+            <pre><code class="language-go">var a []byte</code></pre>
+
+            <img src="images/slices/zero_slice.svg" alt="zero slice"/>
+
+            <p>
+                This creates a runtime.slice value whose fields are all zero-values.
+                The array pointer is also zero, i.e., <code>nil</code>. In Go, as in most languages,
+                the address <code>0x0</code> is treated as <code>nil</code>.
+            </p>
+
+            <p>
+                If you declare a slice with zero elements like this:
+            </p>
+
+            <pre><code class="language-go">a := []byte{}</code></pre>
+
+            <img src="images/slices/empty_slice.svg" alt="empty slice"/>
+
+            <p>
+                the <code>runtime.slice</code> looks different: the length and capacity are zero, and the address is a special one,
+                <code>runtime.zerobase</code>. Go uses this address for empty strings, structs, and slices
+                to avoid unnecessary allocations.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                For comparison, in C you often see functions that take a pointer to the first element of an array and
+                its length (the number of consecutive elements to process):
+            </p>
+
+            <pre><code class="language-c">void sum(int *data, size_t len, long *out) {
+    long s = 0;
+    for (size_t i = 0; i < len; ++i) s += data[i];
+    *out = s;
+}</code></pre>
+
+            <p>
+                Of course, C has third-party libraries that provide slice-like functionality (e.g., <code>GLib</code>).
+                Fortunately, Go’s designers considered “array + length” important enough to build into the language—thus, slices.
+            </p>
+
+            <p>
+                In Go, keeping the same bit widths (C’s <code>int</code> and <code>long</code> correspond to Go’s
+                <code>int32</code> and <code>int64</code>), the function looks like this:
+            </p>
+
+            <pre><code class="language-c">func sum(data []int32) (out int64) {
+    for _, v := range data {
+        out += int64(v)
+    }
+    return
+}</code></pre>
+
+            <p>
+                Here <code>data</code> is a slice; it already carries a pointer to the array and its length.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                The slice header is hidden from the programmer.
+                When you hear “slice,” think: a struct with a pointer to an array plus <code>len</code> and <code>cap</code>.
+                Every time you manipulate a slice, you’re really working with that struct.
+            </p>
+
+            <p>
+                To inspect a slice’s header fields use the built-ins: <code>len()</code> returns the length, <code>cap()</code> the capacity.
+            </p>
+
+            <p>
+                There are several ways to create a slice.
+                The built-in generic function <code>make</code> is the most versatile.
+                <code>make</code> takes a length and an optional capacity (the third argument).
+            </p>
+
+            <p>
+                Now we can decide at runtime what array length and capacity we need:
+            </p>
+
+            <pre><code class="language-go">type item struct {
+    price, qty int
+}
+
+var capacity int
+_, err := fmt.Scanf("%d", &capacity)
+if err != nil {
+    panic(err)
+}
+
+order1 := make([]item, 0, capacity) // reserve an array with the required capacity
+fmt.Println(len(order1)) // prints 0
+fmt.Println(cap(order1)) // prints the value of capacity
+
+// ...populate order1 with items</code></pre>
+
+            <p>
+                Previously—using <strong>only arrays</strong>—we created an order with the maximum capacity (e.g., 100 elements)
+                even if we needed just a few. Now the order has exactly the required capacity—no memory waste.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                In <code>order1</code>, the length is 0, so even though capacity is sufficient, it contains no useful data.
+                Suppose the user entered 1 in the example above—they know they’ll buy only one item—so
+                the constructor was <code>make([]item, 0, 1)</code>. Here are the resulting slice header and its array:
+            </p>
+
+            <img src="images/slices/order1_0len_before_append.svg" alt="order1 zero len before append" />
+
+            <p>
+                How do we add an item to this slice? Use the built-in generic append:
+            </p>
+
+            <pre><code class="language-go">order1 = append(order1, item{25, 1})</code></pre>
+
+            <p>
+                If the array’s capacity allows it, <code>append</code> writes the new element to the array and increases the slice’s <code>len</code>:
+            </p>
+
+            <img src="images/slices/order1_0len_after_append.svg" alt="order1 zero len after append" />
+
+            <div class="article-gap"></div>
+
+            <h2>append reallocates the array</h2>
+
+            <p>
+                Some time later the user wants to buy one more item.
+                What happens if you append another element to <code>order1</code> even though its capacity allows only one?
+            </p>
+
+            <pre><code class="language-go">order1 := append(order1, item{16,2})
+fmt.Println(len(order1), cap(order1)) // prints 2 2</code></pre>
+
+            <p>
+                In this case <code>append</code> creates a new, larger array, copies the old array’s content into it,
+                adds the new element, and finally returns a new slice header pointing to the newly created array:
+            </p>
+
+            <img src="images/slices/append_allocates_new_array.svg" alt="append allocates new array" />
+
+            <p>
+                The old array is marked as garbage and will be collected soon.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <p>
+                Note that a slice’s capacity grows in steps as you keep appending:
+            </p>
+
+            <p>
+                Go chooses the next capacity (the step height) based on the element’s byte size.
+                For single-byte elements like <code>[]byte</code>, growth is very fast at first but slows quickly.
+                For multi-byte elements like <code>[]item</code>, the slowdown happens earlier.
+                The general rule: capacity grows quickly for the first few reallocations,
+                then drops sharply and tends toward ~25% growth per subsequent reallocation.
+                Go is frugal with memory.
+            </p>
+
+            <p>
+                If this strategy doesn’t suit you, you can always write your own version of <code>append</code>.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <h2>slicing</h2>
+
+            <p>
+                As we’ve seen, a slice doesn’t store data; it just points to an array.
+                That means by adjusting the pointer and <code>len</code>, we can access a <strong>portion</strong> of the underlying array.
+            </p>
+
+            <p>
+                <strong>Slicing</strong> takes a portion of a slice, array, or string by index using <code>s[low:high]</code>,
+                where <code>low</code> is the starting index (inclusive) and <code>high</code> is the ending index (exclusive).
+                The result is a new slice pointing to the same array:
+            </p>
+
+            <pre><code class="language-go">s1 := []rune("drum✨icicle")
+s2 := s1[3:7]
+fmt.Println(string(s2)) // "m✨ic"</code></pre>
+
+            <img src="images/slices/slicing1.svg" alt="slicing" />
+
+            <p>
+                <code>s2</code>’s capacity is 8, which allows slicing like:
+            </p>
+
+            <pre><code class="language-go">fmt.Println(string(s2[0:8])) // "m✨icicle"
+// same as:
+fmt.Println(string(s2[:cap(s2)])) // "m✨icicle"</code></pre>
+
+            <div class="article-gap"></div>
+
+            <h2>no shifting left</h2>
+
+            <p>
+                In a slice expression <code>s[low:high]</code>, <code>low</code> is non-negative.
+                That means you cannot move the pointer to earlier array elements:
+            </p>
+
+            <pre><code class="language-go">f := func() []byte {
+    s := []byte{10,20,30,40,50}
+    return s[2:]
+}
+fmt.Println(f())    // "[30 40 50]"
+fmt.Println(f()[-2:]) // ERROR</code></pre>
+
+            <p>
+                Outside <code>f</code> you can no longer access <code>s[0] = 10</code> or <code>s[1] = 20</code>.
+                Slicing only lets you shift the pointer to the right!
+            </p>
+
+            <p>
+                The code above also illustrates a memory leak.
+                We retained memory that we can no longer use.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <h2>memory leak</h2>
+
+            <p>
+                Let’s look at a simplified example of a leak.
+            </p>
+
+            <p>
+                The function <code>title()</code> returns the <code>&lt;title&gt;</code> of an HTML page:
+            </p>
+
+            <pre><code class="language-go">func title(html []byte) []byte {
+	start := bytes.Index(html, []byte("&lt;title&gt;"))
+	if start == -1 { return nil }
+	start += len("&lt;title&gt;")
+
+	titleLen := bytes.Index(html[start:], []byte("&lt;/title&gt;"))
+	if titleLen == -1 { return nil }
+
+	return html[start : start+titleLen] // PROBLEM!
+}</code></pre>
+
+            <p>
+                Notice the last line returns a slice.
+                That means as long as the result of <code>title()</code> is kept anywhere, the entire HTML page will be kept alive too.
+            </p>
+
+            <p>
+                Suppose we’re writing a web scraper that collects page titles and caches them for later use:
+            </p>
+
+            <pre><code class="language-go">var cache map[string][]byte // map of URL to &lt;title&gt;
+
+type webScraper interface {
+	Next() bool
+	URL() string
+	HTML() []byte
+}
+
+func cacheURLsTitles(ws webScraper) {
+	if cache == nil { cache = make(map[string][]byte) }
+
+	for ws.Next() {
+		cache[ws.URL()] = title(ws.HTML()) // PROBLEM!
+	}
+}</code></pre>
+
+            <blockquote>
+                An array won’t be freed as long as at least one slice still points to it. Be especially careful when working with large arrays!
+            </blockquote>
+
+            <p>
+                The correct approach is to copy the title into a new array.
+            </p>
+
+            <div class="article-gap"></div>
+
+            <h2>copy()</h2>
+
+            <p>
+                To avoid leaks, copy the found title with a simple loop:
+            </p>
+
+            <pre><code class="language-go">func title(html []byte) []byte {
+    // Same as before ...
+
+    // Copying
+    result := make([]byte, titleLen)
+    for i := range result {
+        result[i] = respBody[start+i]
+    }
+
+    return result
+}</code></pre>
+
+            <p>
+                You can also use the built-in <code>copy(dst, src)</code>, which does the same:
+            </p>
+
+            <pre><code class="language-go">result := make([]byte, titleLen)
+copy(result, respBody[start:])</code></pre>
+
+            <div class="article-gap"></div>
+
+            <p>
+                Arrays are fixed-size values; slices are lightweight headers that point to arrays and carry <code>len</code>/<code>cap</code>.
+                In day-to-day Go, you’ll mostly use slices—just remember they share backing arrays: <code>append</code> may reallocate,
+                slicing can keep large buffers alive, and <code>copy</code> breaks unwanted ties.
+                Master these mechanics and you’ll write code that’s both correct and fast.
+            </p>
+
+            <div class="author-block">
+                <div class="author-info">
+                    <div class="author-photo"><img src="../images/artem.jpeg" alt="Artem Ostretsov"></div>
+                    <div class="author-details">
+                        <h3 class="author-name">Artem Ostretsov</h3>
+                        <p class="author-date">2025-09-02</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+
+<footer>
+    <div class="container">
+        <p>Backend Development Team. Building the future, one API at a time.</p>
+    </div>
+</footer>
+</body>
+<script defer src="https://unpkg.com/prismjs@1/components/prism-core.min.js"></script>
+<script defer src="https://unpkg.com/prismjs@1/components/prism-clike.min.js"></script>
+<script defer src="https://unpkg.com/prismjs@1/components/prism-go.min.js"></script>
+<script defer src="https://unpkg.com/prismjs@1/components/prism-c.min.js"></script>
+</html>
