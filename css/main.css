@@ -521,3 +521,8 @@ code:not(:where(pre *)) {
         padding: 0 10px;
     }
 }
+
+.blur-extreme {
+    filter: blur(6px);
+    cursor: pointer;
+}
