@@ -1,0 +1,114 @@
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Backend Podcast: 119. Backend on TypeScript</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    <link href="../../css/css.css?2024-08-04" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="other-platforms">
+        <a href="https://feeds.acast.com/public/shows/64727c07e689970012fb1c23">RSS</a>
+        <a href="https://t.me/bkndpro">Telegram</a>
+        <a href="https://www.youtube.com/@ostrbor/videos">YouTube</a>
+        <a href="https://podcasts.apple.com/us/podcast/backend-podcast/id1732130106">Apple</a>
+        <a href="https://music.yandex.ru/album/28370806">Яндекс</a>
+        <a href="https://open.spotify.com/show/6G9K0DrOH2wsEqDKbed01e?si=oQXKuI4tQKqgJj894-2p_A">Spotify</a>
+        <a href="https://music.amazon.com/podcasts/d797927c-7c90-4d4b-a845-3b61dc25060c/backend-podcast">Amazon</a>
+        <a href="mailto:OstretsovAA+podcast@gmail.com">Почта</a>
+    </div>
+
+    <hgroup>
+        <h1>119. Backend on TypeScript</h1>
+        <h2>12.10.2025</h2>
+    </hgroup>
+
+    <p>
+        <iframe src="https://embed.acast.com/64727c07e689970012fb1c23/68ebc142a1ee1b85d353427c" frameBorder="0" width="100%" height="190px"></iframe>
+        <a href="https://bknd.pro/podcast-files/119_backend_podcast.mp3">Скачать</a>
+    </p>
+
+    <p>
+        <a href="../../index.html">К списку выпусков</a>
+    </p>
+
+    <h4>Ссылки выпуска:</h4>
+    <ul>
+        <li>
+            <a href="https://www.stackrender.io/">
+                StackRender is the next-gen database schema design and generation tool.
+            </a>
+        </li>
+        <li>
+            <a href="https://xyflow.com/">
+                React Flow | Svelte Flow - Powerful open source libraries for building node-based UIs with React (https://reactflow.dev) or Svelte (https://svelteflow.dev). Ready out-of-the-box and infinitely customizable.
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/shadcn-ui/ui">
+                A set of beautifully-designed, accessible components and a code distribution platform. Works with your favorite frameworks. Open Source. Open Code. (97k stars)
+            </a>
+        </li>
+        <li>
+            <a href="https://github.com/aaPanel/BillionMail">
+                BillionMail gives you open-source MailServer, NewsLetter, Email Marketing — fully self-hosted, dev-friendly, and free from monthly fees.
+            </a>
+        </li>
+    </ul>
+
+    <h4>StackRender</h4>
+
+    <p>
+        Наш слушатель поделился, что в компании они используют TypeScript для написания в том числе backend'а и это
+        очень неплохой выбор для fullstack разработчика. На TypeScript сейчас огромное количество популярных проектов на github:
+        vscode, n8n, grafana, nocodb (Airtable альтернатива) и т.д.
+    </p>
+
+    <p>
+        Также выходит много новых проектов.
+        Проект, подтверждающий, что в одиночку можно сделать очень неплохой проект в сжатые сроки (4! месяца).
+    </p>
+
+    <p>
+        StackRender — это бесплатный проект с открытым исходным кодом для генерации схем баз данных,
+        который помогает быстро проектировать, редактировать и развёртывать базы данных.
+    </p>
+
+    <p>
+        Что умеет StackRender:
+    </p>
+
+    <ul>
+        <li>Мгновенно превращает ваши спецификации в чертёж базы данных</li>
+        <li>Позволяет редактировать и улучшать его через интуитивно понятный интерфейс</li>
+        <li>Повышает производительность с помощью ИИ-подсказок по созданию индексов</li>
+        <li>Экспортирует DDL в нужном вам диалекте (Postgres, MySQL, MariaDB, SQLite и др.)</li>
+    </ul>
+
+    <p>
+        Проект также примечателен фронтенд стеком, который был использован:
+    </p>
+
+    <ul>
+        <li>Tailwind CSS</li>
+        <li>xyflow - для графиков, диаграм и т.д.</li>
+    </ul>
+
+    <p>
+        При всей моей предвзятости, что SQL - это уже и так идеальная абстрация и как говорят, I will die on this hill -
+        отмечу, что проект выглядит очень неплохо и скорее заставляет задуматься, а не стоит ли глянуть TypeScript.
+    </p>
+
+    <h4>Файл должен быть на сервере</h4>
+
+    <p>
+        Помимо станадартных средств не стоит забывать про передачу в приложение по ssh:
+    </p>
+
+    <code>cat /tmp/data.json | ssh dev@srv "docker exec -i srv-app-1 /app load-json"</code>
+</div>
+</body>
+</html>
