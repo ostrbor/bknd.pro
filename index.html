@@ -1,128 +1,965 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backend Development Team</title>
-    <link rel="stylesheet" href="css/main.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Software For Logistics - Transform Your Warehouse Operations</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script type="text/javascript">
+        let copyPressed = false;
+
+        function copyEmail(event) {
+            if (copyPressed) {
+                return
+            }
+            copyPressed = true
+
+            const email = 'contact@bknd.pro'
+
+            const textArea = document.createElement('textarea');
+            textArea.value = email;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            const copyBtn = event.currentTarget.querySelector('.copy-btn');
+            const copyBtnInnerHTML = copyBtn.innerHTML
+            copyBtn.innerHTML = `<span class="material-symbols-outlined copied-btn">check</span>`;
+
+            const emailBlock = event.currentTarget;
+            emailBlock.classList.add('show-copied');
+            setTimeout(() => emailBlock.classList.remove('show-copied'), 1200);
+
+            setTimeout(() => {
+                copyBtn.innerHTML = copyBtnInnerHTML;
+                copyPressed = false
+            }, 2000);
+        }
+
+        // Lightbox functionality
+        function openLightbox(imgSrc, imgAlt) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imgSrc;
+            lightboxImg.alt = imgAlt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Smooth scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.03,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-section').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Close lightbox on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            });
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #1f2937;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        #content {
+            background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hero background */
+        #content::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0 3rem 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: #475569;
+            font-weight: 500;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Value Props - What business owners care about */
+        .value-props {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .value-prop {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .value-prop:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.1);
+        }
+
+        .value-prop-icon {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+
+        .value-prop-icon-span {
+            font-size: 55px;
+        }
+
+        .value-prop-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .value-prop-desc {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            margin: 4rem 0;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .email-block {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 32px;
+            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .email-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .email-text {
+            color: #1e293b;
+        }
+
+        .copy-btn {
+            color: #3b82f6;
+            transition: all 0.2s;
+        }
+
+        .email-block:hover .copy-btn {
+            color: #2563eb;
+        }
+
+        .copied-btn {
+            color: #10b981 !important;
+        }
+
+        /* Problem/Solution Cards */
+        h2 {
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            font-size: 2.25rem;
+        }
+
+        .section-intro {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 3rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        section {
+            margin: 5rem 0;
+            opacity: 1;
+        }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-section.fade-in-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .solution-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 3rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02), 0 10px 15px rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+        }
+
+        .solution-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 24px 48px rgba(59, 130, 246, 0.08);
+        }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .problem, .solution {
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .problem {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border-left: 4px solid #ef4444;
+        }
+
+        .solution {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(22, 163, 74, 0.05) 100%);
+            border-left: 4px solid #22c55e;
+        }
+
+        .problem h3, .solution h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .problem h3 {
+            color: #dc2626;
+        }
+
+        .solution h3 {
+            color: #16a34a;
+        }
+
+        .problem p, .solution p {
+            color: #475569;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* ROI Highlights */
+        .roi-highlight {
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+            border: 2px solid #fbbf24;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+        }
+
+        .roi-highlight strong {
+            color: #92400e;
+            font-size: 1.15rem;
+        }
+
+        /* Image gallery */
+        .image-gallery {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .image-gallery-item {
+            position: relative;
+            cursor: pointer;
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+
+        .image-gallery-item::after {
+            content: 'zoom_in';
+            font-family: 'Material Symbols Outlined';
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .image-gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .image-gallery img {
+            border-radius: 16px;
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .image-gallery-item:hover img {
+            transform: scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Results metrics */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Courier logos */
+        .couriers {
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .couriers img {
+            max-height: 70px;
+            max-width: 120px;
+            opacity: 0.6;
+            transition: all 0.3s;
+            filter: grayscale(100%);
+        }
+
+        .couriers img:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            filter: grayscale(0%);
+        }
+
+        /* Trust section */
+        .trust-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(139, 92, 246, 0.02) 100%);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .trust-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .trust-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .trust-icon {
+            padding-top: 0.3rem;
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .trust-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-content p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.2s;
+            z-index: 10000;
+        }
+
+        .lightbox-close:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        a {
+            color: #3b82f6;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 600;
+        }
+
+        a:hover {
+            color: #2563eb;
+        }
+
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.15rem;
+            }
+
+            .solution-card {
+                padding: 2rem;
+            }
+
+            .problem-solution {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                margin: 3rem 0;
+            }
+
+            .email-block {
+                font-size: 1.1rem;
+                padding: 14px 20px;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .cta-section {
+                padding: 2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .hide-on-print {
+                display: none !important;
+            }
+
+            .solution-card {
+                page-break-inside: avoid;
+            }
+
+            .lightbox {
+                display: none !important;
+            }
+        }
+
+        .email-block {
+            position: relative; /* important for tooltip positioning */
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            right: 14px;
+            top: -10px;
+            transform: translateY(-100%);
+            background: rgba(15, 23, 42, 0.92);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .copy-tooltip::after {
+            content: "";
+            position: absolute;
+            right: 18px;
+            bottom: -6px;
+            border-width: 6px 6px 0 6px;
+            border-style: solid;
+            border-color: rgba(15, 23, 42, 0.92) transparent transparent transparent;
+        }
+
+        .email-block.show-copied .copy-tooltip {
+            opacity: 1;
+            transform: translateY(-110%);
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="container">
-            <div class="logo">DevTeam</div>
-            <ul class="nav-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#team">Team</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <img id="lightbox-img" src="" alt="">
+    </div>
+</div>
 
-    <section class="hero">
-        <div class="container">
-            <h1>Backend Development Experts</h1>
-            <p>We build scalable, robust backend systems that power your business. From e-commerce platforms to API integrations, we deliver solutions that work.</p>
-            <a href="#contact" class="cta-button">Let's Talk</a>
+<div id="content">
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>We build software to automate warehouse operations</h1>
+            <p class="hero-subtitle">
+                Reliable solutions from experienced developers who know logistics from inside
+            </p>
         </div>
-    </section>
 
-    <section id="services" class="section services">
-        <div class="container">
-            <h2 class="section-title">What We Do</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🛒</div>
-                    <h3>E-commerce Systems</h3>
-                    <p>Complete e-commerce platforms with payment processing, inventory management, and order fulfillment systems.</p>
+        <!-- Value Props - What matters to business owners -->
+        <div class="value-props fade-in-section">
+            <div class="value-prop">
+                <div class="value-prop-icon">
+                    <span class="material-symbols-outlined value-prop-icon-span">savings</span>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">⚡</div>
-                    <h3>APIs</h3>
-                    <p>High-performance REST APIs designed to handle requests with optimal response times.</p>
+                <div class="value-prop-title">Less manual work</div>
+<!--                <div class="value-prop-amount">60%</div>-->
+                <div class="value-prop-desc">Automated steps instead of spreadsheets and copy-paste</div>
+            </div>
+            <div class="value-prop">
+                <div class="value-prop-icon">
+                    <span class="material-symbols-outlined value-prop-icon-span">speed</span>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">☁️</div>
-                    <h3>Cloud Infrastructure</h3>
-                    <p>Cloud-native solutions using AWS, Hetzner, Google cloud services for maximum scalability, reliability, and cost-effectiveness.</p>
+                <div class="value-prop-title">Faster daily operations</div>
+<!--                <div class="value-prop-amount">10x</div>-->
+                <div class="value-prop-desc">Receiving, labeling, and shipping without bottlenecks</div>
+            </div>
+            <div class="value-prop">
+                <div class="value-prop-icon">
+                    <span class="material-symbols-outlined value-prop-icon-span">trending_up</span>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">📦</div>
-                    <h3>Courier Integration</h3>
-                    <p>Seamless integration with USPS, DHL, FedEx, UPS and international courier services for automated shipping.</p>
+                <div class="value-prop-title">Clear payback</div>
+                <div class="value-prop-desc">Automation focused on saving time and labor costs</div>
+            </div>
+            <div class="value-prop">
+                <div class="value-prop-icon">
+                    <span class="material-symbols-outlined value-prop-icon-span">verified</span>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">🏭</div>
-                    <h3>Warehouse Automation</h3>
-                    <p>Smart warehouse management systems with inventory tracking, automation workflows, and real-time monitoring.</p>
-                </div>
+                <div class="value-prop-title">Fewer mistakes</div>
+                <div class="value-prop-desc">Consistent processes instead of human errors</div>
             </div>
         </div>
-    </section>
 
-    <section id="team" class="section">
-        <div class="container">
-            <h2 class="section-title">Meet Our Team</h2>
-            <div class="team">
-                <div class="team-member">
-                    <div class="member-photo"><img src="images/artem.jpeg" alt="Artem"></div>
-                    <h3 class="member-name">Artem</h3>
-                    <p class="member-role">Lead Backend Engineer</p>
-                    <p>
-                        Backend engineering — scalable Go & PostgreSQL solutions that automate, integrate, and deliver results
-                    </p>
-                </div>
-                <div class="team-member">
-                    <div class="member-photo"><img src="images/boris.jpeg" alt="Boris"></div>
-                    <h3 class="member-name">Boris</h3>
-                    <p class="member-role">Senior Backend Engineer</p>
-                    <p>
-                        15+ years building simple, stable software in Go, PostgreSQL, JavaScript, and Python
-                    </p>
-                </div>
+        <!-- CTA Section -->
+        <div class="cta-section fade-in-section">
+            <h2>Want to see if automation makes sense for your warehouse?</h2>
+            <p>We can review your current process and suggest practical improvements</p>
+            <div class="email-block" onclick="copyEmail(event)">
+                <span class="material-symbols-outlined">mail</span>
+                <span class="email-text" id="email">contact@bknd.pro</span>
+                <span id="email-copy-btn" class="material-symbols-outlined copy-btn hide-on-print">content_copy</span>
+                <span class="copy-tooltip" aria-live="polite">Copied</span>
             </div>
         </div>
-    </section>
 
-    <section id="blog" class="section blog">
-        <div class="container">
-            <h2 class="section-title">Technical Insights</h2>
-            <div class="blog-posts">
-                <article class="blog-post">
-                    <h3>Go Slices</h3>
-                    <p>
-                        Deep understanding of Go slices, comparisons with arrays, building your own slices, guarding against leaks.
-                    </p>
-                    <a href="/articles/2025-go-slices.html" class="read-more">Read More →</a>
-                </article>
+        <!-- Solutions with Problem/Solution format -->
+        <section class="fade-in-section">
+            <h2 style="text-align: center;">Typical warehouse problems we help to solve</h2>
+            <p class="section-intro">
+                Based on real systems we’ve built and supported ourselves
+            </p>
 
-                <article class="blog-post">
-                    <h3>Go Context Package</h3>
-                    <p>
-                        Explore how Go’s context package powers cancellation, deadlines,
-                        and data passing across goroutines, with practical examples and best practices
-                        for resource management in concurrent applications.
-                    </p>
-                    <a href="/articles/2023-go-context.html" class="read-more">Read More →</a>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section contact">
-        <div class="container">
-            <div class="contact-info">
-                <div class="contact-item">
-                    <h2><a href="mailto:contact@bknd.pro">contact@bknd.pro</a></h2>
+            <!-- API Integration -->
+            <div class="solution-card">
+                <h2>Shipping label automation</h2>
+                <div class="problem-solution">
+                    <div class="problem">
+                        <h3>The Problem</h3>
+                        <p>Creating shipping labels manually through carrier websites wastes time and causes mistakes.</p>
+                    </div>
+                    <div class="solution">
+                        <h3>What we built</h3>
+                        <p>We connected carriers directly via API and automated label creation, tracking updates, and shipment data flow.</p>
+                    </div>
+                </div>
+                <div class="roi-highlight">
+                    <strong>Result</strong>: Shipping became faster, more predictable, and less dependent on manual work.
+                </div>
+                <div class="couriers">
+                    <img src="images/ups.png" title="UPS" alt="UPS"/>
+                    <img src="images/fedex.png" title="FedEx" alt="FedEx"/>
+                    <img src="images/usps.png" title="USPS" alt="USPS"/>
+                    <img src="images/shipstation.png" title="ShipStation" alt="ShipStation"/>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <footer>
-        <div class="container">
-            <p>Backend Development Team</p>
+            <!-- WMS -->
+            <div class="solution-card">
+                <h2>Custom warehouse management system</h2>
+                <div class="problem-solution">
+                    <div class="problem">
+                        <h3>The Problem</h3>
+                        <p>Inventory tracked in spreadsheets leads to lost parcels, confusion, and no real-time visibility.</p>
+                    </div>
+                    <div class="solution">
+                        <h3>What we built</h3>
+                        <p>A simple, custom WMS tailored to real warehouse workflows: receiving, storage, picking, and client access via API.</p>
+                    </div>
+                </div>
+                <div class="roi-highlight">
+                    <strong>Result</strong>: Clear inventory state, fewer losses, and the ability to scale without adding chaos.
+                </div>
+            </div>
+
+            <!-- Receiving Automation -->
+            <div class="solution-card">
+                <h2>Automated receiving and measurements</h2>
+                <div class="problem-solution">
+                    <div class="problem">
+                        <h3>The Problem</h3>
+                        <p>Manual weighing and measuring slows down receiving and creates queues during peak hours.</p>
+                    </div>
+                    <div class="solution">
+                        <h3>What we built</h3>
+                        <p>Integrated camera-based dimensioning and industrial scales directly into the receiving process.</p>
+                    </div>
+                </div>
+                <div class="roi-highlight">
+                    <strong>Result</strong>: Receiving became consistent, fast, and no longer depended on operator attention.
+                </div>
+                <div class="image-gallery">
+                    <div class="image-gallery-item" onclick="openLightbox('images/av900_2.webp', 'Datalogic AV900 Dimensioning System')">
+                        <img src="images/av900_2.webp" alt="Datalogic AV900 Dimensioning System" loading="lazy">
+                    </div>
+                    <div class="image-gallery-item" onclick="openLightbox('images/tld250_2.webp', 'Mettler Toledo TLD 250 Parcel Scale')">
+                        <img src="images/tld250_2.webp" alt="Mettler Toledo TLD 250" loading="lazy">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sorting Conveyor -->
+            <div class="solution-card">
+                <h2>Parcel sorting automation</h2>
+                <div class="problem-solution">
+                    <div class="problem">
+                        <h3>The Problem</h3>
+                        <p>Delayed parcels were sorted manually — slow, error-prone, and physically exhausting for staff.</p>
+                    </div>
+                    <div class="solution">
+                        <h3>What we built</h3>
+                        <p>Software integration for an automated conveyor with routing logic based on parcel data.</p>
+                    </div>
+                </div>
+                <div class="roi-highlight">
+                    <strong>Result</strong>: Sorting runs continuously with minimal supervision and fewer mistakes.
+                </div>
+                <div class="image-gallery">
+                    <div class="image-gallery-item" onclick="openLightbox('images/vitronic.webp', 'Vitronic Automated Sorting Conveyor')">
+                        <img src="images/vitronic.webp" alt="Vitronic conveyor system" loading="lazy">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Label Applicator -->
+            <div class="solution-card">
+                <h2>Automatic label printing and verification</h2>
+                <div class="problem-solution">
+                    <div class="problem">
+                        <h3>The Problem</h3>
+                        <p>Manually applied labels lead to unreadable barcodes and carrier rejections.</p>
+                    </div>
+                    <div class="solution">
+                        <h3>What we built</h3>
+                        <p>Integrated automatic label applicator with print verification and warehouse software.</p>
+                    </div>
+                </div>
+                <div class="roi-highlight">
+                    <strong>Result</strong>: Stable label quality and fewer issues with carriers.
+                </div>
+                <div class="image-gallery">
+                    <div class="image-gallery-item" onclick="openLightbox('images/panther.webp', 'Panther Automated Label Applicator')">
+                        <img src="images/panther.webp" alt="Panther Label Applicator" loading="lazy">
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Business -->
+            <div class="solution-card">
+                <h2>WhatsApp integration for customer support</h2>
+                <div class="problem-solution">
+                    <div class="problem">
+                        <h3>The Problem</h3>
+                        <p>Staff had to search across systems while answering client questions in WhatsApp.</p>
+                    </div>
+                    <div class="solution">
+                        <h3>What we built</h3>
+                        <p>Connected WhatsApp Business API with internal systems so operators see order context instantly.</p>
+                    </div>
+                </div>
+                <div class="roi-highlight">
+                    <strong>Result</strong>: Faster replies, less stress for support staff, and better customer experience.
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Section -->
+        <section class="fade-in-section">
+            <div class="trust-section">
+                <h2 style="text-align: center;">Who we are and how we work</h2>
+                <div class="trust-items">
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <span class="material-symbols-outlined">verified</span>
+                        </div>
+                        <div class="trust-content">
+                            <h3>Hands-on logistics experience</h3>
+                            <p>We build and support warehouse systems we actually use in daily operations</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <span class="material-symbols-outlined">speed</span>
+                        </div>
+                        <div class="trust-content">
+                            <h3>Small team, direct communication</h3>
+                            <p>You talk directly to the developers — no managers, no layers</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <span class="material-symbols-outlined">savings</span>
+                        </div>
+                        <div class="trust-content">
+                            <h3>Fair pricing</h3>
+                            <p>We focus on long-term cooperation, not one-off projects</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <span class="material-symbols-outlined">check</span>
+                        </div>
+                        <div class="trust-content">
+                            <h3>We stay involved after launch</h3>
+                            <p>Bug fixes, small improvements, and support when something breaks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <div class="cta-section fade-in-section">
+            <h2>Have a problem in your warehouse you want to fix?</h2>
+            <p>Describe it briefly — we’ll tell you honestly if we can help</p>
+            <div class="email-block" onclick="copyEmail(event)">
+                <span class="material-symbols-outlined">mail</span>
+                <span class="email-text">contact@bknd.pro</span>
+                <span class="material-symbols-outlined copy-btn hide-on-print">content_copy</span>
+                <span class="copy-tooltip" aria-live="polite">Copied</span>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.9;">
+                Typical response time: Within 24 hours
+            </p>
         </div>
-    </footer>
+
+        <div class="hide-on-print" style="margin: 5rem 0;">&nbsp;</div>
+    </div>
+</div>
+
 </body>
 </html>
