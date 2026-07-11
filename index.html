@@ -57,25 +57,7 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Smooth scroll animations
         document.addEventListener('DOMContentLoaded', function() {
-            const observerOptions = {
-                threshold: 0.03,
-                rootMargin: '0px 0px -100px 0px'
-            };
-
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in-visible');
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.fade-in-section').forEach(el => {
-                observer.observe(el);
-            });
-
             // Close lightbox on escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
@@ -197,7 +179,7 @@
 
         .value-prop-desc {
             color: #64748b;
-            font-size: 1rem;
+            font-size: 1.125rem;
         }
 
         /* CTA Section */
@@ -285,18 +267,7 @@
             opacity: 1;
         }
 
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-        .fade-in-section.fade-in-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .solution-card {
+.solution-card {
             background: #ffffff;
             border-radius: 24px;
             padding: 3rem;
@@ -306,68 +277,55 @@
             margin-bottom: 2rem;
         }
 
-        .solution-card:hover {
-            border-color: #cbd5e1;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08), 0 24px 48px rgba(59, 130, 246, 0.08);
+        .solution-card h2 {
+            font-size: 1.9rem;
+            margin-bottom: 1.25rem;
         }
 
-        .problem-solution {
+        /* Case details: plain rows in the spirit of the GOV.UK summary list */
+        .case-details {
+            margin: 0;
+        }
+
+        .case-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 220px 1fr;
+            gap: 0.25rem 2.5rem;
+            padding: 1.25rem 0;
+            border-top: 1px solid #e2e8f0;
         }
 
-        .problem, .solution {
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-
-        .problem {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(220, 38, 38, 0.05) 100%);
-            border-left: 4px solid #ef4444;
-        }
-
-        .solution {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(22, 163, 74, 0.05) 100%);
-            border-left: 4px solid #22c55e;
-        }
-
-        .problem h3, .solution h3 {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.75rem;
+        .case-row dt {
+            font-size: 1.2rem;
             font-weight: 700;
+            color: #0f172a;
+            line-height: 1.55;
         }
 
-        .problem h3 {
-            color: #dc2626;
+        .case-row dd {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #334155;
+            line-height: 1.55;
+            margin: 0;
         }
 
-        .solution h3 {
-            color: #16a34a;
+        .case-result dd {
+            font-weight: 600;
+            color: #0f172a;
         }
 
-        .problem p, .solution p {
-            color: #475569;
-            font-size: 1.05rem;
-            line-height: 1.7;
+        .case-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
-        /* ROI Highlights */
-        .roi-highlight {
-            background: linear-gradient(135deg, rgba(250, 204, 21, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
-            border: 2px solid #fbbf24;
-            padding: 1.5rem;
-            border-radius: 16px;
-            margin: 1.5rem 0;
-        }
-
-        .roi-highlight strong {
-            color: #92400e;
-            font-size: 1.15rem;
+        .case-link .material-symbols-outlined {
+            font-size: 1.2rem;
         }
 
         /* Image gallery */
@@ -518,6 +476,7 @@
 
         .trust-content p {
             color: #64748b;
+            font-size: 1.125rem;
             line-height: 1.6;
         }
 
@@ -612,8 +571,14 @@
                 padding: 2rem;
             }
 
-            .problem-solution {
+            .case-row {
                 grid-template-columns: 1fr;
+                padding: 1rem 0;
+            }
+
+            .case-row dt,
+            .case-row dd {
+                font-size: 1.1rem;
             }
 
             section {
@@ -712,7 +677,7 @@
         </div>
 
         <!-- Value Props - What matters to business owners -->
-        <div class="value-props fade-in-section">
+        <div class="value-props">
             <div class="value-prop">
                 <div class="value-prop-icon">
                     <span class="material-symbols-outlined value-prop-icon-span">savings</span>
@@ -746,7 +711,7 @@
         </div>
 
         <!-- CTA Section -->
-        <div class="cta-section fade-in-section">
+        <div class="cta-section">
             <h2>Want to see if automation makes sense for your warehouse?</h2>
             <p>We can review your current process and suggest practical improvements</p>
             <div class="email-block" onclick="copyEmail(event)">
@@ -758,7 +723,7 @@
         </div>
 
         <!-- Solutions with Problem/Solution format -->
-        <section class="fade-in-section">
+        <section>
             <h2 style="text-align: center;">Typical warehouse problems we help to solve</h2>
             <p class="section-intro">
                 Based on real systems we’ve built and supported ourselves
@@ -767,19 +732,20 @@
             <!-- API Integration -->
             <div class="solution-card">
                 <h2>Shipping label automation</h2>
-                <div class="problem-solution">
-                    <div class="problem">
-                        <h3>The Problem</h3>
-                        <p>Creating shipping labels manually through carrier websites wastes time and causes mistakes.</p>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>Creating shipping labels manually through carrier websites wastes time and causes mistakes.</dd>
                     </div>
-                    <div class="solution">
-                        <h3>What we built</h3>
-                        <p>We connected carriers directly via API and automated label creation, tracking updates, and shipment data flow.</p>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>We connected carriers directly via API and automated label creation, tracking updates, and shipment data flow.</dd>
                     </div>
-                </div>
-                <div class="roi-highlight">
-                    <strong>Result</strong>: Shipping became faster, more predictable, and less dependent on manual work.
-                </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>Shipping became faster, more predictable, and less dependent on manual work.</dd>
+                    </div>
+                </dl>
                 <div class="couriers">
                     <img src="images/ups.png" title="UPS" alt="UPS"/>
                     <img src="images/fedex.png" title="FedEx" alt="FedEx"/>
@@ -791,37 +757,43 @@
             <!-- WMS -->
             <div class="solution-card">
                 <h2>Custom warehouse management system</h2>
-                <div class="problem-solution">
-                    <div class="problem">
-                        <h3>The Problem</h3>
-                        <p>Inventory tracked in spreadsheets leads to lost parcels, confusion, and no real-time visibility.</p>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>Inventory tracked in spreadsheets leads to lost parcels, confusion, and no real-time visibility.</dd>
                     </div>
-                    <div class="solution">
-                        <h3>What we built</h3>
-                        <p>A simple, custom WMS tailored to real warehouse workflows: receiving, storage, picking, and client access via API.</p>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>A simple, custom WMS tailored to real warehouse workflows: receiving, storage, picking, and client access via API.</dd>
                     </div>
-                </div>
-                <div class="roi-highlight">
-                    <strong>Result</strong>: Clear inventory state, fewer losses, and the ability to scale without adding chaos.
-                </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>Clear inventory state, fewer losses, and the ability to scale without adding chaos.</dd>
+                    </div>
+                </dl>
+                <a href="/wms/" class="case-link">
+                    Learn more
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
             </div>
 
             <!-- Receiving Automation -->
             <div class="solution-card">
                 <h2>Automated receiving and measurements</h2>
-                <div class="problem-solution">
-                    <div class="problem">
-                        <h3>The Problem</h3>
-                        <p>Manual weighing and measuring slows down receiving and creates queues during peak hours.</p>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>Manual weighing and measuring slows down receiving and creates queues during peak hours.</dd>
                     </div>
-                    <div class="solution">
-                        <h3>What we built</h3>
-                        <p>Integrated camera-based dimensioning and industrial scales directly into the receiving process.</p>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>Integrated camera-based dimensioning and industrial scales directly into the receiving process.</dd>
                     </div>
-                </div>
-                <div class="roi-highlight">
-                    <strong>Result</strong>: Receiving became consistent, fast, and no longer depended on operator attention.
-                </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>Receiving became consistent, fast, and no longer depended on operator attention.</dd>
+                    </div>
+                </dl>
                 <div class="image-gallery">
                     <div class="image-gallery-item" onclick="openLightbox('images/av900_2.webp', 'Datalogic AV900 Dimensioning System')">
                         <img src="images/av900_2.webp" alt="Datalogic AV900 Dimensioning System" loading="lazy">
@@ -835,19 +807,20 @@
             <!-- Sorting Conveyor -->
             <div class="solution-card">
                 <h2>Parcel sorting automation</h2>
-                <div class="problem-solution">
-                    <div class="problem">
-                        <h3>The Problem</h3>
-                        <p>Delayed parcels were sorted manually — slow, error-prone, and physically exhausting for staff.</p>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>Delayed parcels were sorted manually — slow, error-prone, and physically exhausting for staff.</dd>
                     </div>
-                    <div class="solution">
-                        <h3>What we built</h3>
-                        <p>Software integration for an automated conveyor with routing logic based on parcel data.</p>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>Software integration for an automated conveyor with routing logic based on parcel data.</dd>
                     </div>
-                </div>
-                <div class="roi-highlight">
-                    <strong>Result</strong>: Sorting runs continuously with minimal supervision and fewer mistakes.
-                </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>Sorting runs continuously with minimal supervision and fewer mistakes.</dd>
+                    </div>
+                </dl>
                 <div class="image-gallery">
                     <div class="image-gallery-item" onclick="openLightbox('images/vitronic.webp', 'Vitronic Automated Sorting Conveyor')">
                         <img src="images/vitronic.webp" alt="Vitronic conveyor system" loading="lazy">
@@ -858,19 +831,20 @@
             <!-- Label Applicator -->
             <div class="solution-card">
                 <h2>Automatic label printing and verification</h2>
-                <div class="problem-solution">
-                    <div class="problem">
-                        <h3>The Problem</h3>
-                        <p>Manually applied labels lead to unreadable barcodes and carrier rejections.</p>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>Manually applied labels lead to unreadable barcodes and carrier rejections.</dd>
                     </div>
-                    <div class="solution">
-                        <h3>What we built</h3>
-                        <p>Integrated automatic label applicator with print verification and warehouse software.</p>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>Integrated automatic label applicator with print verification and warehouse software.</dd>
                     </div>
-                </div>
-                <div class="roi-highlight">
-                    <strong>Result</strong>: Stable label quality and fewer issues with carriers.
-                </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>Stable label quality and fewer issues with carriers.</dd>
+                    </div>
+                </dl>
                 <div class="image-gallery">
                     <div class="image-gallery-item" onclick="openLightbox('images/panther.webp', 'Panther Automated Label Applicator')">
                         <img src="images/panther.webp" alt="Panther Label Applicator" loading="lazy">
@@ -881,24 +855,25 @@
             <!-- WhatsApp Business -->
             <div class="solution-card">
                 <h2>WhatsApp integration for customer support</h2>
-                <div class="problem-solution">
-                    <div class="problem">
-                        <h3>The Problem</h3>
-                        <p>Staff had to search across systems while answering client questions in WhatsApp.</p>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>Staff had to search across systems while answering client questions in WhatsApp.</dd>
                     </div>
-                    <div class="solution">
-                        <h3>What we built</h3>
-                        <p>Connected WhatsApp Business API with internal systems so operators see order context instantly.</p>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>Connected WhatsApp Business API with internal systems so operators see order context instantly.</dd>
                     </div>
-                </div>
-                <div class="roi-highlight">
-                    <strong>Result</strong>: Faster replies, less stress for support staff, and better customer experience.
-                </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>Faster replies, less stress for support staff, and better customer experience.</dd>
+                    </div>
+                </dl>
             </div>
         </section>
 
         <!-- Trust Section -->
-        <section class="fade-in-section">
+        <section>
             <div class="trust-section">
                 <h2 style="text-align: center;">Who we are and how we work</h2>
                 <div class="trust-items">
@@ -943,7 +918,7 @@
         </section>
 
         <!-- Final CTA -->
-        <div class="cta-section fade-in-section">
+        <div class="cta-section">
             <h2>Have a problem in your warehouse you want to fix?</h2>
             <p>Describe it briefly — we’ll tell you honestly if we can help</p>
             <div class="email-block" onclick="copyEmail(event)">
