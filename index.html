@@ -78,6 +78,7 @@
             background: #fafafa;
             color: #1f2937;
             overflow-x: hidden;
+            overflow-x: clip; /* clip has no scrollable region at all; hidden is the fallback */
             line-height: 1.6;
         }
 
@@ -88,22 +89,16 @@
         }
 
         #content {
-            background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+            /* Hero background glow, painted as a background layer.
+               As an absolutely positioned pseudo-element hanging off the right edge
+               it added 200px of scrollable overflow that `overflow: hidden` hid but
+               did not remove, letting the page scroll sideways. */
+            background:
+                radial-gradient(circle 566px at calc(100% - 200px) 200px,
+                    rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0) 70%) no-repeat,
+                linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
             position: relative;
             overflow: hidden;
-        }
-
-        /* Hero background */
-        #content::before {
-            content: '';
-            position: absolute;
-            top: -200px;
-            right: -200px;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
         }
 
         .container {
@@ -178,7 +173,7 @@
         }
 
         .value-prop-desc {
-            color: #64748b;
+            color: #475569;
             font-size: 1.125rem;
         }
 
@@ -243,6 +238,77 @@
             color: #10b981 !important;
         }
 
+        /* Existing components - accented intro + compact card grid */
+        .proven-software-intro {
+            max-width: 820px;
+            margin: 28px auto 36px;
+            padding: 4px 0 4px 24px;
+            border-left: 4px solid #3b82f6;
+            text-align: left;
+        }
+
+        /* reuse .section-intro typography, drop its centering and spacing */
+        .proven-software-intro .section-intro {
+            max-width: none;
+            margin: 0;
+            text-align: left;
+        }
+
+        .proven-software-intro .section-intro + .section-intro {
+            margin-top: 14px;
+        }
+
+        .capability-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .capability-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .capability-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.08);
+        }
+
+        .capability-icon {
+            font-size: 32px;
+            color: #3b82f6;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .capability-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .capability-card p {
+            color: #475569;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .capability-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .proven-software-intro {
+                padding-left: 16px;
+            }
+        }
+
         /* Problem/Solution Cards */
         h2 {
             font-weight: 800;
@@ -254,7 +320,7 @@
 
         .section-intro {
             font-size: 1.25rem;
-            color: #64748b;
+            color: #475569;
             margin-bottom: 3rem;
             text-align: center;
             max-width: 800px;
@@ -411,7 +477,7 @@
         }
 
         .metric-label {
-            color: #64748b;
+            color: #475569;
             font-size: 0.95rem;
             font-weight: 500;
         }
@@ -475,7 +541,7 @@
         }
 
         .trust-content p {
-            color: #64748b;
+            color: #475569;
             font-size: 1.125rem;
             line-height: 1.6;
         }
@@ -574,6 +640,10 @@
             .case-row {
                 grid-template-columns: 1fr;
                 padding: 1rem 0;
+            }
+
+            .capability-grid {
+                grid-template-columns: 1fr;
             }
 
             .case-row dt,
@@ -721,6 +791,44 @@
                 <span class="copy-tooltip" aria-live="polite">Copied</span>
             </div>
         </div>
+
+        <!-- Existing components we reuse across projects -->
+        <section class="capabilities">
+            <h2 style="text-align: center;">Start with proven software, not a blank page</h2>
+            <div class="proven-software-intro">
+                <p class="section-intro">
+                    We already have working components for warehouse management, fulfillment, carrier integrations,
+                    labeling, customs processing, and equipment automation.
+                </p>
+                <p class="section-intro">
+                    We adapt them to your workflow, making development faster and more affordable than building
+                    everything from scratch.
+                </p>
+            </div>
+
+            <div class="capability-grid">
+                <div class="capability-card">
+                    <span class="material-symbols-outlined capability-icon">warehouse</span>
+                    <h3>WMS &amp; Fulfillment</h3>
+                    <p>Receiving, inventory, picking, packing, and client workflows.</p>
+                </div>
+                <div class="capability-card">
+                    <span class="material-symbols-outlined capability-icon">local_shipping</span>
+                    <h3>Carrier &amp; Customs Integrations</h3>
+                    <p>Shipping labels, tracking, shipment data, and customs workflows.</p>
+                </div>
+                <div class="capability-card">
+                    <span class="material-symbols-outlined capability-icon">precision_manufacturing</span>
+                    <h3>Warehouse Equipment</h3>
+                    <p>Scanners, scales, dimensioning systems, sorters, and label applicators.</p>
+                </div>
+                <div class="capability-card">
+                    <span class="material-symbols-outlined capability-icon">document_scanner</span>
+                    <h3>Labels, OCR &amp; Reporting</h3>
+                    <p>Label generation, data extraction, operational reports, and billing support.</p>
+                </div>
+            </div>
+        </section>
 
         <!-- Solutions with Problem/Solution format -->
         <section>
