@@ -7,7 +7,6 @@
   <meta name="description" content="A production WMS foundation with ongoing customization from logistics software developers. Source-available, self-hosted, no vendor lock-in." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://i.ytimg.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700;800&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -29,7 +28,6 @@
       --green:         #2c8c66;
       --measure:       44rem;   /* ~66ch reading measure */
       --max:           960px;
-      --wide:          1082px;  /* video column: 1080 + 1px border per side */
     }
 
     * { box-sizing: border-box; }
@@ -124,7 +122,7 @@
     .demo { padding: 8px 0 24px; }
     /* 1080px native video + 1px border per side: on big screens the video
        renders 1:1 and is never upscaled/blurred */
-    .demo .container { width: min(var(--wide), calc(100% - 40px)); }
+    .demo .container { width: min(1082px, calc(100% - 40px)); }
     .demo-frame {
       position: relative;
       border: 1px solid var(--hairline);
@@ -194,199 +192,6 @@
       margin: 0 0 8px;
     }
 
-    /* ── PLAYLIST ────────────────────────────────── */
-    #playlist { padding: 48px 0 40px; }
-    #playlist .container { width: min(var(--wide), calc(100% - 40px)); }
-    .pl-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px 32px;
-      margin-bottom: 24px;
-    }
-    .pl-head h2 { margin: 0; }
-    .pl-head p { margin: 4px 0 0; }
-    .pl-all {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .pl-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 348px;
-      border: 1px solid var(--hairline);
-      background: var(--surface-card);
-    }
-    .pl-stage { border-right: 1px solid var(--hairline); min-width: 0; }
-    .pl-frame {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      background: var(--surface-dark);
-      overflow: hidden;
-    }
-    .pl-frame img,
-    .pl-frame iframe {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      object-fit: cover;
-    }
-    .pl-play {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      border: 0;
-      padding: 0;
-      background: rgba(35, 37, 29, 0.35);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s;
-    }
-    .pl-play:hover { background: rgba(35, 37, 29, 0.24); }
-    .pl-play:hover .demo-play-icon { background: var(--primary-press); transform: scale(1.06); }
-    .pl-play:focus-visible { outline: 4px solid var(--primary); outline-offset: -4px; }
-
-    .pl-meta {
-      padding: 20px 24px 22px;
-      border-top: 1px solid var(--hairline-soft);
-    }
-    .pl-eyebrow {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--mute);
-      margin: 0 0 6px;
-    }
-    .pl-meta h3 { margin: 0 0 6px; font-size: 23px; }
-    .pl-meta p { margin: 0; font-size: 18px; line-height: 1.55; color: var(--mute); }
-
-    /* The rail is absolutely positioned so its height is driven by the stage
-       column and it scrolls internally instead of stretching the card. */
-    .pl-rail-wrap { position: relative; min-width: 0; }
-    .pl-rail {
-      position: absolute;
-      inset: 0;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      background: var(--surface-card);
-    }
-    .pl-item {
-      display: grid;
-      grid-template-columns: 26px 108px minmax(0, 1fr);
-      align-items: start;
-      gap: 0 12px;
-      width: 100%;
-      padding: 12px 14px 12px 12px;
-      border: 0;
-      border-bottom: 1px solid var(--hairline-soft);
-      border-left: 4px solid transparent;
-      background: transparent;
-      font-family: 'IBM Plex Sans', sans-serif;
-      text-align: left;
-      cursor: pointer;
-      transition: background 0.12s;
-    }
-    .pl-item:hover { background: var(--surface-soft); }
-    .pl-item[aria-current="true"] {
-      background: var(--surface-soft);
-      border-left-color: var(--primary);
-    }
-    .pl-item:disabled { cursor: default; opacity: 0.55; }
-    .pl-item:disabled:hover { background: transparent; }
-    .pl-item:focus-visible {
-      outline: 3px solid var(--primary);
-      outline-offset: -3px;
-    }
-    .pl-num {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--ash);
-      font-variant-numeric: tabular-nums;
-      padding-top: 2px;
-    }
-    .pl-item[aria-current="true"] .pl-num { color: var(--ink); }
-    .pl-thumb {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      background: var(--surface-dark);
-      overflow: hidden;
-    }
-    .pl-thumb img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .pl-len {
-      position: absolute;
-      right: 3px;
-      bottom: 3px;
-      padding: 1px 5px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--on-dark);
-      background: rgba(35, 37, 29, 0.86);
-      font-variant-numeric: tabular-nums;
-    }
-    .pl-text { min-width: 0; }
-    .pl-title {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--ink);
-      margin: 1px 0 3px;
-    }
-    .pl-sub {
-      font-size: 14px;
-      line-height: 1.4;
-      color: var(--mute);
-      margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .pl-now {
-      display: none;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--primary-shade);
-    }
-    .pl-item[aria-current="true"] .pl-now { display: block; }
-
-    /* Placeholder tile shown until a real video ID is filled in */
-    .pl-blank {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        repeating-linear-gradient(-45deg,
-          #2b2d24 0 10px, #23251d 10px 20px);
-      color: var(--ash);
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      padding: 8px;
-    }
-
     /* ── COSTS ───────────────────────────────────── */
     .cost-zero {
       font-family: 'IBM Plex Sans', sans-serif;
@@ -413,13 +218,6 @@
       border-top: 1px solid var(--hairline);
     }
     .feature p { font-size: 19px; line-height: 1.6; margin: 0; }
-    .feature-watch {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      margin-top: 10px;
-      display: inline-block;
-    }
 
     /* ── CTA ─────────────────────────────────────── */
     .cta {
@@ -494,28 +292,16 @@
     .email-item.copied .copy-hint { opacity: 1; }
 
     /* ── RESPONSIVE ──────────────────────────────── */
-    @media (max-width: 900px) {
-      .pl-grid { grid-template-columns: 1fr; }
-      .pl-stage { border-right: 0; border-bottom: 1px solid var(--hairline); }
-      .pl-rail-wrap { position: static; }
-      .pl-rail { position: static; max-height: 340px; }
-    }
-
     @media (max-width: 768px) {
       body { font-size: 18px; }
       .hero { padding: 40px 0 32px; }
       section { padding: 40px 0; }
-      #playlist { padding: 40px 0 32px; }
       .features { grid-template-columns: 1fr; column-gap: 0; }
       .cta { padding: 44px 0; }
-      .demo-play-icon { width: 72px; height: 72px; }
-      .demo-play-icon::after { border-width: 15px 0 15px 25px; margin-left: 6px; }
-      .pl-item { grid-template-columns: 24px 92px minmax(0, 1fr); }
     }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .demo-play-icon, .pl-item, .pl-play { transition: none; }
     }
   </style>
 </head>
@@ -572,37 +358,6 @@
     </div>
   </section>
 
-  <!-- ── YOUTUBE PLAYLIST ───────────────────────── -->
-  <section id="playlist" aria-labelledby="playlist-title">
-    <div class="container">
-      <div class="pl-head">
-        <div>
-          <h2 id="playlist-title">See the system working</h2>
-          <p>Short walkthroughs of the features, recorded in the running system.</p>
-        </div>
-        <a class="pl-all" id="pl-all" href="https://www.youtube.com/watch?v=zcwdW6BAMFY&list=PLNyHCjgq_iD8">Full playlist on YouTube&nbsp;↗</a>
-      </div>
-
-      <div class="pl-grid">
-        <div class="pl-stage">
-          <div class="pl-frame" id="pl-frame">
-            <!-- Player facade injected here; the real YouTube iframe only
-                 loads after a click, so nothing third-party runs on page load -->
-          </div>
-          <div class="pl-meta">
-            <p class="pl-eyebrow" id="pl-eyebrow">Now playing</p>
-            <h3 id="pl-title"></h3>
-            <p id="pl-blurb"></p>
-          </div>
-        </div>
-
-        <div class="pl-rail-wrap">
-          <ul class="pl-rail" id="pl-rail" aria-label="Feature walkthroughs"></ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ── FOUNDATION ─────────────────────────────── -->
   <section id="foundation">
     <div class="container">
@@ -612,7 +367,6 @@
         <div class="feature">
           <h3>Receiving</h3>
           <p>Each scan resolves as new, matched, partial, or conflict — and is logged.</p>
-<!--          <a class="feature-watch" href="#playlist" data-watch="receiving">Watch it →</a>-->
         </div>
         <div class="feature">
           <h3>ASN matching</h3>
@@ -675,43 +429,6 @@
 </footer>
 
 <script>
-  /* ═══════════════════════════════════════════════════════════
-     EDIT HERE — YouTube playlist
-
-     PLAYLIST_ID : from the playlist URL
-                   youtube.com/playlist?list=PLxxxxxxxxxxxx
-     VIDEOS      : one entry per video, in playing order.
-                   id    — the 11-character video ID
-                           (youtu.be/<id> or watch?v=<id>)
-                   len   — duration badge, e.g. "2:14" (optional)
-                   key   — matches data-watch="…" on the feature
-                           cards further up the page (optional)
-
-     Videos with an empty id render as a placeholder tile and
-     are not clickable, so the page stays presentable while the
-     playlist is still being filled in.
-     ═══════════════════════════════════════════════════════════ */
-  const PLAYLIST_ID = '';
-
-  const VIDEOS = [
-    {
-      id: 'zcwdW6BAMFY',
-      key: 'low-stock-email-report',
-      len: '1:10',
-      title: 'Stop Stockouts Before Fulfillment Orders Pile Up',
-      blurb: 'When inventory arrives late, fulfillment orders pile up and warehouse operations slow down. This WMS feature automatically tracks stock levels and tells clients what needs to be replenished.'
-    },
-    {
-      id: 'AL3h1YvaLPg',
-      key: 'phone-table-into-receiving-camer',
-      len: '1:15',
-      title: 'Turn Any Phone Into a WMS Receiving Camera',
-      blurb: 'During receiving, you may need close-up photos of a package, its contents, or the accompanying paperwork. Our WMS turns any phone or tablet into a receiving camera.'
-    }
-  ];
-  /* ══════════════════ END EDIT ══════════════════════════════ */
-
-  /* ── Email copy button ───────────────────────── */
   document.querySelector('.copy-btn').addEventListener('click', async function () {
     const item = this.closest('.email-item');
     const email = item.querySelector('a').textContent.trim();
@@ -730,7 +447,6 @@
     this._hintTimer = setTimeout(() => item.classList.remove('copied'), 1800);
   });
 
-  /* ── Local MP4 demo ──────────────────────────── */
   {
     const frame = document.querySelector('.demo-frame');
     const video = frame.querySelector('video');
@@ -738,161 +454,6 @@
     video.addEventListener('play', () => frame.classList.add('playing'));
     video.addEventListener('pause', () => frame.classList.remove('playing'));
     video.addEventListener('click', () => video.pause());
-  }
-
-  /* ── YouTube playlist ────────────────────────── */
-  {
-    const rail    = document.getElementById('pl-rail');
-    const frame   = document.getElementById('pl-frame');
-    const elTitle = document.getElementById('pl-title');
-    const elBlurb = document.getElementById('pl-blurb');
-    const elBrow  = document.getElementById('pl-eyebrow');
-    const allLink = document.getElementById('pl-all');
-
-    const pad  = n => String(n).padStart(2, '0');
-    const thumb = id => 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg';
-    const fallbackThumb = id => 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
-
-    if (PLAYLIST_ID) {
-      allLink.href = 'https://www.youtube.com/playlist?list=' + PLAYLIST_ID;
-    } else {
-      allLink.hidden = true;
-    }
-
-    // Thumbnail with a graceful fallback: maxres → hqdefault → placeholder
-    function makeThumb(video, alt) {
-      if (!video.id) {
-        const blank = document.createElement('div');
-        blank.className = 'pl-blank';
-        blank.textContent = 'Video coming soon';
-        return blank;
-      }
-      const img = document.createElement('img');
-      img.src = thumb(video.id);
-      img.alt = alt;
-      img.loading = 'lazy';
-      img.addEventListener('error', function onErr() {
-        this.removeEventListener('error', onErr);
-        this.src = fallbackThumb(video.id);
-      });
-      return img;
-    }
-
-    let current = 0;
-
-    // Rail
-    VIDEOS.forEach((v, i) => {
-      const li = document.createElement('li');
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'pl-item';
-      btn.setAttribute('aria-current', 'false');
-      if (!v.id) btn.disabled = true;
-
-      const num = document.createElement('span');
-      num.className = 'pl-num';
-      num.textContent = pad(i + 1);
-
-      const th = document.createElement('span');
-      th.className = 'pl-thumb';
-      th.appendChild(makeThumb(v, ''));
-      if (v.len) {
-        const len = document.createElement('span');
-        len.className = 'pl-len';
-        len.textContent = v.len;
-        th.appendChild(len);
-      }
-
-      const text = document.createElement('span');
-      text.className = 'pl-text';
-      const nowTag = document.createElement('span');
-      nowTag.className = 'pl-now';
-      nowTag.textContent = 'Now playing';
-      const title = document.createElement('span');
-      title.className = 'pl-title';
-      title.textContent = v.title;
-      const sub = document.createElement('span');
-      sub.className = 'pl-sub';
-      sub.textContent = v.blurb;
-      text.append(nowTag, title, sub);
-
-      btn.append(num, th, text);
-      btn.addEventListener('click', () => select(i, true));
-      li.appendChild(btn);
-      rail.appendChild(li);
-
-      v._btn = btn;
-    });
-
-    // Stage: show the poster, load the iframe only on click
-    function select(i, autoplay) {
-      const v = VIDEOS[i];
-      current = i;
-
-      VIDEOS.forEach(x => x._btn.setAttribute('aria-current', x === v ? 'true' : 'false'));
-
-      elBrow.textContent = 'Part ' + pad(i + 1) + ' of ' + pad(VIDEOS.length);
-      elTitle.textContent = v.title;
-      elBlurb.textContent = v.blurb;
-
-      frame.replaceChildren();
-
-      if (!v.id) {
-        frame.appendChild(makeThumb(v, ''));
-        return;
-      }
-
-      if (autoplay) {
-        frame.appendChild(makeEmbed(v));
-      } else {
-        frame.appendChild(makeThumb(v, v.title));
-        const play = document.createElement('button');
-        play.type = 'button';
-        play.className = 'pl-play';
-        play.setAttribute('aria-label', 'Play: ' + v.title);
-        const icon = document.createElement('span');
-        icon.className = 'demo-play-icon';
-        icon.setAttribute('aria-hidden', 'true');
-        play.appendChild(icon);
-        play.addEventListener('click', () => {
-          frame.replaceChildren(makeEmbed(v));
-        });
-        frame.appendChild(play);
-      }
-    }
-
-    function makeEmbed(v) {
-      const params = new URLSearchParams({
-        autoplay: '1',
-        rel: '0',
-        modestbranding: '1',
-        playsinline: '1'
-      });
-      if (PLAYLIST_ID) params.set('list', PLAYLIST_ID);
-
-      const iframe = document.createElement('iframe');
-      iframe.src = 'https://www.youtube-nocookie.com/embed/' + v.id + '?' + params;
-      iframe.title = v.title;
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.allowFullscreen = true;
-      return iframe;
-    }
-
-    // "Watch it →" links on the feature cards jump to the matching video
-    document.querySelectorAll('[data-watch]').forEach(link => {
-      link.addEventListener('click', e => {
-        const i = VIDEOS.findIndex(v => v.key === link.dataset.watch);
-        if (i === -1) return;
-        e.preventDefault();
-        select(i, false);
-        document.getElementById('playlist').scrollIntoView({ block: 'start' });
-        VIDEOS[i]._btn.scrollIntoView({ block: 'nearest' });
-      });
-    });
-
-    select(0, false);
   }
 </script>
 
