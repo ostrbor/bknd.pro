@@ -64,6 +64,23 @@
                     closeLightbox();
                 }
             });
+
+            // Inline video demos: click to play, click again to pause
+            document.querySelectorAll('.case-video').forEach(function(frame) {
+                const video = frame.querySelector('video');
+                frame.querySelector('.case-video-play').addEventListener('click', function() {
+                    video.play();
+                });
+                video.addEventListener('click', function() {
+                    video.paused ? video.play() : video.pause();
+                });
+                video.addEventListener('play', function() {
+                    frame.classList.add('playing');
+                });
+                video.addEventListener('pause', function() {
+                    frame.classList.remove('playing');
+                });
+            });
         });
     </script>
     <style>
@@ -450,6 +467,69 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 12px rgba(0, 0, 0, 0.08);
         }
 
+        /* Inline video demo */
+        .case-video {
+            position: relative;
+            margin-top: 2rem;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            background: #0f172a;
+        }
+
+        .case-video video {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1080 / 676;
+            cursor: pointer;
+        }
+
+        .case-video-play {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            border: 0;
+            padding: 0;
+            background: rgba(15, 23, 42, 0.35);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .case-video-play:hover {
+            background: rgba(15, 23, 42, 0.45);
+        }
+
+        .case-video-play span {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: #ffffff;
+            font-size: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.45);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .case-video-play:hover span {
+            transform: scale(1.08);
+            box-shadow: 0 16px 40px rgba(59, 130, 246, 0.55);
+        }
+
+        .case-video-play:focus-visible {
+            outline: 3px solid #3b82f6;
+            outline-offset: -3px;
+        }
+
+        .case-video.playing .case-video-play {
+            display: none;
+        }
+
         /* Results metrics */
         .metrics {
             display: grid;
@@ -640,6 +720,12 @@
             .case-row {
                 grid-template-columns: 1fr;
                 padding: 1rem 0;
+            }
+
+            .case-video-play span {
+                width: 64px;
+                height: 64px;
+                font-size: 32px;
             }
 
             .capability-grid {
@@ -919,6 +1005,7 @@
                 <div class="couriers">
                     <img src="images/ups.png" title="UPS" alt="UPS"/>
                     <img src="images/fedex.png" title="FedEx" alt="FedEx"/>
+                    <img src="images/dhl.png" title="DHL" alt="DHL"/>
                     <img src="images/usps.png" title="USPS" alt="USPS"/>
                     <img src="images/ontrac.png" title="ShipStation" alt="OnTrac"/>
                     <img src="images/shipstation.png" title="ShipStation" alt="ShipStation"/>
@@ -942,6 +1029,14 @@
                         <dd>Clear inventory state, fewer losses, and the ability to scale without adding chaos.</dd>
                     </div>
                 </dl>
+                <div class="case-video">
+                    <video src="wms/landing.mp4"
+                           muted loop playsinline preload="metadata"
+                           aria-label="Demo: a package is scanned, weighed and measured, matched to a client, consolidated, and the client is notified automatically"></video>
+                    <button class="case-video-play" type="button" aria-label="Play the demo video">
+                        <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
+                    </button>
+                </div>
                 <a href="/wms/" class="case-link">
                     Learn more
                     <span class="material-symbols-outlined">arrow_forward</span>
