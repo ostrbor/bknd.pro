@@ -8,133 +8,178 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://i.ytimg.com" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700;800&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
   <style>
+    /* Same tokens as the main page (/index.html) */
     :root {
-      --canvas:        #eeefe9;
-      --surface-soft:  #e5e7e0;
-      --surface-card:  #ffffff;
-      --surface-dark:  #23251d;
-      --hairline:      #bfc1b7;
-      --hairline-soft: #dcdfd2;
-      --ink:           #23251d;
-      --body:          #2a2c24;
-      --mute:          #565850;
-      --ash:           #9b9c92;
-      --primary:       #f7a501;
-      --primary-press: #dd9001;
-      --primary-shade: #b57500;
-      --on-primary:    #23251d;
-      --on-dark:       #ffffff;
-      --green:         #2c8c66;
-      --measure:       44rem;   /* ~66ch reading measure */
-      --max:           960px;
-      --wide:          1082px;  /* video column: 1080 + 1px border per side */
+      --ink:         #1c1917;
+      --text:        #44403c;
+      --muted:       #78716c;
+      --line:        #e7e1d8;
+      --line-strong: #d6cec2;
+      --paper:       #fbf9f6;
+      --card:        #ffffff;
+      --accent:      #1d4ed8;
+      --accent-dark: #1e3a8a;
+      --accent-soft: #eef2fb;
+      --warm:        #b45309;
+      --warm-soft:   #fbf1e4;
+      --dark:        #1c1917;
+      --green:       #15803d;
+      --serif:       'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --max:         1080px;
+      --wide:        1082px;  /* video column: 1080 + 1px border per side */
     }
 
-    * { box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
-      background: var(--canvas);
-      color: var(--body);
-      font-size: 20px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-    }
-    h1, h2, h3, .sans {
-      font-family: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
-    }
-    p { margin: 0 0 20px; max-width: var(--measure); }
-    .container { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
-
-    /* ── LINKS (GOV.UK style: always underlined) ── */
-    a {
-      color: var(--ink);
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 0.15em;
-    }
-    a:hover { text-decoration-thickness: 3px; }
-    a:focus-visible, .btn:focus-visible {
-      outline: none;
-      background-color: var(--primary);
-      color: var(--on-primary);
-      box-shadow: 0 -2px var(--primary), 0 4px var(--ink);
-      text-decoration: none;
-    }
-
-    /* ── BUTTONS (GOV.UK: square, hard shadow) ──── */
-    .btn {
-      font-family: 'IBM Plex Sans', sans-serif;
-      display: inline-block;
-      padding: 12px 24px 11px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--paper);
+      color: var(--text);
       font-size: 18px;
-      font-weight: 700;
-      line-height: 1.2;
-      color: var(--on-primary);
-      background: var(--primary);
-      border: 2px solid transparent;
-      box-shadow: 0 3px 0 var(--primary-shade);
-      text-decoration: none;
-      cursor: pointer;
+      line-height: 1.6;
+      overflow-x: hidden;
+      overflow-x: clip;
     }
-    .btn:hover { background: var(--primary-press); }
-    .btn:active { box-shadow: none; transform: translateY(3px); }
+    .container { width: min(var(--max), calc(100% - 4rem)); margin: 0 auto; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    a:hover { color: var(--accent-dark); }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    h1, h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      color: var(--ink);
+    }
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      max-width: 860px;
+      margin: 0 auto 1.5rem;
+    }
+    h2 {
+      font-size: clamp(1.85rem, 3.4vw, 2.4rem);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+    }
+    .section-intro {
+      font-size: 1.2rem;
+      color: var(--text);
+      max-width: 760px;
+      margin: 0 auto 2.5rem;
+      text-align: center;
+    }
+    .center { text-align: center; }
+
+    /* ── BUTTON ──────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: var(--accent);
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.22);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      color: #ffffff;
+      background: var(--accent-dark);
+      box-shadow: 0 8px 20px rgba(29, 78, 216, 0.28);
+    }
+    .btn .material-symbols-outlined { font-size: 20px; }
 
     /* ── HERO ────────────────────────────────────── */
-    .hero { padding: 56px 0 40px; }
-    h1 {
-      font-size: clamp(34px, 5vw, 52px);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.8px;
-      color: var(--ink);
-      margin: 0 0 24px;
-      max-width: 15em;
+    .hero {
+      padding: 5rem 0 3rem;
+      text-align: center;
     }
-    /* GOV.UK-style bulleted list */
-    ul.bullets {
+    /* Hero glow painted on <main> so it fades out instead of being cut at the hero edge */
+    main {
+      background:
+        radial-gradient(circle 566px at calc(100% - 200px) 200px,
+          rgba(217, 119, 6, 0.07) 0%, rgba(217, 119, 6, 0) 70%) no-repeat,
+        radial-gradient(circle 480px at 120px 420px,
+          rgba(29, 78, 216, 0.04) 0%, rgba(29, 78, 216, 0) 70%) no-repeat;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .back-link .material-symbols-outlined { font-size: 18px; }
+    .hero-points {
       list-style: none;
-      margin: 0 0 32px;
-      padding: 0;
-      max-width: var(--measure);
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      max-width: 820px;
+      margin: 0 auto 2.25rem;
     }
-    ul.bullets li {
-      position: relative;
-      padding-left: 28px;
-      line-height: 1.55;
+    .hero-points li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
     }
-    ul.bullets li::before {
-      content: "";
-      position: absolute;
-      left: 4px;
-      top: 0.62em;
-      width: 9px;
-      height: 9px;
-      background: var(--primary);
+    .hero-points .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--warm);
     }
-    ul.bullets li b { color: var(--ink); font-weight: 500; }
 
     /* ── VIDEO ───────────────────────────────────── */
-    .demo { padding: 8px 0 24px; }
+    .demo { padding: 1rem 0 2rem; }
     /* 1080px native video + 1px border per side: on big screens the video
        renders 1:1 and is never upscaled/blurred */
-    .demo .container { width: min(var(--wide), calc(100% - 40px)); }
+    .demo .container { width: min(var(--wide), calc(100% - 4rem)); }
     .demo-frame {
       position: relative;
-      border: 1px solid var(--hairline);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--dark);
+      box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04), 0 12px 32px rgba(28, 25, 23, 0.08);
     }
     .demo-frame video {
       display: block;
       width: 100%;
       height: auto;
       aspect-ratio: 1080 / 676;
-      background: var(--surface-dark);
     }
     /* Big click-to-play overlay covering the whole video */
     .demo-play {
@@ -143,88 +188,125 @@
       width: 100%;
       border: 0;
       padding: 0;
-      background: rgba(35, 37, 29, 0.35);
+      background: rgba(28, 25, 23, 0.35);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.3s;
     }
+    .demo-play:hover { background: rgba(28, 25, 23, 0.45); }
     .demo-play-icon {
-      width: 104px;
-      height: 104px;
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 4px 0 var(--primary-shade);
+      background: var(--accent);
+      box-shadow: 0 10px 30px rgba(29, 78, 216, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.12s;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .demo-play-icon::after {
       content: "";
       border-style: solid;
-      border-width: 22px 0 22px 36px;
-      border-color: transparent transparent transparent var(--ink);
-      margin-left: 8px;
+      border-width: 17px 0 17px 28px;
+      border-color: transparent transparent transparent #ffffff;
+      margin-left: 6px;
     }
-    .demo-play:hover .demo-play-icon { background: var(--primary-press); transform: scale(1.06); }
-    .demo-play:focus-visible {
-      outline: 4px solid var(--primary);
-      outline-offset: -4px;
+    .demo-play:hover .demo-play-icon,
+    .pl-play:hover .demo-play-icon {
+      transform: scale(1.08);
+      box-shadow: 0 16px 40px rgba(29, 78, 216, 0.5);
+    }
+    .demo-play:focus-visible,
+    .pl-play:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: -3px;
+      border-radius: 0;
     }
     .demo-frame.playing .demo-play { display: none; }
     .demo-frame.playing video { cursor: pointer; }
 
     /* ── SECTIONS ────────────────────────────────── */
-    section { padding: 48px 0; }
-    h2 {
-      font-size: clamp(27px, 3.4vw, 36px);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      line-height: 1.15;
-      color: var(--ink);
-      margin: 0 0 20px;
-      max-width: 20em;
+    section { padding: 4rem 0; }
+
+    /* ── PRICING & OWNERSHIP ─────────────────────── */
+    .promise-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
     }
-    h3 {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.2px;
+    .promise {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04), 0 8px 24px rgba(28, 25, 23, 0.04);
+    }
+    .promise-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .promise-icon .material-symbols-outlined { font-size: 28px; }
+    .promise h2 { font-size: 1.9rem; margin-bottom: 0.75rem; }
+    .promise p { font-size: 1.1rem; }
+    .promise p + p { margin-top: 0.75rem; }
+    .promise b { color: var(--ink); font-weight: 600; }
+    .cost-zero {
+      font-size: 1.2rem !important;
+      line-height: 1.4;
+      font-weight: 600;
       color: var(--ink);
-      margin: 0 0 8px;
+    }
+    .cost-zero b {
+      font-family: var(--serif);
+      font-size: 2.4rem;
+      font-weight: 600;
+      line-height: 1;
+      vertical-align: -0.1em;
+      color: var(--warm);
+      margin-right: 0.25rem;
     }
 
     /* ── PLAYLIST ────────────────────────────────── */
-    #playlist { padding: 48px 0 40px; }
-    #playlist .container { width: min(var(--wide), calc(100% - 40px)); }
+    #playlist .container { width: min(var(--wide), calc(100% - 4rem)); }
     .pl-head {
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
       justify-content: space-between;
-      gap: 8px 32px;
-      margin-bottom: 24px;
+      gap: 0.5rem 2rem;
+      margin-bottom: 1.5rem;
     }
     .pl-head h2 { margin: 0; }
-    .pl-head p { margin: 4px 0 0; }
+    .pl-head p { margin: 0.25rem 0 0; font-size: 1.15rem; }
     .pl-all {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 1.05rem;
       white-space: nowrap;
     }
 
     .pl-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 348px;
-      border: 1px solid var(--hairline);
-      background: var(--surface-card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04), 0 8px 24px rgba(28, 25, 23, 0.04);
     }
-    .pl-stage { border-right: 1px solid var(--hairline); min-width: 0; }
+    .pl-stage { border-right: 1px solid var(--line); min-width: 0; }
     .pl-frame {
       position: relative;
       aspect-ratio: 16 / 9;
-      background: var(--surface-dark);
+      background: var(--dark);
       overflow: hidden;
     }
     .pl-frame img,
@@ -243,32 +325,29 @@
       width: 100%;
       border: 0;
       padding: 0;
-      background: rgba(35, 37, 29, 0.35);
+      background: rgba(28, 25, 23, 0.35);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s;
+      transition: background 0.3s;
     }
-    .pl-play:hover { background: rgba(35, 37, 29, 0.24); }
-    .pl-play:hover .demo-play-icon { background: var(--primary-press); transform: scale(1.06); }
-    .pl-play:focus-visible { outline: 4px solid var(--primary); outline-offset: -4px; }
+    .pl-play:hover { background: rgba(28, 25, 23, 0.24); }
 
     .pl-meta {
-      padding: 20px 24px 22px;
-      border-top: 1px solid var(--hairline-soft);
+      padding: 1.25rem 1.5rem 1.4rem;
+      border-top: 1px solid var(--line);
     }
     .pl-eyebrow {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 15px;
+      font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--mute);
-      margin: 0 0 6px;
+      color: var(--warm);
+      margin: 0 0 0.35rem;
     }
-    .pl-meta h3 { margin: 0 0 6px; font-size: 23px; }
-    .pl-meta p { margin: 0; font-size: 18px; line-height: 1.55; color: var(--mute); }
+    .pl-meta h3 { margin: 0 0 0.35rem; font-size: 1.3rem; }
+    .pl-meta p { margin: 0; font-size: 1.05rem; line-height: 1.55; color: var(--text); }
 
     /* The rail is absolutely positioned so its height is driven by the stage
        column and it scrolls internally instead of stretching the card. */
@@ -281,7 +360,7 @@
       margin: 0;
       padding: 0;
       list-style: none;
-      background: var(--surface-card);
+      background: var(--card);
     }
     .pl-item {
       display: grid;
@@ -291,37 +370,39 @@
       width: 100%;
       padding: 12px 14px 12px 12px;
       border: 0;
-      border-bottom: 1px solid var(--hairline-soft);
+      border-bottom: 1px solid var(--line);
       border-left: 4px solid transparent;
       background: transparent;
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: inherit;
       text-align: left;
       cursor: pointer;
-      transition: background 0.12s;
+      transition: background 0.15s;
     }
-    .pl-item:hover { background: var(--surface-soft); }
+    .pl-item:hover { background: var(--paper); }
     .pl-item[aria-current="true"] {
-      background: var(--surface-soft);
-      border-left-color: var(--primary);
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
     }
     .pl-item:disabled { cursor: default; opacity: 0.55; }
     .pl-item:disabled:hover { background: transparent; }
     .pl-item:focus-visible {
-      outline: 3px solid var(--primary);
+      outline: 3px solid var(--accent);
       outline-offset: -3px;
+      border-radius: 0;
     }
     .pl-num {
       font-size: 14px;
       font-weight: 700;
-      color: var(--ash);
+      color: var(--muted);
       font-variant-numeric: tabular-nums;
       padding-top: 2px;
     }
-    .pl-item[aria-current="true"] .pl-num { color: var(--ink); }
+    .pl-item[aria-current="true"] .pl-num { color: var(--accent); }
     .pl-thumb {
       position: relative;
       aspect-ratio: 16 / 9;
-      background: var(--surface-dark);
+      background: var(--dark);
+      border-radius: 6px;
       overflow: hidden;
     }
     .pl-thumb img {
@@ -337,22 +418,24 @@
       padding: 1px 5px;
       font-size: 12px;
       font-weight: 600;
-      color: var(--on-dark);
-      background: rgba(35, 37, 29, 0.86);
+      color: #ffffff;
+      background: rgba(28, 25, 23, 0.86);
+      border-radius: 4px;
       font-variant-numeric: tabular-nums;
     }
     .pl-text { min-width: 0; }
     .pl-title {
-      font-size: 16px;
+      display: block;
+      font-size: 15px;
       font-weight: 700;
       line-height: 1.3;
       color: var(--ink);
       margin: 1px 0 3px;
     }
     .pl-sub {
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.4;
-      color: var(--mute);
+      color: var(--muted);
       margin: 0;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -361,11 +444,11 @@
     }
     .pl-now {
       display: none;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--primary-shade);
+      color: var(--accent);
     }
     .pl-item[aria-current="true"] .pl-now { display: block; }
 
@@ -378,144 +461,174 @@
       justify-content: center;
       background:
         repeating-linear-gradient(-45deg,
-          #2b2d24 0 10px, #23251d 10px 20px);
-      color: var(--ash);
-      font-family: 'IBM Plex Sans', sans-serif;
+          #292524 0 10px, #1c1917 10px 20px);
+      color: #a8a29e;
       font-size: 14px;
       font-weight: 600;
       text-align: center;
       padding: 8px;
     }
 
-    /* ── COSTS ───────────────────────────────────── */
-    .cost-zero {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 23px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 12px;
-    }
-    .cost-zero b {
-      font-size: 1.5em;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    /* ── FEATURE LIST ────────────────────────────── */
+    /* ── FEATURES ────────────────────────────────── */
     .features {
-      margin-top: 8px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 56px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
     }
     .feature {
-      padding: 24px 0;
-      border-top: 1px solid var(--hairline);
+      background: var(--card);
+      padding: 1.75rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+      transition: box-shadow 0.3s, border-color 0.3s;
     }
-    .feature p { font-size: 19px; line-height: 1.6; margin: 0; }
+    .feature:hover {
+      border-color: var(--line-strong);
+      box-shadow: 0 8px 20px rgba(28, 25, 23, 0.06);
+    }
+    .feature-icon {
+      display: block;
+      font-size: 30px;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .feature p { font-size: 1rem; line-height: 1.6; }
     .feature-watch {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      margin-top: 10px;
+      font-size: 0.95rem;
+      margin-top: 0.6rem;
       display: inline-block;
     }
 
     /* ── CTA ─────────────────────────────────────── */
     .cta {
-      background: var(--surface-dark);
-      color: var(--on-dark);
-      padding: 56px 0;
+      background:
+        radial-gradient(circle 420px at 100% 0%, rgba(251, 191, 36, 0.16) 0%, rgba(251, 191, 36, 0) 70%) no-repeat,
+        linear-gradient(135deg, #1e3a8a 0%, #1c2f5e 100%);
+      color: #ffffff;
+      padding: 3.5rem 3rem;
+      border-radius: 20px;
+      text-align: center;
+      margin: 2rem 0 5rem;
     }
-    .cta h2 { color: var(--on-dark); margin-bottom: 16px; }
-    .cta p { color: rgba(255,255,255,.78); font-size: 19px; margin-bottom: 28px; }
-    .cta a:not(.btn) { color: var(--on-dark); }
+    .cta h2 { color: #ffffff; max-width: 760px; margin: 0 auto 1rem; }
+    .cta p { color: #dbe3f4; font-size: 1.2rem; margin-bottom: 2rem; }
+    .cta .cta-note { font-size: 1rem; margin: 1.5rem 0 0; }
 
-    /* ── FOOTER ──────────────────────────────────── */
-    footer {
-      border-top: 6px solid var(--primary);
-      background: var(--surface-soft);
-      padding: 32px 0 96px;
+    .email-block {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px 32px;
+      background: #ffffff;
+      border: 0;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transition: box-shadow 0.3s;
+    }
+    .email-block:hover { box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); }
+    .email-block .copy-icon { color: var(--accent); }
+    .email-block.copied .copy-icon { color: var(--green); }
+    .copy-tooltip {
+      position: absolute;
+      right: 14px;
+      top: -10px;
+      transform: translateY(-100%);
+      background: rgba(28, 25, 23, 0.92);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      white-space: nowrap;
+    }
+    .email-block.copied .copy-tooltip {
+      opacity: 1;
+      transform: translateY(-110%);
+    }
+
+    /* ── FOOTER (same as main page) ──────────────── */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      background: #f5f1eb;
+      padding: 2.5rem 0;
     }
     .footer-inner {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 23px;
-      color: var(--body);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
     }
     .footer-contacts {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 0;
-      padding: 0;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
       list-style: none;
     }
-    .wa-item {
+    .footer-contacts a,
+    .footer-home {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 0.5rem;
+      color: var(--text);
+      font-size: 1.05rem;
     }
-    .wa-icon {
-      width: 26px;
-      height: 26px;
-      flex: none;
-      fill: #1da851;
-      stroke: #1da851;
-      stroke-width: 0.9;
+    .footer-contacts a:hover,
+    .footer-home:hover { color: var(--accent-dark); }
+    .footer-contacts .material-symbols-outlined,
+    .footer-contacts svg {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+      flex-shrink: 0;
     }
-    .wa-note { color: var(--mute); }
-    .email-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .copy-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      padding: 0;
-      border: 1px solid var(--hairline);
-      background: var(--surface-card);
-      color: var(--body);
-      cursor: pointer;
-    }
-    .copy-btn:hover { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
-    .copy-btn:focus-visible { outline: 3px solid var(--primary); outline-offset: 1px; }
-    .copy-btn svg { width: 20px; height: 20px; }
-    .copy-hint {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--green);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .email-item.copied .copy-hint { opacity: 1; }
 
     /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 1024px) {
+      .features { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 900px) {
       .pl-grid { grid-template-columns: 1fr; }
-      .pl-stage { border-right: 0; border-bottom: 1px solid var(--hairline); }
+      .pl-stage { border-right: 0; border-bottom: 1px solid var(--line); }
       .pl-rail-wrap { position: static; }
       .pl-rail { position: static; max-height: 340px; }
     }
 
     @media (max-width: 768px) {
-      body { font-size: 18px; }
-      .hero { padding: 40px 0 32px; }
-      section { padding: 40px 0; }
-      #playlist { padding: 40px 0 32px; }
-      .features { grid-template-columns: 1fr; column-gap: 0; }
-      .cta { padding: 44px 0; }
-      .demo-play-icon { width: 72px; height: 72px; }
-      .demo-play-icon::after { border-width: 15px 0 15px 25px; margin-left: 6px; }
+      body { font-size: 17px; }
+      .container,
+      .demo .container,
+      #playlist .container { width: calc(100% - 2rem); }
+      .hero { padding: 3rem 0 2rem; }
+      section { padding: 3rem 0; }
+      .promise-grid,
+      .features { grid-template-columns: 1fr; }
+      .promise { padding: 2rem; }
+      .cta { padding: 2.5rem 1.5rem; margin-bottom: 3rem; }
+      .email-block { font-size: 1.1rem; padding: 14px 20px; }
+      .demo-play-icon { width: 64px; height: 64px; }
+      .demo-play-icon::after { border-width: 13px 0 13px 21px; margin-left: 5px; }
       .pl-item { grid-template-columns: 24px 92px minmax(0, 1fr); }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-contacts { flex-direction: column; align-items: flex-start; gap: 1rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .demo-play-icon, .pl-item, .pl-play { transition: none; }
+      .demo-play-icon, .pl-item, .pl-play, .feature { transition: none; }
     }
   </style>
 </head>
@@ -526,15 +639,22 @@
   <!-- ── HERO ───────────────────────────────────── -->
   <header class="hero">
     <div class="container">
+      <a class="back-link" href="/">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        BKND Software
+      </a>
       <h1>Warehouse software adapted to your workflow</h1>
-      <ul class="bullets">
-        <li><b>Replace spreadsheets</b></li>
-        <li><b>Track everything</b></li>
-        <li><b>Reduce mistakes</b></li>
-        <li><b>Connect equipment</b></li>
-        <li><b>Your system stays yours</b></li>
+      <ul class="hero-points">
+        <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Replace spreadsheets</li>
+        <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Track everything</li>
+        <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Reduce mistakes</li>
+        <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Connect equipment</li>
+        <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Your system stays yours</li>
       </ul>
-      <a class="btn" href="mailto:contact@bknd.pro?subject=WMS%20workflow%20discussion">Contact us</a>
+      <a class="btn" href="mailto:contact@bknd.pro?subject=WMS%20workflow%20discussion">
+        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+        Contact us
+      </a>
     </div>
   </header>
 
@@ -555,20 +675,20 @@
     </div>
   </div>
 
-  <!-- ── COSTS ──────────────────────────────────── -->
-  <section id="costs">
-    <div class="container">
-      <h2>What it costs</h2>
-      <p class="cost-zero"><b>$0</b> setup, per-seat, and per-scan fees.</p>
-      <p>You pay a fixed monthly price based on the level of support and development you need.</p>
-    </div>
-  </section>
-
-  <!-- ── OWNERSHIP ──────────────────────────────── -->
-  <section id="ownership">
-    <div class="container">
-      <h2>Your system stays yours</h2>
-      <p>You have access to the source code. If we ever part ways, <b>the system stays yours and keeps running</b>.</p>
+  <!-- ── COSTS & OWNERSHIP ──────────────────────── -->
+  <section>
+    <div class="container promise-grid">
+      <div class="promise" id="costs">
+        <div class="promise-icon"><span class="material-symbols-outlined" aria-hidden="true">payments</span></div>
+        <h2>What it costs</h2>
+        <p class="cost-zero"><b>$0</b> setup, per-seat, and per-scan fees.</p>
+        <p>You pay a fixed monthly price based on the level of support and development you need.</p>
+      </div>
+      <div class="promise" id="ownership">
+        <div class="promise-icon"><span class="material-symbols-outlined" aria-hidden="true">key</span></div>
+        <h2>Your system stays yours</h2>
+        <p>You have access to the source code. If we ever part ways, <b>the system stays yours and keeps running</b>.</p>
+      </div>
     </div>
   </section>
 
@@ -606,31 +726,37 @@
   <!-- ── FOUNDATION ─────────────────────────────── -->
   <section id="foundation">
     <div class="container">
-      <h2>Built for real 3PL and fulfillment operations</h2>
-      <p>The hard operational pieces are already built and hardened.</p>
+      <h2 class="center">Built for real 3PL and fulfillment operations</h2>
+      <p class="section-intro">The hard operational pieces are already built and hardened.</p>
       <div class="features">
         <div class="feature">
+          <span class="material-symbols-outlined feature-icon" aria-hidden="true">move_to_inbox</span>
           <h3>Receiving</h3>
           <p>Each scan resolves as new, matched, partial, or conflict — and is logged.</p>
 <!--          <a class="feature-watch" href="#playlist" data-watch="receiving">Watch it →</a>-->
         </div>
         <div class="feature">
+          <span class="material-symbols-outlined feature-icon" aria-hidden="true">fact_check</span>
           <h3>ASN matching</h3>
           <p>Packages match expected shipments even when carriers reformat tracking numbers.</p>
         </div>
         <div class="feature">
+          <span class="material-symbols-outlined feature-icon" aria-hidden="true">barcode_scanner</span>
           <h3>Barcode validation</h3>
           <p>Carrier-specific checks catch doubled scans, truncated numbers, and bad check digits.</p>
         </div>
         <div class="feature">
+          <span class="material-symbols-outlined feature-icon" aria-hidden="true">precision_manufacturing</span>
           <h3>DWS and equipment</h3>
           <p>Dimensioners, sorters, and printer-applicators connect through APIs with per-device rules.</p>
         </div>
         <div class="feature">
+          <span class="material-symbols-outlined feature-icon" aria-hidden="true">warehouse</span>
           <h3>Inventory and fulfillment</h3>
           <p>Client-isolated inventory, safe reservations, order queue, picking waves, labels, CSV exports.</p>
         </div>
         <div class="feature">
+          <span class="material-symbols-outlined feature-icon" aria-hidden="true">history</span>
           <h3>Audit and webhooks</h3>
           <p>Every package event is traceable. Webhooks retry until clients receive them.</p>
         </div>
@@ -639,38 +765,49 @@
   </section>
 
   <!-- ── CTA ─────────────────────────────────────── -->
-  <div class="cta">
-    <div class="container">
+  <div class="container">
+    <div class="cta">
       <h2>Show us your workflow — we’ll find the first step to automate</h2>
       <p>Tell us how packages move through your warehouse. No commitment.</p>
-      <a class="btn" href="mailto:contact@bknd.pro?subject=WMS%20workflow%20discussion">Contact us</a>
+      <button class="email-block" type="button" aria-label="Copy email address contact@bknd.pro">
+        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+        <span class="email-text">contact@bknd.pro</span>
+        <span class="material-symbols-outlined copy-icon" aria-hidden="true">content_copy</span>
+        <span class="copy-tooltip" role="status">Copied</span>
+      </button>
+      <p class="cta-note">We usually reply within one business day</p>
     </div>
   </div>
 
 </main>
 
-<footer>
+<footer class="site-footer">
   <div class="container footer-inner">
     <ul class="footer-contacts">
-      <li class="wa-item">
-        <svg class="wa-icon" viewBox="-1 -1 26 26" role="img" aria-label="WhatsApp" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-        </svg>
-        <a href="https://wa.me/5491132703101">+54&nbsp;9&nbsp;11&nbsp;3270&nbsp;3101</a>
-        <span class="wa-note">(WhatsApp)</span>
+      <li>
+        <a href="mailto:contact@bknd.pro?subject=WMS%20workflow%20discussion">
+          <span class="material-symbols-outlined">mail</span>
+          contact@bknd.pro
+        </a>
       </li>
-      <li class="email-item">
-        <a href="mailto:contact@bknd.pro?subject=WMS%20workflow%20discussion">contact@bknd.pro</a>
-        <button class="copy-btn" type="button" aria-label="Copy email address">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <rect x="9" y="9" width="12" height="12" rx="2"/>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      <li>
+        <a href="https://www.linkedin.com/company/bknd-software/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
           </svg>
-        </button>
-        <span class="copy-hint" role="status">Copied!</span>
+          LinkedIn
+        </a>
       </li>
-      <li><a href="https://bknd.pro">bknd.pro</a></li>
+      <li>
+        <a href="https://www.youtube.com/@BKNDSoftware" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/>
+          </svg>
+          YouTube
+        </a>
+      </li>
     </ul>
+    <a class="footer-home" href="/">bknd.pro</a>
   </div>
 </footer>
 
@@ -712,22 +849,28 @@
   /* ══════════════════ END EDIT ══════════════════════════════ */
 
   /* ── Email copy button ───────────────────────── */
-  document.querySelector('.copy-btn').addEventListener('click', async function () {
-    const item = this.closest('.email-item');
-    const email = item.querySelector('a').textContent.trim();
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch {
-      const ta = document.createElement('textarea');
-      ta.value = email;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-    }
-    item.classList.add('copied');
-    clearTimeout(this._hintTimer);
-    this._hintTimer = setTimeout(() => item.classList.remove('copied'), 1800);
+  document.querySelectorAll('.email-block').forEach(function (block) {
+    block.addEventListener('click', async function () {
+      const email = block.querySelector('.email-text').textContent.trim();
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = email;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      const icon = block.querySelector('.copy-icon');
+      icon.textContent = 'check';
+      block.classList.add('copied');
+      clearTimeout(block._hintTimer);
+      block._hintTimer = setTimeout(() => {
+        block.classList.remove('copied');
+        icon.textContent = 'content_copy';
+      }, 1800);
+    });
   });
 
   /* ── Local MP4 demo ──────────────────────────── */
