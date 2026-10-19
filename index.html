@@ -455,9 +455,15 @@
         .image-gallery-item {
             position: relative;
             cursor: pointer;
-            flex: 1;
-            min-width: 250px;
+            flex: 1 1 0;
+            min-width: 0;
             max-width: 400px;
+        }
+
+        @media (max-width: 640px) {
+            .image-gallery-item {
+                flex-basis: 100%;
+            }
         }
 
         .image-gallery-item::after {
@@ -496,6 +502,50 @@
 
         .image-gallery-item:hover img {
             box-shadow: 0 14px 32px rgba(28, 25, 23, 0.14);
+        }
+
+        /* Single-photo case: text left, photo right */
+        .solution-split {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        .solution-split .case-row {
+            grid-template-columns: 1fr;
+        }
+
+        .solution-split .solution-media {
+            max-width: none;
+            min-height: 320px;
+        }
+
+        .solution-split .solution-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            box-shadow: 0 6px 20px rgba(28, 25, 23, 0.08);
+            transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .solution-split .solution-media:hover img {
+            box-shadow: 0 14px 32px rgba(28, 25, 23, 0.14);
+        }
+
+        @media (max-width: 768px) {
+            .solution-split {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .solution-split .solution-media {
+                min-height: 280px;
+            }
         }
 
         /* Inline video demo */
@@ -596,25 +646,50 @@
 
         /* Courier logos */
         .couriers {
-            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .couriers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        .courier {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 3rem;
-            flex-wrap: wrap;
+            justify-content: center;
+            height: 76px;
+            padding: 0 1.25rem;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
 
-        .couriers img {
-            max-height: 70px;
-            max-width: 120px;
-            opacity: 0.6;
-            transition: opacity 0.3s, filter 0.3s;
-            filter: grayscale(100%);
+        .courier:hover {
+            background: var(--card);
+            border-color: #d6cec2;
+            box-shadow: 0 6px 18px rgba(28, 25, 23, 0.07);
+            transform: translateY(-2px);
         }
 
-        .couriers img:hover {
-            opacity: 1;
-            filter: grayscale(0%);
+        .courier img {
+            height: var(--logo-h, 28px);
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        @media (max-width: 640px) {
+            .couriers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .courier {
+                height: 64px;
+                padding: 0 0.75rem;
+            }
         }
 
         /* Trust section */
@@ -1049,12 +1124,16 @@
                     </div>
                 </dl>
                 <div class="couriers">
-                    <img src="images/ups.png" title="UPS" alt="UPS"/>
-                    <img src="images/fedex.png" title="FedEx" alt="FedEx"/>
-                    <img src="images/dhl.png" title="DHL" alt="DHL"/>
-                    <img src="images/usps.png" title="USPS" alt="USPS"/>
-                    <img src="images/ontrac.png" title="OnTrac" alt="OnTrac"/>
-                    <img src="images/shipstation.png" title="ShipStation" alt="ShipStation"/>
+                    <div class="couriers-grid">
+                        <div class="courier"><img src="images/ups.svg" alt="UPS" title="UPS" style="--logo-h: 42px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/fedex.svg" alt="FedEx" title="FedEx" style="--logo-h: 30px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/dhl.svg" alt="DHL" title="DHL" style="--logo-h: 26px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/usps.svg" alt="USPS" title="USPS" style="--logo-h: 24px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/ontrac.png" alt="OnTrac" title="OnTrac" style="--logo-h: 22px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/speedx.png" alt="SpeedX" title="SpeedX" style="--logo-h: 24px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/gofo.png" alt="GoFo" title="GoFo" style="--logo-h: 24px" loading="lazy"/></div>
+                        <div class="courier"><img src="images/shipstation.png" alt="ShipStation" title="ShipStation" style="--logo-h: 24px" loading="lazy"/></div>
+                    </div>
                 </div>
             </div>
 
@@ -1113,54 +1192,57 @@
                     <div class="image-gallery-item" onclick="openLightbox('images/tld250_2.webp', 'Mettler Toledo TLD 250 Parcel Scale')">
                         <img src="images/tld250_2.webp" alt="Mettler Toledo TLD 250" loading="lazy" style="object-position: center bottom;">
                     </div>
+                    <div class="image-gallery-item" onclick="openLightbox('images/sr5000.webp', 'Keyence SR-5000 Barcode Reader')">
+                        <img src="images/sr5000.webp" alt="Keyence SR-5000 Barcode Reader" loading="lazy">
+                    </div>
                 </div>
             </div>
 
             <!-- Sorting Conveyor -->
-            <div class="solution-card">
-                <h2>Parcel sorting automation</h2>
-                <dl class="case-details">
-                    <div class="case-row">
-                        <dt>The problem</dt>
-                        <dd>Delayed parcels were sorted manually — slow, error-prone, and physically exhausting for staff.</dd>
-                    </div>
-                    <div class="case-row">
-                        <dt>What we built</dt>
-                        <dd>Software integration for an automated conveyor with routing logic based on parcel data.</dd>
-                    </div>
-                    <div class="case-row case-result">
-                        <dt>The result</dt>
-                        <dd>Sorting runs continuously with minimal supervision and fewer mistakes.</dd>
-                    </div>
-                </dl>
-                <div class="image-gallery">
-                    <div class="image-gallery-item" onclick="openLightbox('images/vitronic.webp', 'Vitronic Automated Sorting Conveyor')">
-                        <img src="images/vitronic.webp" alt="Vitronic conveyor system" loading="lazy">
-                    </div>
+            <div class="solution-card solution-split">
+                <div class="solution-text">
+                    <h2>Parcel sorting automation</h2>
+                    <dl class="case-details">
+                        <div class="case-row">
+                            <dt>The problem</dt>
+                            <dd>Delayed parcels were sorted manually — slow, error-prone, and physically exhausting for staff.</dd>
+                        </div>
+                        <div class="case-row">
+                            <dt>What we built</dt>
+                            <dd>Software integration for an automated conveyor with routing logic based on parcel data.</dd>
+                        </div>
+                        <div class="case-row case-result">
+                            <dt>The result</dt>
+                            <dd>Sorting runs continuously with minimal supervision and fewer mistakes.</dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="image-gallery-item solution-media" onclick="openLightbox('images/vitronic.webp', 'Vitronic Automated Sorting Conveyor')">
+                    <img src="images/vitronic.webp" alt="Vitronic conveyor system" loading="lazy">
                 </div>
             </div>
 
             <!-- Label Applicator -->
-            <div class="solution-card">
-                <h2>Automatic label printing and verification</h2>
-                <dl class="case-details">
-                    <div class="case-row">
-                        <dt>The problem</dt>
-                        <dd>Manually applied labels lead to unreadable barcodes and carrier rejections.</dd>
-                    </div>
-                    <div class="case-row">
-                        <dt>What we built</dt>
-                        <dd>Integrated automatic label applicator with print verification and warehouse software.</dd>
-                    </div>
-                    <div class="case-row case-result">
-                        <dt>The result</dt>
-                        <dd>Stable label quality and fewer issues with carriers.</dd>
-                    </div>
-                </dl>
-                <div class="image-gallery">
-                    <div class="image-gallery-item" onclick="openLightbox('images/panther.webp', 'Panther Automated Label Applicator')">
-                        <img src="images/panther.webp" alt="Panther Label Applicator" loading="lazy">
-                    </div>
+            <div class="solution-card solution-split">
+                <div class="solution-text">
+                    <h2>Automatic label printing and verification</h2>
+                    <dl class="case-details">
+                        <div class="case-row">
+                            <dt>The problem</dt>
+                            <dd>Manually applied labels lead to unreadable barcodes and carrier rejections.</dd>
+                        </div>
+                        <div class="case-row">
+                            <dt>What we built</dt>
+                            <dd>Integrated automatic label applicator with print verification and warehouse software.</dd>
+                        </div>
+                        <div class="case-row case-result">
+                            <dt>The result</dt>
+                            <dd>Stable label quality and fewer issues with carriers.</dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="image-gallery-item solution-media" onclick="openLightbox('images/panther.webp', 'Panther Automated Label Applicator')">
+                    <img src="images/panther.webp" alt="Panther Label Applicator" loading="lazy">
                 </div>
             </div>
 
