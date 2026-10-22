@@ -1,0 +1,8 @@
+name,eyebrow,title,body,result,photo
+01-shipping-label-automation,01 · CARRIER INTEGRATIONS,Shipping label automation,"Direct carrier APIs: labels, tracking and shipment data, no more carrier websites.","→ Faster, predictable shipping",photos/shipping.png
+02-custom-wms,02 · WMS & FULFILLMENT,Custom warehouse management,"Receiving, storage, picking and client API access, built around your real workflow.","→ Clear inventory, fewer losses",photos/wms.png
+03-automated-receiving,03 · WAREHOUSE EQUIPMENT,Automated receiving & measurements,Camera dimensioning and industrial scales wired straight into receiving.,→ No more queues at peak hours,photos/receiving.png
+04-parcel-sorting,04 · SORTING,Parcel sorting automation,Conveyor integration with routing logic driven by parcel data.,"→ Continuous sorting, fewer errors",photos/sorting.png
+05-label-printing-verification,05 · LABELING,Automatic label printing & verification,"Label applicator with print verification, connected to your warehouse software.","→ Readable barcodes, fewer rejections",photos/labeling.png
+06-whatsapp-support,06 · CUSTOMER SUPPORT,WhatsApp support integration,"WhatsApp Business API linked to internal systems, so operators see order context instantly.","→ Faster replies, happier clients",photos/whatsapp.png
+07-machine-vision,07 · MACHINE VISION,Machine vision parcel counting,A YOLO model counts the parcels in every camera frame before a customer notification goes out.,→ No mixed-up notifications,photos/vision.png
