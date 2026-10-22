@@ -504,6 +504,16 @@
             box-shadow: 0 14px 32px rgba(28, 25, 23, 0.14);
         }
 
+        /* Single landscape photo under the text, shown uncropped */
+        .image-wide .image-gallery-item {
+            max-width: none;
+        }
+
+        .image-wide img {
+            height: auto;
+            aspect-ratio: 16 / 10;
+        }
+
         /* Single-photo case: text left, photo right */
         .solution-split {
             display: grid;
@@ -1243,6 +1253,30 @@
                 </div>
                 <div class="image-gallery-item solution-media" onclick="openLightbox('images/panther.webp', 'Panther Automated Label Applicator')">
                     <img src="images/panther.webp" alt="Panther Label Applicator" loading="lazy">
+                </div>
+            </div>
+
+            <!-- Machine Vision -->
+            <div class="solution-card">
+                <h2>Machine vision for parcel counting</h2>
+                <dl class="case-details">
+                    <div class="case-row">
+                        <dt>The problem</dt>
+                        <dd>When two parcels passed under the receiving camera together, one customer could get a notification with another customer’s parcel photo.</dd>
+                    </div>
+                    <div class="case-row">
+                        <dt>What we built</dt>
+                        <dd>A YOLO object detector trained on photos from the real conveyor camera. It counts the parcels in each frame and runs inside our Go service, so a notification goes out only when exactly one parcel is in the photo.</dd>
+                    </div>
+                    <div class="case-row case-result">
+                        <dt>The result</dt>
+                        <dd>No more mixed-up notifications. Unclear frames wait for a person to check them, so a mistake costs a short delay instead of a privacy problem.</dd>
+                    </div>
+                </dl>
+                <div class="image-gallery image-wide">
+                    <div class="image-gallery-item" onclick="openLightbox('images/parcel-count-error.webp', 'Two parcels detected in one frame: notification held')">
+                        <img src="images/parcel-count-error.webp" alt="Conveyor camera frame with two detected parcels and a 2 parcels detected warning" loading="lazy">
+                    </div>
                 </div>
             </div>
 
