@@ -1272,15 +1272,15 @@
                 <dl class="case-details">
                     <div class="case-row">
                         <dt>The problem</dt>
-                        <dd>When two parcels passed under the receiving camera together, one customer could get a notification with another customer’s parcel photo.</dd>
+                        <dd>Two parcels under the camera could be registered as one, causing incorrect customer notifications and requiring manual fixes.</dd>
                     </div>
                     <div class="case-row">
                         <dt>What we built</dt>
-                        <dd>A YOLO object detector trained on photos from the real conveyor camera. It counts the parcels in each frame and runs inside our Go service, so a notification goes out only when exactly one parcel is in the photo.</dd>
+                        <dd>A machine vision module trained to count parcels on a moving conveyor belt in real time.</dd>
                     </div>
                     <div class="case-row case-result">
                         <dt>The result</dt>
-                        <dd>No more mixed-up notifications. Unclear frames wait for a person to check them, so a mistake costs a short delay instead of a privacy problem.</dd>
+                        <dd>Accurate automated parcel receiving with minimal manual intervention.</dd>
                     </div>
                 </dl>
                 <div class="image-gallery image-wide">
