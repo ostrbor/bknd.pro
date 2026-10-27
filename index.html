@@ -330,10 +330,107 @@
         }
 
         .capability-icon {
-            font-size: 30px;
-            color: var(--accent);
-            display: block;
-            margin-bottom: 0.75rem;
+            width: 56px;
+            height: 56px;
+            margin-bottom: 1rem;
+            border-radius: 14px;
+            background: var(--accent-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .capability-card:hover .capability-icon {
+            background: #e3e9f8;
+        }
+
+        .capability-icon svg {
+            width: 40px;
+            height: 40px;
+            overflow: visible;
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .capability-icon .fill-card { fill: var(--card); }
+        .capability-icon .fill-soft { fill: var(--accent-soft); }
+        .capability-icon .warm { stroke: var(--warm); fill: var(--warm-soft); }
+        .capability-icon .warm-line { stroke: var(--warm); }
+
+        /* every animated part transforms around its own box */
+        .capability-icon svg :where(*) {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+
+        /* Animations stay attached and only pause off hover,
+           so leaving a card freezes it and hovering again resumes from that frame */
+        .capability-icon svg * { animation-play-state: paused !important; }
+        .capability-card:hover .capability-icon svg * { animation-play-state: running !important; }
+
+        /* WMS: dock door rolls up, then boxes drop in and stack (plays once) */
+        .ic-door { transform-origin: 50% 0%; animation: ic-roll 0.35s ease-out forwards; }
+        .ic-door line { animation: ic-fade 0.2s forwards; }
+        @keyframes ic-roll { to { transform: scaleY(0.15); } }
+        @keyframes ic-fade { to { opacity: 0; } }
+        /* boxes start above the opening, hidden by its clip and the door */
+        .ic-box { animation: ic-drop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) 0.25s both; }
+        @keyframes ic-drop {
+            from { transform: translateY(-14px); }
+            to { transform: translateY(0); }
+        }
+
+        /* Carriers: truck drives, wheels spin, speed lines stream */
+        .ic-truck { animation: ic-bob 0.4s ease-in-out infinite alternate; }
+        .ic-wheel { animation: ic-spin 0.5s linear infinite; }
+        .ic-speed line { stroke-dasharray: 3 3; opacity: 0; transition: opacity 0.3s; animation: ic-stream 0.4s linear infinite; }
+        .capability-card:hover .ic-speed line { opacity: 1; }
+        @keyframes ic-bob { to { transform: translate(1px, -0.8px); } }
+        @keyframes ic-spin { to { transform: rotate(360deg); } }
+        @keyframes ic-stream { to { stroke-dashoffset: 6; } }
+
+        /* Equipment: parcels ride the belt, camera flashes when one is right under it.
+           The -0.88s delay makes the resting frame show a parcel just before the lens. */
+        /* belt travels the same 16.5 units per 2s as the parcels; 16.5 = 3 dash periods */
+        .ic-belt { stroke-dasharray: 2 3.5; animation: ic-belt 2s linear -0.88s infinite; }
+        .ic-parcel { animation: ic-ride 2s linear -0.88s infinite; }
+        .ic-flash { opacity: 0; animation: ic-flash 2s linear -0.88s infinite; }
+        .ic-lens { animation: ic-lens 2s linear -0.88s infinite; }
+        @keyframes ic-belt { to { stroke-dashoffset: -16.5; } }
+        /* parcels are 16.5 apart and shift by exactly one spacing, so the loop is seamless;
+           at 50% a parcel is centred under the lens */
+        @keyframes ic-ride {
+            from { transform: translateX(-8.25px); }
+            to { transform: translateX(8.25px); }
+        }
+        @keyframes ic-flash {
+            0%, 46%, 64%, 100% { opacity: 0; }
+            50%, 56% { opacity: 1; }
+        }
+        @keyframes ic-lens {
+            0%, 46%, 64%, 100% { fill: var(--card); }
+            50%, 56% { fill: var(--warm-soft); }
+        }
+
+        /* OCR: scan beam sweeps, text lines light up */
+        .ic-beam { opacity: 0; animation: ic-scan 1.8s ease-in-out infinite; }
+        .ic-text line { animation: ic-read 1.8s ease-in-out infinite; }
+        .ic-text line:nth-child(2) { animation-delay: 0.2s; }
+        .ic-text line:nth-child(3) { animation-delay: 0.4s; }
+        .ic-code { stroke-linecap: butt; animation: ic-read 1.8s ease-in-out 0.65s infinite; }
+        @keyframes ic-scan {
+            0% { transform: translateY(0); opacity: 0; }
+            10%, 80% { opacity: 1; }
+            90%, 100% { transform: translateY(26px); opacity: 0; }
+        }
+        @keyframes ic-read { 20%, 40% { stroke: var(--warm); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .capability-icon svg * { animation: none !important; transition: none !important; }
         }
 
         .capability-card h3 {
@@ -1096,22 +1193,101 @@
 
             <div class="capability-grid">
                 <div class="capability-card">
-                    <span class="material-symbols-outlined capability-icon">warehouse</span>
+                    <span class="capability-icon">
+                        <svg viewBox="0 4 48 48" aria-hidden="true">
+                            <path class="fill-card" d="M4 40 V23 L24 16 L44 23 V40 Z"/>
+                            <path d="M1.5 24.5 L24 16 L46.5 24.5"/>
+                            <rect class="fill-soft" x="12" y="25" width="24" height="15"/>
+                            <clipPath id="ic-door-clip"><rect x="12" y="25" width="24" height="17"/></clipPath>
+                            <g clip-path="url(#ic-door-clip)">
+                            <rect class="ic-box warm" x="17" y="34" width="6" height="6" rx="1"/>
+                            <rect class="ic-box warm" style="animation-delay: 0.35s" x="25" y="34" width="6" height="6" rx="1"/>
+                            <rect class="ic-box warm" style="animation-delay: 0.47s" x="21" y="28" width="6" height="6" rx="1"/>
+                            </g>
+                            <g class="ic-door">
+                                <rect class="fill-card" x="12" y="25" width="24" height="7" vector-effect="non-scaling-stroke"/>
+                                <line x1="12" y1="28.5" x2="36" y2="28.5" vector-effect="non-scaling-stroke"/>
+                            </g>
+                        </svg>
+                    </span>
                     <h3>WMS &amp; Fulfillment</h3>
                     <p>Receiving, inventory, picking, packing, and client workflows.</p>
                 </div>
                 <div class="capability-card">
-                    <span class="material-symbols-outlined capability-icon">local_shipping</span>
+                    <span class="capability-icon">
+                        <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <g class="ic-speed warm-line">
+                                <line x1="-1" y1="17" x2="5" y2="17"/>
+                                <line x1="-3" y1="23" x2="5" y2="23"/>
+                                <line x1="-1" y1="29" x2="5" y2="29"/>
+                            </g>
+                            <g class="ic-truck">
+                                <rect class="fill-card" x="8" y="12" width="23" height="20" rx="2"/>
+                                <path class="fill-card" d="M31 18 H39 L45 25 V32 H31 Z"/>
+                                <path class="fill-soft" d="M34 21 H38 L41 25 H34 Z"/>
+                                <path class="warm" d="M19.5 15 L26 18.5 V25.5 L19.5 29 L13 25.5 V18.5 Z"/>
+                                <path class="warm-line" d="M13 18.5 L19.5 22 L26 18.5 M19.5 22 V29 M16.25 16.75 L22.75 20.25" stroke-width="1.5"/>
+                            </g>
+                            <g class="ic-wheel"><circle class="fill-card" cx="15" cy="34" r="4"/><line x1="15" y1="31.5" x2="15" y2="36.5"/></g>
+                            <g class="ic-wheel"><circle class="fill-card" cx="38" cy="34" r="4"/><line x1="38" y1="31.5" x2="38" y2="36.5"/></g>
+                        </svg>
+                    </span>
                     <h3>Carrier &amp; Customs Integrations</h3>
                     <p>Shipping labels, tracking, shipment data, and customs workflows.</p>
                 </div>
                 <div class="capability-card">
-                    <span class="material-symbols-outlined capability-icon">precision_manufacturing</span>
+                    <span class="capability-icon">
+                        <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <line x1="10" y1="34" x2="10" y2="42"/>
+                            <line x1="38" y1="34" x2="38" y2="42"/>
+                            <clipPath id="ic-belt-clip"><rect x="3" y="0" width="42" height="27"/></clipPath>
+                            <g clip-path="url(#ic-belt-clip)">
+                                <g class="ic-parcel">
+                                    <rect class="warm" x="-11.5" y="19" width="7" height="7" rx="1"/>
+                                    <rect class="warm" x="5" y="19" width="7" height="7" rx="1"/>
+                                    <rect class="warm" x="21.5" y="19" width="7" height="7" rx="1"/>
+                                    <rect class="warm" x="38" y="19" width="7" height="7" rx="1"/>
+                                </g>
+                            </g>
+                            <rect class="fill-soft" x="3" y="26" width="42" height="8" rx="4"/>
+                            <line class="ic-belt" x1="8" y1="30" x2="40" y2="30"/>
+                            <line x1="25" y1="2" x2="25" y2="6"/>
+                            <rect class="fill-card" x="19" y="6" width="12" height="6.5" rx="1.5"/>
+                            <line class="warm-line" x1="27.5" y1="9" x2="28" y2="9"/>
+                            <path class="fill-card ic-lens" d="M22 12.5 V13 A3 3 0 0 0 28 13 V12.5"/>
+                            <g class="ic-flash warm-line">
+                                <line x1="16" y1="7" x2="13.5" y2="5.5"/>
+                                <line x1="15.5" y1="11" x2="12.5" y2="11"/>
+                                <line x1="34" y1="7" x2="36.5" y2="5.5"/>
+                                <line x1="34.5" y1="11" x2="37.5" y2="11"/>
+                            </g>
+                        </svg>
+                    </span>
                     <h3>Warehouse Equipment</h3>
                     <p>Scanners, scales, dimensioning systems, sorters, and label applicators.</p>
                 </div>
                 <div class="capability-card">
-                    <span class="material-symbols-outlined capability-icon">document_scanner</span>
+                    <span class="capability-icon">
+                        <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <path class="fill-card" d="M11 5 H29 L37 13 V43 H11 Z"/>
+                            <path class="fill-soft" d="M29 5 V13 H37"/>
+                            <g class="ic-text">
+                                <line x1="16" y1="18" x2="31" y2="18"/>
+                                <line x1="16" y1="23" x2="31" y2="23"/>
+                                <line x1="16" y1="28" x2="26" y2="28"/>
+                            </g>
+                            <g class="ic-code">
+                                <line x1="16.5" y1="33" x2="16.5" y2="39" stroke-width="1.5"/>
+                                <line x1="19" y1="33" x2="19" y2="39" stroke-width="1"/>
+                                <line x1="21" y1="33" x2="21" y2="39" stroke-width="2"/>
+                                <line x1="23.5" y1="33" x2="23.5" y2="39" stroke-width="1"/>
+                                <line x1="25.5" y1="33" x2="25.5" y2="39" stroke-width="1.5"/>
+                                <line x1="28" y1="33" x2="28" y2="39" stroke-width="2"/>
+                                <line x1="30.5" y1="33" x2="30.5" y2="39" stroke-width="1"/>
+                            </g>
+                            <line class="ic-beam warm-line" x1="6" y1="14" x2="42" y2="14" stroke-width="2.5"/>
+                        </svg>
+                    </span>
                     <h3>Labels, OCR &amp; Reporting</h3>
                     <p>Label generation, data extraction, operational reports, and billing support.</p>
                 </div>
