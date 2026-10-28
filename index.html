@@ -180,7 +180,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin: 3rem 0;
+            max-width: 1040px;
+            margin: 3rem auto;
         }
 
         .value-prop {
@@ -214,6 +215,16 @@
             font-size: 32px;
         }
 
+        /* Drawn $ so the bar is full height and as thick as the S */
+        .value-prop-icon-dollar {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+        }
+
         .value-prop-title {
             font-size: 1.3rem;
             font-weight: 700;
@@ -225,6 +236,32 @@
             color: var(--text);
             font-size: 1.075rem;
         }
+
+        /* Argentina / nearshore signal: flag-striped card */
+        .value-prop-nearshore {
+            /* Fixed-height flag stripes so wrapping text never runs into them */
+            background: linear-gradient(to bottom,
+                #a9cdee 0 12px, var(--card) 12px calc(100% - 12px), #a9cdee calc(100% - 12px));
+            border-color: #c9dcef;
+        }
+
+        .value-prop-nearshore:hover {
+            border-color: #a9c6e4;
+        }
+
+
+        .flag-us {
+            display: inline-block;
+            width: 1.15em;
+            height: 0.75em;
+            vertical-align: -0.05em;
+            margin: 0 0.05em;
+            border-radius: 2px;
+            background: #fff;
+            box-shadow: 0 0 0 1px rgba(28, 25, 23, 0.12);
+        }
+
+
 
         /* CTA Section */
         .cta-section {
@@ -1135,33 +1172,27 @@
         <div class="value-props">
             <div class="value-prop">
                 <div class="value-prop-icon">
-                    <span class="material-symbols-outlined value-prop-icon-span">auto_mode</span>
+                    <span class="material-symbols-outlined value-prop-icon-span">conveyor_belt</span>
                 </div>
                 <div class="value-prop-title">Less manual work</div>
-<!--                <div class="value-prop-amount">60%</div>-->
-                <div class="value-prop-desc">Automated steps instead of spreadsheets and copy-paste</div>
+                <div class="value-prop-desc">Faster daily operations, fewer mistakes</div>
             </div>
             <div class="value-prop">
                 <div class="value-prop-icon">
-                    <span class="material-symbols-outlined value-prop-icon-span">speed</span>
+                    <span class="material-symbols-outlined value-prop-icon-span">support_agent</span>
                 </div>
-                <div class="value-prop-title">Faster daily operations</div>
-<!--                <div class="value-prop-amount">10x</div>-->
-                <div class="value-prop-desc">Receiving, labeling, and shipping without bottlenecks</div>
+                <div class="value-prop-title">Quick to respond</div>
+                <div class="value-prop-desc">Talk directly to the developers who build your software</div>
             </div>
-            <div class="value-prop">
+            <div class="value-prop value-prop-nearshore">
                 <div class="value-prop-icon">
-                    <span class="material-symbols-outlined value-prop-icon-span">trending_up</span>
+                    <svg class="value-prop-icon-dollar" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M16.8 7.6 C16.4 5.6 14.5 4.6 12 4.6 C9.2 4.6 7.3 5.9 7.3 8.1 C7.3 10.4 9.4 11.1 12 11.8 C14.7 12.5 17 13.3 17 15.8 C17 18.1 14.9 19.4 12 19.4 C9.2 19.4 7.3 18.3 6.9 16.2"/>
+                        <line x1="12" y1="2" x2="12" y2="22"/>
+                    </svg>
                 </div>
-                <div class="value-prop-title">Clear payback</div>
-                <div class="value-prop-desc">Automation focused on saving time and labor costs</div>
-            </div>
-            <div class="value-prop">
-                <div class="value-prop-icon">
-                    <span class="material-symbols-outlined value-prop-icon-span">verified</span>
-                </div>
-                <div class="value-prop-title">Fewer mistakes</div>
-                <div class="value-prop-desc">Consistent processes instead of human errors</div>
+                <div class="value-prop-title">Lower rates<br>than US <svg class="flag-us" viewBox="0 0 38 20" aria-hidden="true"><rect y="0.00" width="38" height="1.54" fill="#b22234"/><rect y="3.08" width="38" height="1.54" fill="#b22234"/><rect y="6.15" width="38" height="1.54" fill="#b22234"/><rect y="9.23" width="38" height="1.54" fill="#b22234"/><rect y="12.31" width="38" height="1.54" fill="#b22234"/><rect y="15.38" width="38" height="1.54" fill="#b22234"/><rect y="18.46" width="38" height="1.54" fill="#b22234"/><rect width="15.2" height="10.77" fill="#3c3b6e"/></svg> teams</div>
+                <div class="value-prop-desc">Based in Argentina, working your business hours</div>
             </div>
         </div>
 
